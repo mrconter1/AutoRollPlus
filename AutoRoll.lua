@@ -239,6 +239,14 @@ do -- Private Scope
                 AutoRoll_PCDB[key] = value
             end
         end
+
+        -- Clean up mail/plate rules for all druid profiles
+        for key, rules in pairs(AutoRollPlus_PCDB["profiles"] or {}) do
+            if key:match("^druid_") and type(rules) == "table" then
+                rules["mail"] = nil
+                rules["plate"] = nil
+            end
+        end
     end
 
     function AutoRoll:onEvent(self, event, ...)
