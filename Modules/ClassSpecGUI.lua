@@ -462,6 +462,14 @@ function AutoRollClassSpecGUI:Show()
     end
     frame.statusText:SetText("Ready to configure")
     frame.statusText:SetTextColor(0.7, 0.8, 0.9)
+
+    -- NEW: Auto-detect player's class and pre-select it
+    local _, playerClassKey = UnitClass("player")  -- e.g., "WARRIOR"
+    local autoButton = classButtons[playerClassKey]
+    if autoButton then
+        AutoRollClassSpecGUI:OnClassSelected(playerClassKey, CLASSES[playerClassKey].name, autoButton)
+    end
+
     frame:Show()
 end
 
