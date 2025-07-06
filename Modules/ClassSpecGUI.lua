@@ -31,7 +31,7 @@ function AutoRollClassSpecGUI:CreateFrame()
 
     -- Main frame with bigger dimensions
     frame = CreateFrame("Frame", "AutoRollClassSpecFrame", UIParent)
-    frame:SetSize(600, 480)
+    frame:SetSize(600, 240)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     
     -- Background using a nicer texture
@@ -59,75 +59,22 @@ function AutoRollClassSpecGUI:CreateFrame()
     frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
     frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 
-    -- Title with better styling
+    -- Title
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     title:SetPoint("TOP", frame, "TOP", 0, -25)
     title:SetText("AutoRoll Configuration")
     title:SetTextColor(1, 1, 1)
     title:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
     
-    -- Subtitle
-    local subtitle = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    subtitle:SetPoint("TOP", title, "BOTTOM", 0, -8)
-    subtitle:SetText("Select your class and specialization")
-    subtitle:SetTextColor(0.8, 0.8, 0.9)
-
-    -- Class section with proper containment
-    local classSection = CreateFrame("Frame", nil, frame)
-    classSection:SetSize(560, 160)
-    classSection:SetPoint("TOP", subtitle, "BOTTOM", 0, -15)
-    
-    -- Class section background
-    local classBg = classSection:CreateTexture(nil, "BACKGROUND")
-    classBg:SetAllPoints()
-    classBg:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
-    classBg:SetVertexColor(0.05, 0.05, 0.1, 0.8)
-    
-    -- Class section border
-    local classBorder = classSection:CreateTexture(nil, "BORDER")
-    classBorder:SetAllPoints()
-    classBorder:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-    classBorder:SetVertexColor(0.2, 0.2, 0.3, 0.6)
-    
-    -- Class label
-    local classLabel = classSection:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    classLabel:SetPoint("TOP", classSection, "TOP", 0, -12)
-    classLabel:SetText("Choose Your Class")
-    classLabel:SetTextColor(0.9, 0.9, 1)
-    classLabel:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
-
-    -- Create class icons
-    AutoRollClassSpecGUI:CreateClassIcons(classSection)
-
-    -- Spec section (initially hidden) with proper containment
-    specFrame = CreateFrame("Frame", nil, frame)
-    specFrame:SetSize(560, 100)
-    specFrame:SetPoint("TOP", classSection, "BOTTOM", 0, -15)
-    specFrame:Hide()
-    
-    -- Spec section background
-    local specBg = specFrame:CreateTexture(nil, "BACKGROUND")
-    specBg:SetAllPoints()
-    specBg:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
-    specBg:SetVertexColor(0.05, 0.1, 0.05, 0.8)
-    
-    -- Spec section border
-    local specBorder = specFrame:CreateTexture(nil, "BORDER")
-    specBorder:SetAllPoints()
-    specBorder:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-    specBorder:SetVertexColor(0.2, 0.3, 0.2, 0.6)
-    
-    -- Spec label
-    local specLabel = specFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    specLabel:SetPoint("TOP", specFrame, "TOP", 0, -12)
-    specLabel:SetText("Choose Your Specialization")
-    specLabel:SetTextColor(0.9, 1, 0.9)
-    specLabel:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
-    specFrame.label = specLabel
+    -- Message label (will be set in Show)
+    frame.detectedLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    frame.detectedLabel:SetPoint("TOP", title, "BOTTOM", 0, -30)
+    frame.detectedLabel:SetTextColor(0.9, 0.9, 1)
+    frame.detectedLabel:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
 
     -- Status text with proper positioning
     local statusText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    statusText:SetPoint("TOP", specFrame, "BOTTOM", 0, -15)
+    statusText:SetPoint("TOP", frame.detectedLabel, "BOTTOM", 0, -20)
     statusText:SetText("Ready to configure")
     statusText:SetTextColor(0.7, 0.8, 0.9)
     statusText:SetFont("Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
@@ -200,32 +147,60 @@ function AutoRollClassSpecGUI:CreateFrame()
     return frame
 end
 
--- Create class icons with proper border highlighting
-function AutoRollClassSpecGUI:CreateClassIcons(parent)
+-- Utility to detect class and spec
+local function DetectPlayerClassAndSpec()
+    local _, classKey = UnitClass("player")
+    local specName = nil
+    -- MoP: Use GetPrimaryTalentTree if available
+    if GetPrimaryTalentTree then
+        local specIndex = GetPrimaryTalentTree()
+        local classSpecs = {
+            WARRIOR = {"Arms", "Fury", "Protection"},
+            PALADIN = {"Holy", "Protection", "Retribution"},
+            HUNTER = {"Beast Mastery", "Marksmanship", "Survival"},
+            ROGUE = {"Assassination", "Combat", "Subtlety"},
+            PRIEST = {"Discipline", "Holy", "Shadow"},
+            DEATHKNIGHT = {"Blood", "Frost", "Unholy"},
+            SHAMAN = {"Elemental", "Enhancement", "Restoration"},
+            MAGE = {"Arcane", "Fire", "Frost"},
+            WARLOCK = {"Affliction", "Demonology", "Destruction"},
+            DRUID = {"Balance", "Feral", "Restoration"},
+            MONK = {"Brewmaster", "Mistweaver", "Windwalker"},
+        }
+        local specs = classSpecs[classKey]
+        if specs and specIndex and specs[specIndex] then
+            specName = specs[specIndex]
+        end
+    elseif GetSpecialization and GetSpecializationInfo then
+        local specIndex = GetSpecialization()
+        if specIndex then
+            local _, sName = GetSpecializationInfo(specIndex)
+            specName = sName
+        end
+    end
+    return classKey, specName
+end
+
+-- Patch: Disable all class and spec buttons except the detected ones
+function AutoRollClassSpecGUI:CreateClassIcons(parent, detectedClass)
     local iconSize = 52
     local spacing = 58
     local iconsPerRow = 5
-    local totalIcons = 10  -- Now we have 10 classes
-    local totalRows = 2   -- 10 icons = 2 rows (5 + 5)
-    
-    -- Calculate proper centering for both rows (5 icons each)
+    local totalIcons = 10
+    local totalRows = 2
     local rowWidth = (iconsPerRow * iconSize) + ((iconsPerRow - 1) * (spacing - iconSize))
-    local startX = -rowWidth / 2 + (iconSize / 2)  -- Add half icon size for proper centering
-    
+    local startX = -rowWidth / 2 + (iconSize / 2)
     local startY = -40
     local rowHeight = 65
-    
     local iconIndex = 0
     local classOrder = {"WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "DEATHKNIGHT", "SHAMAN", "MAGE", "WARLOCK", "DRUID"}
-    
     for _, classKey in ipairs(classOrder) do
         local classData = CLASSES[classKey]
         if classData then
             local row = math.floor(iconIndex / iconsPerRow)
             local col = iconIndex % iconsPerRow
-            
             local button = CreateFrame("Button", nil, parent)
-            button:SetSize(iconSize + 8, iconSize + 8)  -- Slightly bigger for border effects
+            button:SetSize(iconSize + 8, iconSize + 8)
             button:SetPoint("TOP", parent, "TOP", startX + (col * spacing), startY - (row * rowHeight))
             
             -- Background glow for selection (initially hidden)
@@ -307,54 +282,47 @@ function AutoRollClassSpecGUI:CreateClassIcons(parent)
                 end
             end)
             
-            -- Click handler
-            button:SetScript("OnClick", function()
-                AutoRollClassSpecGUI:OnClassSelected(classKey, classData.name, button)
-            end)
-            
+            -- Remove click handler
+            button:SetScript("OnClick", nil)
+            button:Disable()
+            if classKey == detectedClass then
+                button:Enable()
+            end
             button.classKey = classKey
             button.className = classData.name
             button.selected = false
             classButtons[classKey] = button
-            
             iconIndex = iconIndex + 1
         end
     end
 end
 
--- Create spec buttons with proper centering
-function AutoRollClassSpecGUI:CreateSpecButtons(classKey)
-    -- Clear existing spec buttons
+function AutoRollClassSpecGUI:CreateSpecButtons(classKey, detectedSpec)
     for _, button in pairs(specButtons) do
         button:Hide()
         button:SetParent(nil)
     end
     specButtons = {}
-    
     local classData = CLASSES[classKey]
     if not classData then return end
-    
     local buttonWidth = 140
     local buttonHeight = 35
     local spacing = 20
     local numSpecs = #classData.specs
-    
-    -- Calculate total width and center position properly
     local totalWidth = (numSpecs * buttonWidth) + ((numSpecs - 1) * spacing)
-    local startX = -totalWidth / 2 + (buttonWidth / 2)  -- Center first button
-    
+    local startX = -totalWidth / 2 + (buttonWidth / 2)
     for i, specName in ipairs(classData.specs) do
         local button = CreateFrame("Button", nil, specFrame, "GameMenuButtonTemplate")
         button:SetSize(buttonWidth, buttonHeight)
         button:SetPoint("TOP", specFrame, "TOP", startX + ((i - 1) * (buttonWidth + spacing)), -50)
         button:SetText(specName)
         button:SetNormalFontObject("GameFontNormal")
-        
-        -- Click handler
-        button:SetScript("OnClick", function()
-            AutoRollClassSpecGUI:OnSpecSelected(specName, button)
-        end)
-        
+        -- Remove click handler
+        button:SetScript("OnClick", nil)
+        button:Disable()
+        if specName == detectedSpec then
+            button:Enable()
+        end
         button.specName = specName
         button.selected = false
         specButtons[specName] = button
@@ -445,31 +413,16 @@ function AutoRollClassSpecGUI:Show()
     if not frame then
         self:CreateFrame()
     end
-    -- Reset selections when showing
-    selectedClass = nil
-    selectedSpec = nil
-    if specFrame then
-        specFrame:Hide()
-    end
-    for _, button in pairs(classButtons) do
-        -- Reset all highlight elements
-        if button.selectedBorder1 then button.selectedBorder1:Hide() end
-        if button.selectedBorder2 then button.selectedBorder2:Hide() end
-        if button.selectionGlow then button.selectionGlow:Hide() end
-        if button.hoverBorder then button.hoverBorder:Hide() end
-        if button.hoverGlow then button.hoverGlow:Hide() end
-        button.selected = false
-    end
+    -- Detect class and spec
+    local detectedClass, detectedSpec = DetectPlayerClassAndSpec()
+    selectedClass = detectedClass
+    selectedSpec = detectedSpec
+    -- Set the detected label
+    local className = detectedClass and CLASSES[detectedClass] and CLASSES[detectedClass].name or (detectedClass or "Unknown")
+    local specName = detectedSpec or "Unknown"
+    frame.detectedLabel:SetText("Detected your class/spec: |cffffd200"..className.."|r - |cff00ffba"..specName.."|r.\nAutoRollPlus will use the profile for this character.")
     frame.statusText:SetText("Ready to configure")
     frame.statusText:SetTextColor(0.7, 0.8, 0.9)
-
-    -- NEW: Auto-detect player's class and pre-select it
-    local _, playerClassKey = UnitClass("player")  -- e.g., "WARRIOR"
-    local autoButton = classButtons[playerClassKey]
-    if autoButton then
-        AutoRollClassSpecGUI:OnClassSelected(playerClassKey, CLASSES[playerClassKey].name, autoButton)
-    end
-
     frame:Show()
 end
 

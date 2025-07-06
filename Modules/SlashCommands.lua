@@ -316,6 +316,61 @@ SlashCmdList["AR"] = function(msg)
 
     end
 
+    if cmd == "detect" then
+        -- Detect class
+        local _, classKey, classID = UnitClass("player")
+        print("AutoRoll: Detected class: " .. classKey)
+
+        -- MoP: Use GetPrimaryTalentTree if available
+        if GetPrimaryTalentTree then
+            local specIndex = GetPrimaryTalentTree()
+            local specName = nil
+            -- Map specIndex to spec name for the player's class
+            local classSpecs = {
+                WARRIOR = {"Arms", "Fury", "Protection"},
+                PALADIN = {"Holy", "Protection", "Retribution"},
+                HUNTER = {"Beast Mastery", "Marksmanship", "Survival"},
+                ROGUE = {"Assassination", "Combat", "Subtlety"},
+                PRIEST = {"Discipline", "Holy", "Shadow"},
+                DEATHKNIGHT = {"Blood", "Frost", "Unholy"},
+                SHAMAN = {"Elemental", "Enhancement", "Restoration"},
+                MAGE = {"Arcane", "Fire", "Frost"},
+                WARLOCK = {"Affliction", "Demonology", "Destruction"},
+                DRUID = {"Balance", "Feral", "Restoration"},
+                MONK = {"Brewmaster", "Mistweaver", "Windwalker"},
+            }
+            local specs = classSpecs[classKey]
+            if specs and specIndex and specs[specIndex] then
+                specName = specs[specIndex]
+            end
+            if specName then
+                print("AutoRoll: Detected spec: " .. specName)
+            else
+                print("AutoRoll: Could not determine spec name (index: "..tostring(specIndex)..")")
+            end
+            return
+        end
+
+        -- Modern API fallback
+        if GetSpecialization and GetSpecializationInfo then
+            local specIndex = GetSpecialization()
+            if specIndex then
+                local specID, specName = GetSpecializationInfo(specIndex)
+                if specName then
+                    print("AutoRoll: Detected spec: " .. specName)
+                else
+                    print("AutoRoll: Could not determine spec name.")
+                end
+            else
+                print("AutoRoll: No specialization selected.")
+            end
+            return
+        end
+
+        print("AutoRoll: Spec detection is not supported in this version of WoW.")
+        return
+    end
+
     -- No rules matched, print help
     print("AutoRoll - Commands")
     print("-- Adding custom rules:")
