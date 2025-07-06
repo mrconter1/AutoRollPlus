@@ -118,8 +118,6 @@ AutoRollDefaults = {
         druid_balance = {
             ["dynamic_pass_ifnotupgrade_intellect_cloth"] = true,
             ["leather"] = AutoRollUtils.ROLL.EXEMPT,
-            ["mail"] = AutoRollUtils.ROLL.EXEMPT,
-            ["plate"] = AutoRollUtils.ROLL.EXEMPT,
             ["staves"] = AutoRollUtils.ROLL.NEED,
         },
         druid_feral = {
