@@ -210,7 +210,7 @@ function AutoRollClassSpecGUI:CreateClassIcons(parent)
     
     -- Calculate proper centering for both rows (5 icons each)
     local rowWidth = (iconsPerRow * iconSize) + ((iconsPerRow - 1) * (spacing - iconSize))
-    local startX = -rowWidth / 2
+    local startX = -rowWidth / 2 + (iconSize / 2)  -- Add half icon size for proper centering
     
     local startY = -40
     local rowHeight = 65
@@ -225,38 +225,68 @@ function AutoRollClassSpecGUI:CreateClassIcons(parent)
             local col = iconIndex % iconsPerRow
             
             local button = CreateFrame("Button", nil, parent)
-            button:SetSize(iconSize, iconSize)
+            button:SetSize(iconSize + 8, iconSize + 8)  -- Slightly bigger for border effects
             button:SetPoint("TOP", parent, "TOP", startX + (col * spacing), startY - (row * rowHeight))
+            
+            -- Background glow for selection (initially hidden)
+            local selectionGlow = button:CreateTexture(nil, "BACKGROUND")
+            selectionGlow:SetSize(iconSize + 12, iconSize + 12)
+            selectionGlow:SetPoint("CENTER", button, "CENTER")
+            selectionGlow:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+            selectionGlow:SetVertexColor(1, 0.8, 0.2, 0.8)
+            selectionGlow:Hide()
+            button.selectionGlow = selectionGlow
+            
+            -- Hover glow (initially hidden)
+            local hoverGlow = button:CreateTexture(nil, "BACKGROUND")
+            hoverGlow:SetSize(iconSize + 8, iconSize + 8)
+            hoverGlow:SetPoint("CENTER", button, "CENTER")
+            hoverGlow:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+            hoverGlow:SetVertexColor(0.6, 0.6, 0.9, 0.6)
+            hoverGlow:Hide()
+            button.hoverGlow = hoverGlow
             
             -- Icon texture
             local icon = button:CreateTexture(nil, "ARTWORK")
-            icon:SetSize(iconSize - 4, iconSize - 4)  -- Slightly smaller to show border
+            icon:SetSize(iconSize - 2, iconSize - 2)  -- Slightly smaller to show border
             icon:SetPoint("CENTER", button, "CENTER")
             icon:SetTexture(classData.icon)
             button.icon = icon
             
-            -- Normal border (always visible)
-            local normalBorder = button:CreateTexture(nil, "BACKGROUND")
-            normalBorder:SetAllPoints()
+            -- Normal border (always visible, subtle)
+            local normalBorder = button:CreateTexture(nil, "BORDER")
+            normalBorder:SetSize(iconSize + 2, iconSize + 2)
+            normalBorder:SetPoint("CENTER", button, "CENTER")
             normalBorder:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-            normalBorder:SetVertexColor(0.3, 0.3, 0.4, 0.7)
+            normalBorder:SetVertexColor(0.4, 0.4, 0.5, 0.8)
             button.normalBorder = normalBorder
             
-            -- Hover border
+            -- Hover border (more prominent)
             local hoverBorder = button:CreateTexture(nil, "BORDER")
-            hoverBorder:SetAllPoints()
+            hoverBorder:SetSize(iconSize + 4, iconSize + 4)
+            hoverBorder:SetPoint("CENTER", button, "CENTER")
             hoverBorder:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-            hoverBorder:SetVertexColor(0.6, 0.6, 0.8, 0.9)
+            hoverBorder:SetVertexColor(0.7, 0.7, 1, 1)
             hoverBorder:Hide()
             button.hoverBorder = hoverBorder
             
-            -- Selected border (bright and prominent)
-            local selectedBorder = button:CreateTexture(nil, "OVERLAY")
-            selectedBorder:SetAllPoints()
-            selectedBorder:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-            selectedBorder:SetVertexColor(1, 0.8, 0.2, 1)
-            selectedBorder:Hide()
-            button.selectedBorder = selectedBorder
+            -- Selected border (very prominent with multiple layers)
+            local selectedBorder1 = button:CreateTexture(nil, "OVERLAY")
+            selectedBorder1:SetSize(iconSize + 6, iconSize + 6)
+            selectedBorder1:SetPoint("CENTER", button, "CENTER")
+            selectedBorder1:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+            selectedBorder1:SetVertexColor(1, 0.8, 0.2, 1)
+            selectedBorder1:Hide()
+            button.selectedBorder1 = selectedBorder1
+            
+            -- Second selected border layer for more prominence
+            local selectedBorder2 = button:CreateTexture(nil, "OVERLAY")
+            selectedBorder2:SetSize(iconSize + 8, iconSize + 8)
+            selectedBorder2:SetPoint("CENTER", button, "CENTER")
+            selectedBorder2:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+            selectedBorder2:SetVertexColor(1, 0.9, 0.4, 0.7)
+            selectedBorder2:Hide()
+            button.selectedBorder2 = selectedBorder2
             
             -- Class name tooltip
             button:SetScript("OnEnter", function()
@@ -265,6 +295,7 @@ function AutoRollClassSpecGUI:CreateClassIcons(parent)
                 GameTooltip:Show()
                 if not button.selected then
                     hoverBorder:Show()
+                    hoverGlow:Show()
                 end
             end)
             
@@ -272,6 +303,7 @@ function AutoRollClassSpecGUI:CreateClassIcons(parent)
                 GameTooltip:Hide()
                 if not button.selected then
                     hoverBorder:Hide()
+                    hoverGlow:Hide()
                 end
             end)
             
@@ -329,21 +361,28 @@ function AutoRollClassSpecGUI:CreateSpecButtons(classKey)
     end
 end
 
--- Class selection handler with border highlighting
+-- Class selection handler with enhanced border highlighting
 function AutoRollClassSpecGUI:OnClassSelected(classKey, className, button)
     -- Reset previous selection
     if selectedClass and classButtons[selectedClass] then
-        classButtons[selectedClass].selectedBorder:Hide()
-        classButtons[selectedClass].hoverBorder:Hide()
-        classButtons[selectedClass].selected = false
+        local prevButton = classButtons[selectedClass]
+        prevButton.selectedBorder1:Hide()
+        prevButton.selectedBorder2:Hide()
+        prevButton.selectionGlow:Hide()
+        prevButton.hoverBorder:Hide()
+        prevButton.hoverGlow:Hide()
+        prevButton.selected = false
     end
     
     selectedClass = classKey
     selectedSpec = nil
     
-    -- Highlight selected class with border
-    button.selectedBorder:Show()
+    -- Highlight selected class with enhanced borders and glow
+    button.selectedBorder1:Show()
+    button.selectedBorder2:Show()
+    button.selectionGlow:Show()
     button.hoverBorder:Hide()  -- Hide hover border when selected
+    button.hoverGlow:Hide()    -- Hide hover glow when selected
     button.selected = true
     
     -- Update status
@@ -413,7 +452,12 @@ function AutoRollClassSpecGUI:Show()
         specFrame:Hide()
     end
     for _, button in pairs(classButtons) do
-        button.selectedBorder:Hide()
+        -- Reset all highlight elements
+        if button.selectedBorder1 then button.selectedBorder1:Hide() end
+        if button.selectedBorder2 then button.selectedBorder2:Hide() end
+        if button.selectionGlow then button.selectionGlow:Hide() end
+        if button.hoverBorder then button.hoverBorder:Hide() end
+        if button.hoverGlow then button.hoverGlow:Hide() end
         button.selected = false
     end
     frame.statusText:SetText("Ready to configure")
