@@ -285,6 +285,11 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
+    if cmd == "config" or cmd == "gui" or cmd == "setup" then
+        AutoRollClassSpecGUI:Show()
+        return
+    end
+
     if cmd == "rules" then
         print("AutoRoll - Rules")
 
@@ -338,5 +343,7 @@ SlashCmdList["AR"] = function(msg)
     print("--       /ar clear ifnotupgrade <item-type> intellect")
     print("-- Test upgrade logic:")
     print("--       /ar test [item-link]")
+    print("-- Open Class/Spec configuration GUI:")
+    print("--       /ar config (or /ar gui or /ar setup)")
 
 end

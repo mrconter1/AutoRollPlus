@@ -11,3 +11,4 @@ AutoRoll.lua
 Dependencies\AddonUtils.lua
 
 Modules\SlashCommands.lua
+Modules\ClassSpecGUI.lua
