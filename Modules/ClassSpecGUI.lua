@@ -421,8 +421,68 @@ function AutoRollClassSpecGUI:Show()
     local className = detectedClass and CLASSES[detectedClass] and CLASSES[detectedClass].name or (detectedClass or "Unknown")
     local specName = detectedSpec or "Unknown"
     frame.detectedLabel:SetText("Detected your class/spec: |cffffd200"..className.."|r - |cff00ffba"..specName.."|r.\nAutoRollPlus will use the profile for this character.")
-    frame.statusText:SetText("Ready to configure")
+    frame.statusText:SetText("")
     frame.statusText:SetTextColor(0.7, 0.8, 0.9)
+
+    -- Hide all extra UI elements
+    if frame.profileKeyLabel then frame.profileKeyLabel:Hide() end
+    if frame.suggestedHeader then frame.suggestedHeader:Hide() end
+    if frame.suggestedLines then for _, line in ipairs(frame.suggestedLines) do line:Hide() end end
+    if frame.rulesSeparator then frame.rulesSeparator:Hide() end
+    if frame.rulesHeader then frame.rulesHeader:Hide() end
+    if frame.reviewNote then frame.reviewNote:Hide() end
+    if frame.rulesBg then frame.rulesBg:Hide() end
+    if frame.rulesBorder then frame.rulesBorder:Hide() end
+
+    -- Show only the rules for this profile as a bullet list
+    if frame.ruleLines then for _, line in ipairs(frame.ruleLines) do line:Hide() end end
+    frame.ruleLines = {}
+    local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey() or "(unknown)"
+    local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
+    local rulesList = {}
+    for k, v in pairs(rules) do
+        if k:find("dynamic_pass_ifnotupgrade_intellect_cloth") and v then
+            table.insert(rulesList, "PASS if not upgrade (cloth, intellect)")
+        elseif k == "leather" and v == AutoRollUtils.ROLL.EXEMPT then
+            table.insert(rulesList, "EXEMPT leather (manual roll)")
+        elseif k == "mail" and v == AutoRollUtils.ROLL.EXEMPT then
+            table.insert(rulesList, "EXEMPT mail (manual roll)")
+        elseif k == "plate" and v == AutoRollUtils.ROLL.EXEMPT then
+            table.insert(rulesList, "EXEMPT plate (manual roll)")
+        elseif k == "staves" and v == AutoRollUtils.ROLL.NEED then
+            table.insert(rulesList, "NEED staves")
+        elseif type(v) == "number" then
+            local ruleStr = AutoRollUtils:getRuleString(v)
+            table.insert(rulesList, (ruleStr:upper() or "?") .. " on " .. k)
+        elseif type(v) == "boolean" and v then
+            table.insert(rulesList, k)
+        end
+    end
+    local lastLine = frame.detectedLabel
+    local yOffset = -8
+    if #rulesList == 0 then
+        local line = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        line:SetPoint("TOP", lastLine, "BOTTOM", 0, yOffset)
+        line:SetTextColor(0.9, 0.95, 1)
+        line:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+        line:SetJustifyH("LEFT")
+        line:SetText("No rules set for this profile.")
+        line:Show()
+        table.insert(frame.ruleLines, line)
+        lastLine = line
+    else
+        for _, rule in ipairs(rulesList) do
+            local line = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            line:SetPoint("TOP", lastLine, "BOTTOM", 0, yOffset)
+            line:SetTextColor(0.9, 0.95, 1)
+            line:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+            line:SetJustifyH("LEFT")
+            line:SetText("• "..rule)
+            line:Show()
+            table.insert(frame.ruleLines, line)
+            lastLine = line
+        end
+    end
     frame:Show()
 end
 

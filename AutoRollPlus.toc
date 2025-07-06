@@ -6,9 +6,9 @@
 ## Author: CassiniEU @ Twitch.com
 ## SavedVariablesPerCharacter: AutoRollPlus_PCDB
 
-AutoRoll.lua
-
 Dependencies\AddonUtils.lua
+
+AutoRoll.lua
 
 Modules\SlashCommands.lua
 Modules\ClassSpecGUI.lua

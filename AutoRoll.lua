@@ -111,17 +111,34 @@ AutoRoll.FilterEndStrings = {
     "Idol$",
 }
 
+-- Make defaults globally accessible for GUI suggested rules
+AutoRollDefaults = {
+    ["rules"] = {},
+    ["profiles"] = {
+        druid_balance = {
+            ["dynamic_pass_ifnotupgrade_intellect_cloth"] = true,
+            ["leather"] = AutoRollUtils.ROLL.EXEMPT,
+            ["mail"] = AutoRollUtils.ROLL.EXEMPT,
+            ["plate"] = AutoRollUtils.ROLL.EXEMPT,
+            ["staves"] = AutoRollUtils.ROLL.NEED,
+        },
+        druid_feral = {
+            ["leather"] = AutoRollUtils.ROLL.NEED,
+            ["cloth"] = AutoRollUtils.ROLL.GREED,
+        },
+        -- Add more class+spec profiles as needed
+    },
+    ["printRolls"] = false,
+    ["enabled"] = true,
+    ["filterRolls"] = true,
+    ["debug"] = false,
+}
+
 do -- Private Scope
 
     local ADDON_NAME = "AutoRollPlus"
 
-    local defaults = {
-        ["rules"] = {},
-        ["printRolls"] = false,
-        ["enabled"] = true,
-        ["filterRolls"] = true,
-        ["debug"] = false,
-    }
+    local defaults = AutoRollDefaults
 
     --==============================
     -- Dynamic Upgrade Rule Helpers
@@ -213,6 +230,7 @@ do -- Private Scope
     -- INITIALIZATION
     function Init()
         LoadOptions()
+        -- (Auto-seed logic removed from here)
     end
 
     function LoadOptions()
@@ -228,10 +246,24 @@ do -- Private Scope
     function AutoRoll:onEvent(self, event, ...)
         if event == "ADDON_LOADED" then
             if select(1, ...) == ADDON_NAME then
-                Init()
+                if not AutoRollPlus_PCDB then
+                    AutoRollPlus_PCDB = {}
+                end
+                LoadOptions()
+                -- Auto-seed rules for current profile if not set
+                local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+                if profileKey and AutoRollDefaults and AutoRollDefaults.profiles and AutoRollDefaults.profiles[profileKey] then
+                    AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
+                    if not AutoRollPlus_PCDB["profiles"][profileKey] or next(AutoRollPlus_PCDB["profiles"][profileKey]) == nil then
+                        AutoRollPlus_PCDB["profiles"][profileKey] = AutoRollUtils:deepcopy(AutoRollDefaults.profiles[profileKey])
+                    end
+                end
                 PrintHelp()
             end
+            return
         end
+        -- For all other events, do nothing if AutoRollPlus_PCDB is not initialized
+        if not AutoRollPlus_PCDB then return end
 
         if AutoRoll_PCDB["enabled"] then
             if event == "START_LOOT_ROLL" then
@@ -262,8 +294,16 @@ do -- Private Scope
     end
 
     function SaveRule(key, rule)
-        -- Get Existing
-        local rules = AutoRoll_PCDB["rules"]
+        -- Get profile key
+        local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+        local rules
+        if profileKey then
+            AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
+            AutoRollPlus_PCDB["profiles"][profileKey] = AutoRollPlus_PCDB["profiles"][profileKey] or {}
+            rules = AutoRollPlus_PCDB["profiles"][profileKey]
+        else
+            rules = AutoRollPlus_PCDB["rules"]
+        end
 
         -- Make Mutations
         if (type(key) == "number") then
@@ -287,7 +327,11 @@ do -- Private Scope
         end
 
         -- Save
-        AutoRoll_PCDB["rules"] = rules
+        if profileKey then
+            AutoRollPlus_PCDB["profiles"][profileKey] = rules
+        else
+            AutoRollPlus_PCDB["rules"] = rules
+        end
     end
 
     function EvaluateActiveRolls()
@@ -423,6 +467,52 @@ do -- Private Scope
     AutoRoll.CheckItemType = CheckItemType
     AutoRoll.CheckItemRarity = CheckItemRarity
     AutoRoll.CheckRuleCombinations = CheckRuleCombinations
+
+    -- Helper to get the current profile key
+    function AutoRoll.GetCurrentProfileKey()
+        local _, classKey = UnitClass("player")
+        local specName = nil
+        if GetPrimaryTalentTree then
+            local specIndex = GetPrimaryTalentTree()
+            local classSpecs = {
+                WARRIOR = {"Arms", "Fury", "Protection"},
+                PALADIN = {"Holy", "Protection", "Retribution"},
+                HUNTER = {"Beast Mastery", "Marksmanship", "Survival"},
+                ROGUE = {"Assassination", "Combat", "Subtlety"},
+                PRIEST = {"Discipline", "Holy", "Shadow"},
+                DEATHKNIGHT = {"Blood", "Frost", "Unholy"},
+                SHAMAN = {"Elemental", "Enhancement", "Restoration"},
+                MAGE = {"Arcane", "Fire", "Frost"},
+                WARLOCK = {"Affliction", "Demonology", "Destruction"},
+                DRUID = {"Balance", "Feral", "Restoration"},
+                MONK = {"Brewmaster", "Mistweaver", "Windwalker"},
+            }
+            local specs = classSpecs[classKey]
+            if specs and specIndex and specs[specIndex] then
+                specName = specs[specIndex]
+            end
+        elseif GetSpecialization and GetSpecializationInfo then
+            local specIndex = GetSpecialization()
+            if specIndex then
+                local _, sName = GetSpecializationInfo(specIndex)
+                specName = sName
+            end
+        end
+        if classKey and specName then
+            return string.lower(classKey .. "_" .. specName):gsub("%s+", "")
+        end
+        return nil
+    end
+
+    -- Helper to get rules for current profile (or global fallback)
+    function AutoRoll.GetActiveRules()
+        if not AutoRollPlus_PCDB then return {} end
+        local key = AutoRoll.GetCurrentProfileKey()
+        if key and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][key] then
+            return AutoRollPlus_PCDB["profiles"][key]
+        end
+        return AutoRollPlus_PCDB["rules"]
+    end
 
 end
 
