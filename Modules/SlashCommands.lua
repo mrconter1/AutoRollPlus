@@ -293,27 +293,38 @@ SlashCmdList["AR"] = function(msg)
     if cmd == "rules" then
         print("AutoRoll - Rules")
 
-        local rules = AutoRoll_PCDB["rules"]
+        -- Use the same logic as AutoRoll.GetActiveRules to get the correct rules table
+        local rules = nil
+        if AutoRoll.GetActiveRules then
+            rules = AutoRoll.GetActiveRules()
+        else
+            -- fallback for legacy
+            local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+            if profileKey and AutoRollPlus_PCDB and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey] then
+                rules = AutoRollPlus_PCDB["profiles"][profileKey]
+            elseif AutoRollPlus_PCDB then
+                rules = AutoRollPlus_PCDB["rules"]
+            else
+                rules = AutoRoll_PCDB["rules"]
+            end
+        end
+
         if rules then
             local count = 0
-
             for itemId,ruleNum in pairs(rules) do
                 local _, itemLink = GetItemInfo(itemId)
                 local rule = AutoRollUtils:getRuleString(ruleNum)
-
                 if rule then
                     print(rule:upper().." on "..(itemLink or "item:"..itemId))
                 end
                 count = count + 1
             end
-
             if count == 0 then
                 print("-- You haven't added any rules yet.")
             else
                 return
             end
         end
-
     end
 
     if cmd == "detect" then
