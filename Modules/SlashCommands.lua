@@ -2,6 +2,8 @@
 SLASH_AR1 = '/ar';
 SLASH_AR2 = '/autoroll';
 
+local STAT_KEYS = AutoRollUtils.STAT_KEYS
+
 SlashCmdList["AR"] = function(msg)
     local cmd = msg:lower()
 
@@ -188,79 +190,90 @@ SlashCmdList["AR"] = function(msg)
     if string.match(cmd, "^test%s+") then
         local itemLink = string.match(cmd, "^test%s+(.+)")
         if itemLink then
-            -- Test the upgrade logic without a real roll
             local itemId = AutoRollUtils:getItemId(itemLink)
             if itemId then
                 local itemName, _, itemRarity, _, _, _, itemSubType, _, itemEquipLoc = GetItemInfo(itemId)
-                
                 print("AutoRoll Test - Item: "..(itemLink or "Unknown"))
                 print("-- Item Type: "..(itemSubType or "Unknown"))
                 print("-- Equip Location: "..(itemEquipLoc or "Unknown"))
-                
-                -- Check if item type is EXEMPT first
-                local exemptKey = itemSubType and itemSubType:lower() or ""
-                local isExempt = AutoRoll_PCDB["rules"][exemptKey] == AutoRollUtils.ROLL.EXEMPT
-                
-                print("-- EXEMPT Rule: "..(isExempt and "YES" or "NO"))
-                
-                if isExempt then
-                    print("-- RESULT: EXEMPT - Would show manual roll window")
-                    return
-                end
-                
-                -- Check if we have a dynamic rule for this item type
-                local dynamicRuleKey = "dynamic_pass_ifnotupgrade_intellect_"..(itemSubType and itemSubType:lower() or "")
-                local hasRule = AutoRoll_PCDB["rules"][dynamicRuleKey]
-                
-                print("-- Dynamic Rule Active: "..(hasRule and "YES" or "NO"))
-                
-                if hasRule then
-                    -- Simulate the upgrade check
-                    local function GetItemStatValue(link, statKey)
-                        if not link then return 0 end
-                        local stats = GetItemStats(link)
-                        return (stats and stats[statKey]) or 0
-                    end
-                    
-                    local equipSlotMap = {
-                        ["INVTYPE_HEAD"] = { 1 }, ["INVTYPE_NECK"] = { 2 }, ["INVTYPE_SHOULDER"] = { 3 },
-                        ["INVTYPE_CLOAK"] = { 15 }, ["INVTYPE_CHEST"] = { 5 }, ["INVTYPE_ROBE"] = { 5 },
-                        ["INVTYPE_WRIST"] = { 9 }, ["INVTYPE_HAND"] = { 10 }, ["INVTYPE_WAIST"] = { 6 },
-                        ["INVTYPE_LEGS"] = { 7 }, ["INVTYPE_FEET"] = { 8 }, ["INVTYPE_FINGER"] = { 11, 12 },
-                        ["INVTYPE_TRINKET"] = { 13, 14 }, ["INVTYPE_WEAPON"] = { 16, 17 },
-                        ["INVTYPE_2HWEAPON"] = { 16 }, ["INVTYPE_WEAPONMAINHAND"] = { 16 },
-                        ["INVTYPE_WEAPONOFFHAND"] = { 17 }, ["INVTYPE_HOLDABLE"] = { 17 },
-                        ["INVTYPE_SHIELD"] = { 17 }, ["INVTYPE_RANGED"] = { 18 }, ["INVTYPE_RANGEDRIGHT"] = { 18 },
-                    }
-                    
-                    local itemInt = GetItemStatValue(itemLink, "ITEM_MOD_INTELLECT_SHORT")
-                    local slots = equipSlotMap[itemEquipLoc]
-                    
-                    print("-- Item Intellect: "..itemInt)
-                    
-                    if slots then
-                        local bestEquipped = 0
-                        for _,slotID in ipairs(slots) do
-                            local equippedLink = GetInventoryItemLink("player", slotID)
-                            local equippedInt = GetItemStatValue(equippedLink, "ITEM_MOD_INTELLECT_SHORT")
-                            print("-- Slot "..slotID.." Intellect: "..equippedInt.." "..(equippedLink or "(empty)"))
-                            if equippedInt > bestEquipped then
-                                bestEquipped = equippedInt
+                -- Use the same logic as EvaluateActiveRolls
+                local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
+                local isArrayProfile = type(rules) == "table" and #rules > 0 and type(rules[1]) == "table"
+                local handled = false
+                if isArrayProfile then
+                    for _, rule in ipairs(rules) do
+                        local match = true
+                        if rule.item and rule.item:upper() ~= (itemSubType and itemSubType:upper()) then
+                            match = false
+                        end
+                        if match and rule.stat and rule.upgrade then
+                            local statKey = STAT_KEYS[rule.stat:lower()]
+                            if not statKey or not AutoRollUtils:IsItemStatUpgrade(itemLink, itemEquipLoc, statKey) then
+                                match = false
                             end
                         end
-                        
-                        print("-- Best Equipped Intellect: "..bestEquipped)
-                        
-                        if itemInt > bestEquipped then
-                            print("-- RESULT: UPGRADE - Would show roll window")
-                        else
-                            print("-- RESULT: NOT UPGRADE - Would auto-PASS")
+                        if match then
+                            print(string.format("Would take action: %s (matched rule: %s)", rule.action, (rule.item and (rule.item .. (rule.stat and ", "..rule.stat or "")) or "")))
+                            handled = true
+                            break
                         end
-                    else
-                        print("-- ERROR: Unknown equip location, can't test")
+                    end
+                    if not handled and AutoRollDefaults and AutoRollDefaults.defaultAction then
+                        print(string.format("No rule matched. Would take default action: %s", AutoRollDefaults.defaultAction:upper()))
                     end
                 else
-                    print("-- RESULT: No dynamic rule - normal rule processing")
+                    -- Legacy logic (table-based rules)
+                    local exemptKey = itemSubType and itemSubType:lower() or ""
+                    local isExempt = rules[exemptKey] == AutoRollUtils.ROLL.EXEMPT
+                    print("-- MANUAL Rule: "..(isExempt and "YES" or "NO"))
+                    if isExempt then
+                        print("-- RESULT: MANUAL - Would show manual roll window")
+                        return
+                    end
+                    local dynamicRuleKey = "dynamic_pass_ifnotupgrade_intellect_"..(itemSubType and itemSubType:lower() or "")
+                    local hasRule = rules[dynamicRuleKey]
+                    print("-- Dynamic Rule Active: "..(hasRule and "YES" or "NO"))
+                    if hasRule then
+                        local function GetItemStatValue(link, statKey)
+                            if not link then return 0 end
+                            local stats = GetItemStats(link)
+                            return (stats and stats[statKey]) or 0
+                        end
+                        local equipSlotMap = {
+                            ["INVTYPE_HEAD"] = { 1 }, ["INVTYPE_NECK"] = { 2 }, ["INVTYPE_SHOULDER"] = { 3 },
+                            ["INVTYPE_CLOAK"] = { 15 }, ["INVTYPE_CHEST"] = { 5 }, ["INVTYPE_ROBE"] = { 5 },
+                            ["INVTYPE_WRIST"] = { 9 }, ["INVTYPE_HAND"] = { 10 }, ["INVTYPE_WAIST"] = { 6 },
+                            ["INVTYPE_LEGS"] = { 7 }, ["INVTYPE_FEET"] = { 8 }, ["INVTYPE_FINGER"] = { 11, 12 },
+                            ["INVTYPE_TRINKET"] = { 13, 14 }, ["INVTYPE_WEAPON"] = { 16, 17 },
+                            ["INVTYPE_2HWEAPON"] = { 16 }, ["INVTYPE_WEAPONMAINHAND"] = { 16 },
+                            ["INVTYPE_WEAPONOFFHAND"] = { 17 }, ["INVTYPE_HOLDABLE"] = { 17 },
+                            ["INVTYPE_SHIELD"] = { 17 }, ["INVTYPE_RANGED"] = { 18 }, ["INVTYPE_RANGEDRIGHT"] = { 18 },
+                        }
+                        local itemInt = GetItemStatValue(itemLink, "ITEM_MOD_INTELLECT_SHORT")
+                        local slots = equipSlotMap[itemEquipLoc]
+                        print("-- Item Intellect: "..itemInt)
+                        if slots then
+                            local bestEquipped = 0
+                            for _,slotID in ipairs(slots) do
+                                local equippedLink = GetInventoryItemLink("player", slotID)
+                                local equippedInt = GetItemStatValue(equippedLink, "ITEM_MOD_INTELLECT_SHORT")
+                                print("-- Slot "..slotID.." Intellect: "..equippedInt.." "..(equippedLink or "(empty)"))
+                                if equippedInt > bestEquipped then
+                                    bestEquipped = equippedInt
+                                end
+                            end
+                            print("-- Best Equipped Intellect: "..bestEquipped)
+                            if itemInt > bestEquipped then
+                                print("-- RESULT: UPGRADE - Would show roll window")
+                            else
+                                print("-- RESULT: NOT UPGRADE - Would auto-PASS")
+                            end
+                        else
+                            print("-- ERROR: Unknown equip location, can't test")
+                        end
+                    else
+                        print("-- RESULT: No dynamic rule - normal rule processing")
+                    end
                 end
             else
                 print("AutoRoll Test - ERROR: Invalid item link")
@@ -309,6 +322,29 @@ SlashCmdList["AR"] = function(msg)
             end
         end
 
+        -- Detect new array-of-objects format
+        if type(rules) == "table" and #rules > 0 and type(rules[1]) == "table" then
+            local count = 0
+            for _, rule in ipairs(rules) do
+                if rule.item and rule.stat and rule.upgrade and rule.action then
+                    print(string.format("%s if %s and item is an %s upgrade", rule.action, rule.item, rule.stat))
+                    count = count + 1
+                elseif rule.item and rule.action then
+                    print(string.format("%s on %s", rule.action, rule.item))
+                    count = count + 1
+                end
+            end
+            -- Print default action as fallback
+            if AutoRollDefaults and AutoRollDefaults.defaultAction then
+                print(string.format("Otherwise, auto-%s", AutoRollDefaults.defaultAction:upper()))
+            end
+            if count == 0 then
+                print("-- You haven't added any rules yet.")
+            end
+            return
+        end
+
+        -- Legacy table rules
         if rules then
             local count = 0
             for itemId,ruleNum in pairs(rules) do

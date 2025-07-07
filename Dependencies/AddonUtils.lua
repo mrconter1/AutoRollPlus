@@ -17,6 +17,11 @@ AutoRollUtils = {
     }
 }
 
+AutoRollUtils.STAT_KEYS = {
+    intellect = "ITEM_MOD_INTELLECT_SHORT",
+    -- Add more stat mappings as needed
+}
+
 function AutoRollUtils:modulus(a,b)
     return a - math.floor(a/b)*b
 end
@@ -108,4 +113,50 @@ function AutoRollUtils:getRarityIntegerFromString(str)
     end
 
     return -1
+end
+
+function AutoRollUtils:IsItemStatUpgrade(itemLink, equipLoc, statKey)
+    local function GetItemStatValue(itemLink, statKey)
+        if not itemLink then return 0 end
+        local stats = GetItemStats(itemLink)
+        if stats and stats[statKey] then
+            return stats[statKey]
+        end
+        return 0
+    end
+    local itemStat = GetItemStatValue(itemLink, statKey)
+    local equipSlotMap = {
+        ["INVTYPE_HEAD"]            = { 1 },
+        ["INVTYPE_NECK"]            = { 2 },
+        ["INVTYPE_SHOULDER"]        = { 3 },
+        ["INVTYPE_CLOAK"]           = { 15 },
+        ["INVTYPE_CHEST"]           = { 5 },
+        ["INVTYPE_ROBE"]            = { 5 },
+        ["INVTYPE_WRIST"]           = { 9 },
+        ["INVTYPE_HAND"]            = { 10 },
+        ["INVTYPE_WAIST"]           = { 6 },
+        ["INVTYPE_LEGS"]            = { 7 },
+        ["INVTYPE_FEET"]            = { 8 },
+        ["INVTYPE_FINGER"]          = { 11, 12 },
+        ["INVTYPE_TRINKET"]         = { 13, 14 },
+        ["INVTYPE_WEAPON"]          = { 16, 17 },
+        ["INVTYPE_2HWEAPON"]        = { 16 },
+        ["INVTYPE_WEAPONMAINHAND"]  = { 16 },
+        ["INVTYPE_WEAPONOFFHAND"]   = { 17 },
+        ["INVTYPE_HOLDABLE"]        = { 17 },
+        ["INVTYPE_SHIELD"]          = { 17 },
+        ["INVTYPE_RANGED"]          = { 18 },
+        ["INVTYPE_RANGEDRIGHT"]     = { 18 },
+    }
+    local slots = equipSlotMap[equipLoc]
+    if not slots then return false end
+    local bestEquipped = 0
+    for _,slotID in ipairs(slots) do
+        local equippedLink = GetInventoryItemLink("player", slotID)
+        local equippedStat = GetItemStatValue(equippedLink, statKey)
+        if equippedStat > bestEquipped then
+            bestEquipped = equippedStat
+        end
+    end
+    return itemStat > bestEquipped
 end

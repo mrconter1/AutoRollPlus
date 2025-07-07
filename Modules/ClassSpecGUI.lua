@@ -31,7 +31,7 @@ function AutoRollClassSpecGUI:CreateFrame()
 
     -- Main frame with bigger dimensions
     frame = CreateFrame("Frame", "AutoRollClassSpecFrame", UIParent)
-    frame:SetSize(600, 240)
+    frame:SetSize(700, 400)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     
     -- Background using a nicer texture
@@ -48,7 +48,7 @@ function AutoRollClassSpecGUI:CreateFrame()
     
     -- Top accent bar
     local topBar = frame:CreateTexture(nil, "ARTWORK")
-    topBar:SetSize(600, 3)
+    topBar:SetSize(700, 3)
     topBar:SetPoint("TOP", frame, "TOP", 0, 0)
     topBar:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
     topBar:SetVertexColor(0.2, 0.6, 1, 1)
@@ -80,9 +80,20 @@ function AutoRollClassSpecGUI:CreateFrame()
     statusText:SetFont("Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
     frame.statusText = statusText
 
+    -- ScrollFrame for rules
+    local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
+    scrollFrame:SetPoint("TOPLEFT", frame, "TOPLEFT", 30, -140)
+    scrollFrame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -30, 80)
+    frame.rulesScrollFrame = scrollFrame
+
+    local rulesContent = CreateFrame("Frame", nil, scrollFrame)
+    rulesContent:SetSize(1, 1) -- Will be resized dynamically
+    scrollFrame:SetScrollChild(rulesContent)
+    frame.rulesContent = rulesContent
+
     -- Button section with proper alignment
     local buttonSection = CreateFrame("Frame", nil, frame)
-    buttonSection:SetSize(560, 50)
+    buttonSection:SetSize(660, 50)
     buttonSection:SetPoint("BOTTOM", frame, "BOTTOM", 0, 15)
 
     -- Cancel Button (left side)
@@ -434,54 +445,70 @@ function AutoRollClassSpecGUI:Show()
     if frame.rulesBg then frame.rulesBg:Hide() end
     if frame.rulesBorder then frame.rulesBorder:Hide() end
 
-    -- Show only the rules for this profile as a bullet list
-    if frame.ruleLines then for _, line in ipairs(frame.ruleLines) do line:Hide() end end
-    frame.ruleLines = {}
+    -- Show only the rules for this profile as a scrollable list
+    local rulesContent = frame.rulesContent
+    for _, child in ipairs({rulesContent:GetChildren()}) do child:Hide() end
     local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey() or "(unknown)"
-    local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
     local rulesList = {}
-    for k, v in pairs(rules) do
-        if k:find("dynamic_pass_ifnotupgrade_intellect_cloth") and v then
-            table.insert(rulesList, "PASS if not upgrade (cloth, intellect)")
-        elseif k == "leather" and v == AutoRollUtils.ROLL.EXEMPT then
-            table.insert(rulesList, "EXEMPT leather (manual roll)")
-        elseif k == "mail" and v == AutoRollUtils.ROLL.EXEMPT then
-            table.insert(rulesList, "EXEMPT mail (manual roll)")
-        elseif k == "plate" and v == AutoRollUtils.ROLL.EXEMPT then
-            table.insert(rulesList, "EXEMPT plate (manual roll)")
-        elseif k == "staves" and v == AutoRollUtils.ROLL.NEED then
-            table.insert(rulesList, "NEED staves")
-        elseif type(v) == "number" then
-            local ruleStr = AutoRollUtils:getRuleString(v)
-            table.insert(rulesList, (ruleStr:upper() or "?") .. " on " .. k)
-        elseif type(v) == "boolean" and v then
-            table.insert(rulesList, k)
+    if profileKey == "priest_discipline" then
+        local profile = AutoRollDefaults and AutoRollDefaults.profiles and AutoRollDefaults.profiles["priest_discipline"] or {}
+        for _, rule in ipairs(profile) do
+            if type(rule) == "table" and rule.item and rule.stat and rule.upgrade and rule.action then
+                table.insert(rulesList, string.format("%s if %s and item is an %s upgrade", rule.action, rule.item, rule.stat))
+            end
+        end
+        -- Add the default action as the last line
+        if AutoRollDefaults and AutoRollDefaults.defaultAction then
+            table.insert(rulesList, string.format("Otherwise, auto-%s", AutoRollDefaults.defaultAction:upper()))
+        end
+    else
+        local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
+        for k, v in pairs(rules) do
+            if k:find("dynamic_pass_ifnotupgrade_intellect_cloth") and v then
+                table.insert(rulesList, "PASS if not upgrade (cloth, intellect)")
+            elseif k == "leather" and v == AutoRollUtils.ROLL.EXEMPT then
+                table.insert(rulesList, "EXEMPT leather (manual roll)")
+            elseif k == "mail" and v == AutoRollUtils.ROLL.EXEMPT then
+                table.insert(rulesList, "EXEMPT mail (manual roll)")
+            elseif k == "plate" and v == AutoRollUtils.ROLL.EXEMPT then
+                table.insert(rulesList, "EXEMPT plate (manual roll)")
+            elseif k == "staves" and v == AutoRollUtils.ROLL.NEED then
+                table.insert(rulesList, "NEED staves")
+            elseif type(v) == "number" then
+                local ruleStr = AutoRollUtils:getRuleString(v)
+                table.insert(rulesList, (ruleStr:upper() or "?") .. " on " .. k)
+            elseif type(v) == "boolean" and v then
+                table.insert(rulesList, k)
+            end
         end
     end
-    local lastLine = frame.detectedLabel
-    local yOffset = -8
-    if #rulesList == 0 then
-        local line = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        line:SetPoint("TOP", lastLine, "BOTTOM", 0, yOffset)
+    -- Remove old rule lines
+    if frame.ruleLines then for _, line in ipairs(frame.ruleLines) do line:Hide() end end
+    frame.ruleLines = {}
+    -- Render rules in scrollable content
+    local yOffset = -10
+    local lastLine = nil
+    for i, rule in ipairs(rulesList) do
+        local line = rulesContent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         line:SetTextColor(0.9, 0.95, 1)
-        line:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+        line:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
         line:SetJustifyH("LEFT")
-        line:SetText("No rules set for this profile.")
+        line:SetText("• "..rule)
+        if i == 1 then
+            line:SetPoint("TOPLEFT", rulesContent, "TOPLEFT", 0, 0)
+        else
+            line:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", 0, yOffset)
+        end
         line:Show()
         table.insert(frame.ruleLines, line)
         lastLine = line
+    end
+    -- Resize content frame to fit all lines
+    if lastLine then
+        local _, _, _, _, y = lastLine:GetPoint()
+        rulesContent:SetHeight(math.abs(y) + 40)
     else
-        for _, rule in ipairs(rulesList) do
-            local line = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-            line:SetPoint("TOP", lastLine, "BOTTOM", 0, yOffset)
-            line:SetTextColor(0.9, 0.95, 1)
-            line:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
-            line:SetJustifyH("LEFT")
-            line:SetText("• "..rule)
-            line:Show()
-            table.insert(frame.ruleLines, line)
-            lastLine = line
-        end
+        rulesContent:SetHeight(40)
     end
     frame:Show()
 end
