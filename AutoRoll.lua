@@ -124,6 +124,11 @@ AutoRollDefaults = {
             ["leather"] = AutoRollUtils.ROLL.NEED,
             ["cloth"] = AutoRollUtils.ROLL.GREED,
         },
+        priest_discipline = {
+            ["dynamic_pass_ifnotupgrade_intellect_cloth"] = true,
+            ["leather"] = AutoRollUtils.ROLL.EXEMPT,
+            -- Add more rules as needed
+        },
         -- Add more class+spec profiles as needed
     },
     ["printRolls"] = false,
@@ -256,13 +261,20 @@ do -- Private Scope
                     AutoRollPlus_PCDB = {}
                 end
                 LoadOptions()
-                -- Auto-seed rules for current profile if not set
+                -- Always reset rules for current profile to defaults (if any)
                 local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+                print("[AutoRoll Debug] Detected profileKey:", profileKey)
                 if profileKey and AutoRollDefaults and AutoRollDefaults.profiles and AutoRollDefaults.profiles[profileKey] then
+                    print("[AutoRoll Debug] Setting defaults for profile:", profileKey)
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
-                    if not AutoRollPlus_PCDB["profiles"][profileKey] or next(AutoRollPlus_PCDB["profiles"][profileKey]) == nil then
-                        AutoRollPlus_PCDB["profiles"][profileKey] = AutoRollUtils:deepcopy(AutoRollDefaults.profiles[profileKey])
+                    -- Clear any old rules for this profile
+                    AutoRollPlus_PCDB["profiles"][profileKey] = {}
+                    -- Set to defaults
+                    for k, v in pairs(AutoRollDefaults.profiles[profileKey]) do
+                        AutoRollPlus_PCDB["profiles"][profileKey][k] = v
                     end
+                else
+                    print("[AutoRoll Debug] No defaults found for profile:", profileKey)
                 end
                 PrintHelp()
             end
