@@ -419,7 +419,7 @@ do -- Private Scope
                         RollOnLoot(RollID, AutoRollUtils.ROLL.GREED)
                         handled = true
                     elseif action == "PASS" then
-                        if AutoRoll_PCDB["printRolls"] then
+                if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: DEFAULT PASS on "..(itemLink or "item:"..itemId))
                         end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.PASS)
@@ -433,73 +433,73 @@ do -- Private Scope
                 if rules[manualKey] == AutoRollUtils.ROLL.EXEMPT then
                     if AutoRoll_PCDB["printRolls"] then
                         print("AutoRoll: MANUAL required for "..(itemLink or "item:"..itemId))
+                end
+                -- Don't roll anything, let manual window appear
+                handled = true
+            end
+
+            if not handled then
+                -- Dynamic rule: PASS if not an Intellect upgrade for this item sub-type
+                local dynamicRuleKey = "dynamic_pass_ifnotupgrade_intellect_"..(itemSubType and itemSubType:lower() or "")
+                if rules[dynamicRuleKey] then
+                    if not IsItemStatUpgrade(itemLink, itemEquipLoc, STAT_KEYS.intellect) then
+                        if AutoRoll_PCDB["printRolls"] then
+                            print("AutoRoll: PASS (not an Intellect upgrade) on "..(itemLink or "item:"..itemId))
+                        end
+                        RollOnLoot(RollID, AutoRollUtils.ROLL.PASS)
+                        handled = true
                     end
-                    -- Don't roll anything, let manual window appear
-                    handled = true
+                end
+            end
+
+            if not handled then
+                -- start by checking the exact item ID
+                local ruleKey = itemId
+                local rule = rules[ruleKey]
+
+                -- In case it's not found, check rule combinations
+                if not rule then
+                    if itemRarity and itemSubType then
+                        local rarity = AutoRollUtils:getRarityStringFromInteger(itemRarity)
+                        if rarity then
+                            ruleKey = rarity.."%+"..itemSubType:lower()
+                            rule = rules[ruleKey]
+                        end
+                    end
                 end
 
-                if not handled then
-                    -- Dynamic rule: PASS if not an Intellect upgrade for this item sub-type
-                    local dynamicRuleKey = "dynamic_pass_ifnotupgrade_intellect_"..(itemSubType and itemSubType:lower() or "")
-                    if rules[dynamicRuleKey] then
-                        if not IsItemStatUpgrade(itemLink, itemEquipLoc, STAT_KEYS.intellect) then
+                -- In case it's not found, check item sub type
+                if not rule then
+                    if itemSubType then
+                        ruleKey = itemSubType:lower()
+                        rule = rules[ruleKey]
+                    end
+                end
+
+                -- In case it's not found, check item rarity
+                if not rule then
+                    if itemRarity then
+                        ruleKey = AutoRollUtils:getRarityStringFromInteger(itemRarity)
+                        rule = rules[ruleKey]
+                    end
+                end
+
+                -- Proceed only if we found an established rule
+                if rule then
+                    if rule > -1 then
+                        local shouldRoll = (rule == AutoRollUtils.ROLL.NEED and canNeed) or (rule == AutoRollUtils.ROLL.GREED and canGreed) or (rule == AutoRollUtils.ROLL.PASS)
+
+                        if shouldRoll then
                             if AutoRoll_PCDB["printRolls"] then
-                                print("AutoRoll: PASS (not an Intellect upgrade) on "..(itemLink or "item:"..itemId))
+                                local ruleString = AutoRollUtils:getRuleString(AutoRoll_PCDB["rules"][ruleKey])
+                                print("AutoRoll: "..ruleString:upper().." on "..GetLootRollItemLink(RollID))
                             end
-                            RollOnLoot(RollID, AutoRollUtils.ROLL.PASS)
-                            handled = true
+
+                            RollOnLoot(RollID, rule)
                         end
                     end
                 end
-
-                if not handled then
-                    -- start by checking the exact item ID
-                    local ruleKey = itemId
-                    local rule = rules[ruleKey]
-
-                    -- In case it's not found, check rule combinations
-                    if not rule then
-                        if itemRarity and itemSubType then
-                            local rarity = AutoRollUtils:getRarityStringFromInteger(itemRarity)
-                            if rarity then
-                                ruleKey = rarity.."%+"..itemSubType:lower()
-                                rule = rules[ruleKey]
-                            end
-                        end
-                    end
-
-                    -- In case it's not found, check item sub type
-                    if not rule then
-                        if itemSubType then
-                            ruleKey = itemSubType:lower()
-                            rule = rules[ruleKey]
-                        end
-                    end
-
-                    -- In case it's not found, check item rarity
-                    if not rule then
-                        if itemRarity then
-                            ruleKey = AutoRollUtils:getRarityStringFromInteger(itemRarity)
-                            rule = rules[ruleKey]
-                        end
-                    end
-
-                    -- Proceed only if we found an established rule
-                    if rule then
-                        if rule > -1 then
-                            local shouldRoll = (rule == AutoRollUtils.ROLL.NEED and canNeed) or (rule == AutoRollUtils.ROLL.GREED and canGreed) or (rule == AutoRollUtils.ROLL.PASS)
-
-                            if shouldRoll then
-                                if AutoRoll_PCDB["printRolls"] then
-                                    local ruleString = AutoRollUtils:getRuleString(AutoRoll_PCDB["rules"][ruleKey])
-                                    print("AutoRoll: "..ruleString:upper().." on "..GetLootRollItemLink(RollID))
-                                end
-
-                                RollOnLoot(RollID, rule)
-                            end
-                        end
-                    end
-                end -- not handled
+            end -- not handled
             end
         end
     end

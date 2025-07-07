@@ -485,28 +485,64 @@ function AutoRollClassSpecGUI:Show()
     -- Remove old rule lines
     if frame.ruleLines then for _, line in ipairs(frame.ruleLines) do line:Hide() end end
     frame.ruleLines = {}
-    -- Render rules in scrollable content
-    local yOffset = -10
-    local lastLine = nil
+    if frame.ruleRowFrames then for _, row in ipairs(frame.ruleRowFrames) do row:Hide() end end
+    frame.ruleRowFrames = {}
+    -- Render rules in scrollable content as table-like rows
+    local yOffset = -2
+    local lastRow = nil
+    local rowHeight = 32
     for i, rule in ipairs(rulesList) do
-        local line = rulesContent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        line:SetTextColor(0.9, 0.95, 1)
-        line:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
-        line:SetJustifyH("LEFT")
-        line:SetText("• "..rule)
-        if i == 1 then
-            line:SetPoint("TOPLEFT", rulesContent, "TOPLEFT", 0, 0)
-        else
-            line:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", 0, yOffset)
+        local row = frame.ruleRowFrames and frame.ruleRowFrames[i] or nil
+        if not row then
+            row = CreateFrame("Frame", nil, rulesContent)
+            row:SetHeight(rowHeight)
+            row:SetWidth(620)
+            -- Background
+            local bg = row:CreateTexture(nil, "BACKGROUND")
+            bg:SetAllPoints()
+            if i % 2 == 0 then
+                bg:SetColorTexture(0.18, 0.22, 0.32, 0.85)
+            else
+                bg:SetColorTexture(0.13, 0.16, 0.22, 0.85)
+            end
+            row.bg = bg
+            -- Border
+            local border = row:CreateTexture(nil, "BORDER")
+            border:SetAllPoints()
+            border:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+            border:SetVertexColor(0.25, 0.35, 0.55, 0.7)
+            row.border = border
+            -- Rule text
+            local text = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            text:SetTextColor(0.95, 0.98, 1)
+            text:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+            text:SetJustifyH("LEFT")
+            text:SetPoint("LEFT", row, "LEFT", 12, 0)
+            text:SetPoint("RIGHT", row, "RIGHT", -12, 0)
+            row.text = text
+            frame.ruleRowFrames = frame.ruleRowFrames or {}
+            table.insert(frame.ruleRowFrames, row)
         end
-        line:Show()
-        table.insert(frame.ruleLines, line)
-        lastLine = line
+        row.text:SetText(rule)
+        row:ClearAllPoints()
+        if i == 1 then
+            row:SetPoint("TOPLEFT", rulesContent, "TOPLEFT", 0, 0)
+        else
+            row:SetPoint("TOPLEFT", lastRow, "BOTTOMLEFT", 0, yOffset)
+        end
+        row:Show()
+        lastRow = row
     end
-    -- Resize content frame to fit all lines
-    if lastLine then
-        local _, _, _, _, y = lastLine:GetPoint()
-        rulesContent:SetHeight(math.abs(y) + 40)
+    -- Hide any extra row frames
+    if frame.ruleRowFrames then
+        for i = #rulesList+1, #frame.ruleRowFrames do
+            frame.ruleRowFrames[i]:Hide()
+        end
+    end
+    -- Resize content frame to fit all rows
+    if lastRow then
+        local _, _, _, _, y = lastRow:GetPoint()
+        rulesContent:SetHeight(math.abs(y) + (#rulesList * rowHeight) + 10)
     else
         rulesContent:SetHeight(40)
     end
