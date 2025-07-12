@@ -502,62 +502,135 @@ function AutoRollClassSpecGUI:Show()
     frame.ruleLines = {}
     if frame.ruleRowFrames then for _, row in ipairs(frame.ruleRowFrames) do row:Hide() end end
     frame.ruleRowFrames = {}
-    -- Render rules in scrollable content as table-like rows
+    -- Render rules as a table with three columns: Item Type, Greed, Need
     local yOffset = -2
     local lastRow = nil
     local rowHeight = 32
-    for i, rule in ipairs(rulesList) do
-        local row = frame.ruleRowFrames and frame.ruleRowFrames[i] or nil
-        if not row then
-            row = CreateFrame("Frame", nil, rulesContent)
-            row:SetHeight(rowHeight)
-            row:SetWidth(620)
-            -- Background
-            local bg = row:CreateTexture(nil, "BACKGROUND")
-            bg:SetAllPoints()
-            if i % 2 == 0 then
-                bg:SetColorTexture(0.18, 0.22, 0.32, 0.85)
-            else
-                bg:SetColorTexture(0.13, 0.16, 0.22, 0.85)
+    local col1Width, col2Width, col3Width = 320, 120, 120
+    -- Header row
+    if not frame.rulesHeaderRow then
+        local header = CreateFrame("Frame", nil, rulesContent)
+        header:SetHeight(rowHeight)
+        header:SetWidth(620)
+        local bg = header:CreateTexture(nil, "BACKGROUND")
+        bg:SetAllPoints()
+        bg:SetColorTexture(0.22, 0.28, 0.38, 0.95)
+        local border = header:CreateTexture(nil, "BORDER")
+        border:SetAllPoints()
+        border:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+        border:SetVertexColor(0.35, 0.45, 0.65, 0.9)
+        local col1 = header:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        col1:SetText("Item Type")
+        col1:SetTextColor(1, 1, 1)
+        col1:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+        col1:SetPoint("LEFT", header, "LEFT", 18, 0)
+        col1:SetWidth(col1Width)
+        col1:SetJustifyH("LEFT")
+        local col2 = header:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        col2:SetText("Greed")
+        col2:SetTextColor(0.2, 1, 0.2)
+        col2:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+        col2:SetPoint("LEFT", header, "LEFT", col1Width + 40, 0)
+        col2:SetWidth(col2Width)
+        col2:SetJustifyH("CENTER")
+        local col3 = header:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        col3:SetText("Need")
+        col3:SetTextColor(0.2, 0.6, 1)
+        col3:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+        col3:SetPoint("LEFT", header, "LEFT", col1Width + col2Width + 60, 0)
+        col3:SetWidth(col3Width)
+        col3:SetJustifyH("CENTER")
+        frame.rulesHeaderRow = header
+    end
+    frame.rulesHeaderRow:SetPoint("TOPLEFT", rulesContent, "TOPLEFT", 0, 0)
+    frame.rulesHeaderRow:Show()
+    lastRow = frame.rulesHeaderRow
+    -- Render each rule as a table row
+    local rowIdx = 1
+    for _, rule in ipairs(rulesList) do
+        local itemType, action = nil, nil
+        if rule:find(" on ") then
+            action, itemType = rule:match("^(%w+) on (.+)$")
+        elseif rule:find(" if ") then
+            action, itemType = rule:match("^(%w+) if (.+)$")
+        end
+        if itemType and action then
+            local row = frame.ruleRowFrames and frame.ruleRowFrames[rowIdx] or nil
+            if not row then
+                row = CreateFrame("Frame", nil, rulesContent)
+                row:SetHeight(rowHeight)
+                row:SetWidth(620)
+                -- Background
+                local bg = row:CreateTexture(nil, "BACKGROUND")
+                bg:SetAllPoints()
+                if rowIdx % 2 == 0 then
+                    bg:SetColorTexture(0.18, 0.22, 0.32, 0.85)
+                else
+                    bg:SetColorTexture(0.13, 0.16, 0.22, 0.85)
+                end
+                row.bg = bg
+                -- Border
+                local border = row:CreateTexture(nil, "BORDER")
+                border:SetAllPoints()
+                border:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
+                border:SetVertexColor(0.25, 0.35, 0.55, 0.7)
+                row.border = border
+                -- Item Type text
+                local col1 = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                col1:SetTextColor(0.95, 0.98, 1)
+                col1:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+                col1:SetJustifyH("LEFT")
+                col1:SetPoint("LEFT", row, "LEFT", 18, 0)
+                col1:SetWidth(col1Width)
+                row.col1 = col1
+                -- Greed icon
+                local greedIcon = row:CreateTexture(nil, "ARTWORK")
+                greedIcon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+                greedIcon:SetSize(20, 20)
+                greedIcon:SetPoint("CENTER", row, "LEFT", col1Width + 40 + col2Width/2, 0)
+                greedIcon:Hide()
+                row.greedIcon = greedIcon
+                -- Need icon
+                local needIcon = row:CreateTexture(nil, "ARTWORK")
+                needIcon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+                needIcon:SetSize(20, 20)
+                needIcon:SetPoint("CENTER", row, "LEFT", col1Width + col2Width + 60 + col3Width/2, 0)
+                needIcon:Hide()
+                row.needIcon = needIcon
+                frame.ruleRowFrames = frame.ruleRowFrames or {}
+                table.insert(frame.ruleRowFrames, row)
             end
-            row.bg = bg
-            -- Border
-            local border = row:CreateTexture(nil, "BORDER")
-            border:SetAllPoints()
-            border:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-            border:SetVertexColor(0.25, 0.35, 0.55, 0.7)
-            row.border = border
-            -- Rule text
-            local text = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-            text:SetTextColor(0.95, 0.98, 1)
-            text:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
-            text:SetJustifyH("LEFT")
-            text:SetPoint("LEFT", row, "LEFT", 12, 0)
-            text:SetPoint("RIGHT", row, "RIGHT", -12, 0)
-            row.text = text
-            frame.ruleRowFrames = frame.ruleRowFrames or {}
-            table.insert(frame.ruleRowFrames, row)
+            row.col1:SetText(itemType)
+            row.greedIcon:Hide()
+            row.needIcon:Hide()
+            if action:upper() == "GREED" then
+                row.greedIcon:SetVertexColor(0.2, 1, 0.2, 1)
+                row.greedIcon:Show()
+            elseif action:upper() == "NEED" then
+                row.needIcon:SetVertexColor(0.2, 0.6, 1, 1)
+                row.needIcon:Show()
+            end
+            row:ClearAllPoints()
+            if rowIdx == 1 then
+                row:SetPoint("TOPLEFT", lastRow, "BOTTOMLEFT", 0, yOffset)
+            else
+                row:SetPoint("TOPLEFT", frame.ruleRowFrames[rowIdx-1], "BOTTOMLEFT", 0, yOffset)
+            end
+            row:Show()
+            lastRow = row
+            rowIdx = rowIdx + 1
         end
-        row.text:SetText(rule)
-        row:ClearAllPoints()
-        if i == 1 then
-            row:SetPoint("TOPLEFT", rulesContent, "TOPLEFT", 0, 0)
-        else
-            row:SetPoint("TOPLEFT", lastRow, "BOTTOMLEFT", 0, yOffset)
-        end
-        row:Show()
-        lastRow = row
     end
     -- Hide any extra row frames
     if frame.ruleRowFrames then
-        for i = #rulesList+1, #frame.ruleRowFrames do
+        for i = rowIdx, #frame.ruleRowFrames do
             frame.ruleRowFrames[i]:Hide()
         end
     end
     -- Resize content frame to fit all rows
     if lastRow then
         local _, _, _, _, y = lastRow:GetPoint()
-        rulesContent:SetHeight(math.abs(y) + (#rulesList * rowHeight) + 10)
+        rulesContent:SetHeight(math.abs(y) + (rowIdx * rowHeight) + 10)
     else
         rulesContent:SetHeight(40)
     end
