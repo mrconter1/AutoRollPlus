@@ -126,37 +126,16 @@ AutoRollDefaults = {
         },
         -- Hunter profiles (all specs)
         hunter_beastmastery = {
-            { item = "LEATHER", stat = "AGILITY", upgrade = true, action = "MANUAL", levelMax = 39 },
-            { item = "MAIL", stat = "AGILITY", upgrade = true, action = "MANUAL", levelMin = 40 },
-            { item = "BOWS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "GUNS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "RING", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "MANUAL" }
+            { item = "ONE-HANDED SWORDS", action = "GREED" },
+            { item = "TWO-HANDED SWORDS", action = "GREED" },
         },
         hunter_marksmanship = {
-            { item = "LEATHER", stat = "AGILITY", upgrade = true, action = "MANUAL", levelMax = 39 },
-            { item = "MAIL", stat = "AGILITY", upgrade = true, action = "MANUAL", levelMin = 40 },
-            { item = "BOWS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "GUNS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "RING", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "MANUAL" }
+            { item = "ONE-HANDED SWORDS", action = "GREED" },
+            { item = "TWO-HANDED SWORDS", action = "GREED" },
         },
         hunter_survival = {
-            { item = "LEATHER", stat = "AGILITY", upgrade = true, action = "MANUAL", levelMax = 39 },
-            { item = "MAIL", stat = "AGILITY", upgrade = true, action = "MANUAL", levelMin = 40 },
-            { item = "BOWS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "GUNS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "RING", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "MANUAL" },
-            { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "MANUAL" }
+            { item = "ONE-HANDED SWORDS", action = "GREED" },
+            { item = "TWO-HANDED SWORDS", action = "GREED" },
         },
         -- Add more class+spec profiles as needed
     },
@@ -292,9 +271,7 @@ do -- Private Scope
                 LoadOptions()
                 -- Always reset rules for current profile to defaults (if any)
                 local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
-                print("[AutoRoll Debug] Detected profileKey:", profileKey)
                 if profileKey and AutoRollDefaults and AutoRollDefaults.profiles and AutoRollDefaults.profiles[profileKey] then
-                    print("[AutoRoll Debug] Setting defaults for profile:", profileKey)
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
                     -- Clear any old rules for this profile
                     AutoRollPlus_PCDB["profiles"][profileKey] = {}
@@ -302,8 +279,6 @@ do -- Private Scope
                     for k, v in pairs(AutoRollDefaults.profiles[profileKey]) do
                         AutoRollPlus_PCDB["profiles"][profileKey][k] = v
                     end
-                else
-                    print("[AutoRoll Debug] No defaults found for profile:", profileKey)
                 end
                 PrintHelp()
             end
@@ -368,7 +343,8 @@ do -- Private Scope
                 print("Removed rule for "..key)
                 rules[key:lower()] = nil
             else
-                rules[key:lower()] = AutoRollUtils:getRuleValue(rule)
+                local value = AutoRollUtils:getRuleValue(rule)
+                rules[key:lower()] = value
                 print("Remembered "..rule:upper().." on "..key)
             end
         end

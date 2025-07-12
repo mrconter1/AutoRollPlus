@@ -23,6 +23,23 @@ SlashCmdList["AR"] = function(msg)
     end
 
     if (rule == "need") or (rule == "greed") or (rule == "pass") or (rule == "exempt") then
+        -- Item Link Rules
+        if itemIdString then
+            AutoRoll.SaveRule(itemIdString, rule)
+            return
+        end
+
+        -- Remove alias support for multi-type weapons (maces, swords, axes)
+        -- Users must now specify the full subtype, e.g., 'one-handed maces' or 'two-handed maces'
+
+        -- Multi-word item type support: join all words after the rule
+        local itemType = string.match(cmd, "^"..rule.."%s+(.+)$")
+        if itemType then
+            AutoRoll.SaveRule(itemType:lower(), rule)
+            print("AutoRoll - "..rule:upper().." on "..itemType)
+            return
+        end
+
         -- NEW FEATURE: "/ar exempt <item-type> [<item-type> ...]"
         -- Example: /ar exempt leather staves
         -- This will set EXEMPT rules so these items always show manual roll window
@@ -46,12 +63,6 @@ SlashCmdList["AR"] = function(msg)
                 print("AutoRoll - PASS on non-upgrade "..itemType.." ("..stat..") items enabled.")
                 return
             end
-        end
-
-        -- Item Link Rules
-        if itemIdString then
-            AutoRoll.SaveRule(itemIdString, rule)
-            return
         end
 
         -- Item Rarity + Item Type Rules
@@ -344,14 +355,20 @@ SlashCmdList["AR"] = function(msg)
             return
         end
 
-        -- Legacy table rules
+        -- Legacy table rules (numeric and string keys)
         if rules then
             local count = 0
             for itemId,ruleNum in pairs(rules) do
-                local _, itemLink = GetItemInfo(itemId)
-                local rule = AutoRollUtils:getRuleString(ruleNum)
-                if rule then
-                    print(rule:upper().." on "..(itemLink or "item:"..itemId))
+                local rule = AutoRollUtils and AutoRollUtils.getRuleString and AutoRollUtils:getRuleString(ruleNum) or tostring(ruleNum)
+                if tonumber(itemId) then
+                    local _, itemLink = GetItemInfo(itemId)
+                    if rule then
+                        print(rule:upper().." on "..(itemLink or "item:"..itemId))
+                    end
+                else
+                    if rule then
+                        print(rule:upper().." on "..tostring(itemId))
+                    end
                 end
                 count = count + 1
             end
