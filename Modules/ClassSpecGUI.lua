@@ -31,7 +31,7 @@ function AutoRollClassSpecGUI:CreateFrame()
 
     -- Main frame with bigger dimensions
     frame = CreateFrame("Frame", "AutoRollClassSpecFrame", UIParent)
-    frame:SetSize(700, 400)
+    frame:SetSize(900, 600)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     
     -- Background using a nicer texture
@@ -82,8 +82,8 @@ function AutoRollClassSpecGUI:CreateFrame()
 
     -- ScrollFrame for rules
     local scrollFrame = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
-    scrollFrame:SetPoint("TOPLEFT", frame, "TOPLEFT", 30, -140)
-    scrollFrame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -30, 80)
+    scrollFrame:SetPoint("TOPLEFT", frame, "TOPLEFT", 20, -120)
+    scrollFrame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -20, 70)
     frame.rulesScrollFrame = scrollFrame
 
     local rulesContent = CreateFrame("Frame", nil, scrollFrame)
@@ -503,18 +503,19 @@ function AutoRollClassSpecGUI:Show()
     if frame.ruleRowFrames then for _, row in ipairs(frame.ruleRowFrames) do row:Hide() end end
     frame.ruleRowFrames = {}
     -- Render rules as a table with three columns: Item Type, Greed, Need
-    local yOffset = -2
+    local yOffset = 0
     local lastRow = nil
-    local rowHeight = 32
-    local col1Width, col2Width, col3Width = 320, 120, 120
+    local rowHeight = 24
+    local tableWidth = frame:GetWidth() - 60
+    local col1Width, col2Width, col3Width = math.floor(tableWidth * 0.65), math.floor(tableWidth * 0.175), math.floor(tableWidth * 0.175)
     -- Header row
     if not frame.rulesHeaderRow then
         local header = CreateFrame("Frame", nil, rulesContent)
-        header:SetHeight(rowHeight)
-        header:SetWidth(620)
+        header:SetHeight(rowHeight+2)
+        header:SetWidth(tableWidth)
         local bg = header:CreateTexture(nil, "BACKGROUND")
         bg:SetAllPoints()
-        bg:SetColorTexture(0.22, 0.28, 0.38, 0.95)
+        bg:SetColorTexture(0.18, 0.22, 0.32, 1)
         local border = header:CreateTexture(nil, "BORDER")
         border:SetAllPoints()
         border:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
@@ -522,26 +523,33 @@ function AutoRollClassSpecGUI:Show()
         local col1 = header:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
         col1:SetText("Item Type")
         col1:SetTextColor(1, 1, 1)
-        col1:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
-        col1:SetPoint("LEFT", header, "LEFT", 18, 0)
+        col1:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+        col1:SetPoint("LEFT", header, "LEFT", 16, 0)
         col1:SetWidth(col1Width)
         col1:SetJustifyH("LEFT")
         local col2 = header:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
         col2:SetText("Greed")
         col2:SetTextColor(0.2, 1, 0.2)
-        col2:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
-        col2:SetPoint("LEFT", header, "LEFT", col1Width + 40, 0)
+        col2:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+        col2:SetPoint("LEFT", header, "LEFT", col1Width + 8, 0)
         col2:SetWidth(col2Width)
         col2:SetJustifyH("CENTER")
         local col3 = header:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
         col3:SetText("Need")
         col3:SetTextColor(0.2, 0.6, 1)
-        col3:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
-        col3:SetPoint("LEFT", header, "LEFT", col1Width + col2Width + 60, 0)
+        col3:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+        col3:SetPoint("LEFT", header, "LEFT", col1Width + col2Width + 16, 0)
         col3:SetWidth(col3Width)
         col3:SetJustifyH("CENTER")
+        -- Add a thin line below the header
+        local sep = header:CreateTexture(nil, "ARTWORK")
+        sep:SetColorTexture(0.3, 0.35, 0.45, 0.85)
+        sep:SetHeight(1)
+        sep:SetPoint("BOTTOMLEFT", header, "BOTTOMLEFT", 2, 0)
+        sep:SetPoint("BOTTOMRIGHT", header, "BOTTOMRIGHT", -2, 0)
         frame.rulesHeaderRow = header
     end
+    frame.rulesHeaderRow:SetWidth(tableWidth)
     frame.rulesHeaderRow:SetPoint("TOPLEFT", rulesContent, "TOPLEFT", 0, 0)
     frame.rulesHeaderRow:Show()
     lastRow = frame.rulesHeaderRow
@@ -559,47 +567,49 @@ function AutoRollClassSpecGUI:Show()
             if not row then
                 row = CreateFrame("Frame", nil, rulesContent)
                 row:SetHeight(rowHeight)
-                row:SetWidth(620)
-                -- Background
+                row:SetWidth(tableWidth)
+                -- Alternating row color
                 local bg = row:CreateTexture(nil, "BACKGROUND")
                 bg:SetAllPoints()
                 if rowIdx % 2 == 0 then
-                    bg:SetColorTexture(0.18, 0.22, 0.32, 0.85)
+                    bg:SetColorTexture(0.15, 0.18, 0.26, 0.93)
                 else
-                    bg:SetColorTexture(0.13, 0.16, 0.22, 0.85)
+                    bg:SetColorTexture(0.11, 0.13, 0.19, 0.93)
                 end
                 row.bg = bg
-                -- Border
-                local border = row:CreateTexture(nil, "BORDER")
-                border:SetAllPoints()
-                border:SetTexture("Interface\\Tooltips\\UI-Tooltip-Border")
-                border:SetVertexColor(0.25, 0.35, 0.55, 0.7)
-                row.border = border
+                -- Thin line at bottom of each row
+                local sep = row:CreateTexture(nil, "ARTWORK")
+                sep:SetColorTexture(0.22, 0.25, 0.32, 0.7)
+                sep:SetHeight(1)
+                sep:SetPoint("BOTTOMLEFT", row, "BOTTOMLEFT", 2, 0)
+                sep:SetPoint("BOTTOMRIGHT", row, "BOTTOMRIGHT", -2, 0)
+                row.sep = sep
                 -- Item Type text
                 local col1 = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
                 col1:SetTextColor(0.95, 0.98, 1)
-                col1:SetFont("Fonts\\FRIZQT__.TTF", 15, "OUTLINE")
+                col1:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
                 col1:SetJustifyH("LEFT")
-                col1:SetPoint("LEFT", row, "LEFT", 18, 0)
+                col1:SetPoint("LEFT", row, "LEFT", 16, 0)
                 col1:SetWidth(col1Width)
                 row.col1 = col1
                 -- Greed icon
                 local greedIcon = row:CreateTexture(nil, "ARTWORK")
                 greedIcon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
-                greedIcon:SetSize(20, 20)
-                greedIcon:SetPoint("CENTER", row, "LEFT", col1Width + 40 + col2Width/2, 0)
+                greedIcon:SetSize(16, 16)
+                greedIcon:SetPoint("CENTER", row, "LEFT", col1Width + col2Width/2 + 8, 0)
                 greedIcon:Hide()
                 row.greedIcon = greedIcon
                 -- Need icon
                 local needIcon = row:CreateTexture(nil, "ARTWORK")
                 needIcon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
-                needIcon:SetSize(20, 20)
-                needIcon:SetPoint("CENTER", row, "LEFT", col1Width + col2Width + 60 + col3Width/2, 0)
+                needIcon:SetSize(16, 16)
+                needIcon:SetPoint("CENTER", row, "LEFT", col1Width + col2Width + col3Width/2 + 16, 0)
                 needIcon:Hide()
                 row.needIcon = needIcon
                 frame.ruleRowFrames = frame.ruleRowFrames or {}
                 table.insert(frame.ruleRowFrames, row)
             end
+            row:SetWidth(tableWidth)
             row.col1:SetText(itemType)
             row.greedIcon:Hide()
             row.needIcon:Hide()
