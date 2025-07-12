@@ -380,6 +380,19 @@ SlashCmdList["AR"] = function(msg)
         end
     end
 
+    if cmd == "apply hunter" then
+        local greedTypes = {
+            "one-handed swords", "two-handed swords", "one-handed maces", "two-handed maces", "one-handed axes", "two-handed axes", "daggers", "polearms", "staves", "fist weapons", "wands", "thrown", "spears",
+            "plate", "cloth", "shields", "librams", "idols", "totems", "sigils", "trade goods", "miscellaneous",
+            "rings", "trinkets", "necklaces", "cloaks"
+        }
+        for _, t in ipairs(greedTypes) do
+            AutoRoll.SaveRule(t, "greed")
+        end
+        print("AutoRoll: Applied GREED rules for all standard hunter non-NEED types.")
+        return
+    end
+
     if cmd == "clearall" then
         local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
         if profileKey and AutoRollPlus_PCDB and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey] then
