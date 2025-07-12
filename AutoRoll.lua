@@ -113,7 +113,7 @@ AutoRoll.FilterEndStrings = {
 
 -- Make defaults globally accessible for GUI suggested rules
 AutoRollDefaults = {
-    defaultAction = "GREED",
+    -- defaultAction = "GREED", -- Removed default auto-greed fallback
     ["rules"] = {},
     ["profiles"] = {
         priest_discipline = {
