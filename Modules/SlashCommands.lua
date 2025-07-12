@@ -363,6 +363,20 @@ SlashCmdList["AR"] = function(msg)
         end
     end
 
+    if cmd == "clearall" then
+        local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+        if profileKey and AutoRollPlus_PCDB and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey] then
+            AutoRollPlus_PCDB["profiles"][profileKey] = {}
+            print("AutoRoll: Cleared all rules for profile: " .. profileKey)
+        elseif AutoRollPlus_PCDB and AutoRollPlus_PCDB["rules"] then
+            AutoRollPlus_PCDB["rules"] = {}
+            print("AutoRoll: Cleared all global rules.")
+        else
+            print("AutoRoll: No rules to clear.")
+        end
+        return
+    end
+
     if cmd == "classspec" then
         -- Print the player's class and spec
         local _, classKey = UnitClass("player")
