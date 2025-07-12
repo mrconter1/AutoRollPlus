@@ -418,6 +418,43 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
+    if cmd == "classspec" then
+        -- Print the player's class and spec
+        local _, classKey = UnitClass("player")
+        local specName = nil
+        -- MoP: Use GetPrimaryTalentTree if available
+        if GetPrimaryTalentTree then
+            local specIndex = GetPrimaryTalentTree()
+            local classSpecs = {
+                WARRIOR = {"Arms", "Fury", "Protection"},
+                PALADIN = {"Holy", "Protection", "Retribution"},
+                HUNTER = {"Beast Mastery", "Marksmanship", "Survival"},
+                ROGUE = {"Assassination", "Combat", "Subtlety"},
+                PRIEST = {"Discipline", "Holy", "Shadow"},
+                DEATHKNIGHT = {"Blood", "Frost", "Unholy"},
+                SHAMAN = {"Elemental", "Enhancement", "Restoration"},
+                MAGE = {"Arcane", "Fire", "Frost"},
+                WARLOCK = {"Affliction", "Demonology", "Destruction"},
+                DRUID = {"Balance", "Feral", "Restoration"},
+                MONK = {"Brewmaster", "Mistweaver", "Windwalker"},
+            }
+            local specs = classSpecs[classKey]
+            if specs and specIndex and specs[specIndex] then
+                specName = specs[specIndex]
+            end
+        elseif GetSpecialization and GetSpecializationInfo then
+            local specIndex = GetSpecialization()
+            if specIndex then
+                local _, sName = GetSpecializationInfo(specIndex)
+                specName = sName
+            end
+        end
+        local _, localizedClass = UnitClass("player")
+        print("AutoRoll: Your class is " .. (localizedClass or classKey or "Unknown"))
+        print("AutoRoll: Your spec is " .. (specName or "Unknown"))
+        return
+    end
+
     -- No rules matched, print help
     print("AutoRoll - Commands")
     print("-- Adding custom rules:")
