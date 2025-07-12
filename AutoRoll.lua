@@ -124,6 +124,40 @@ AutoRollDefaults = {
             { item = "NECKLACE", stat = "INTELLECT", upgrade = true, action = "MANUAL" },
             { item = "CLOAK",    stat = "INTELLECT", upgrade = true, action = "MANUAL" }
         },
+        -- Hunter profiles (all specs)
+        hunter_beastmastery = {
+            { item = "LEATHER", stat = "AGILITY", upgrade = true, action = "NEED", levelMax = 39 },
+            { item = "MAIL", stat = "AGILITY", upgrade = true, action = "NEED", levelMin = 40 },
+            { item = "BOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "GUNS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "RING", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "NEED" }
+        },
+        hunter_marksmanship = {
+            { item = "LEATHER", stat = "AGILITY", upgrade = true, action = "NEED", levelMax = 39 },
+            { item = "MAIL", stat = "AGILITY", upgrade = true, action = "NEED", levelMin = 40 },
+            { item = "BOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "GUNS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "RING", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "NEED" }
+        },
+        hunter_survival = {
+            { item = "LEATHER", stat = "AGILITY", upgrade = true, action = "NEED", levelMax = 39 },
+            { item = "MAIL", stat = "AGILITY", upgrade = true, action = "NEED", levelMin = 40 },
+            { item = "BOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "GUNS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "RING", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "NEED" },
+            { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "NEED" }
+        },
         -- Add more class+spec profiles as needed
     },
     ["printRolls"] = false,
@@ -357,6 +391,7 @@ do -- Private Scope
             local itemName, itemLink, itemRarity, _, _, _, itemSubType, _, itemEquipLoc = GetItemInfo(itemId)
             local handled = false
             if isArrayProfile then
+                local playerLevel = UnitLevel("player")
                 -- New format: iterate rules array
                 for _, rule in ipairs(rules) do
                     local match = true
@@ -370,6 +405,13 @@ do -- Private Scope
                         if not statKey or not IsItemStatUpgrade(itemLink, itemEquipLoc, statKey) then
                             match = false
                         end
+                    end
+                    -- Check levelMin/levelMax if present
+                    if match and rule.levelMin and playerLevel < rule.levelMin then
+                        match = false
+                    end
+                    if match and rule.levelMax and playerLevel > rule.levelMax then
+                        match = false
                     end
                     if match then
                         -- Apply action

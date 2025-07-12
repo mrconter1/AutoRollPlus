@@ -455,6 +455,12 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
+    if cmd == "level" then
+        local level = UnitLevel("player")
+        print("AutoRoll: Your level is " .. tostring(level))
+        return
+    end
+
     -- No rules matched, print help
     print("AutoRoll - Commands")
     print("-- Adding custom rules:")
