@@ -145,6 +145,7 @@ do -- Private Scope
     local STAT_KEYS = {
         intellect = "ITEM_MOD_INTELLECT_SHORT",
         agility = "ITEM_MOD_AGILITY_SHORT",
+        strength = "ITEM_MOD_STRENGTH_SHORT",
         armor = "ITEM_MOD_ARMOR_SHORT",
     }
 
@@ -776,6 +777,26 @@ do -- Private Scope
             return subType == "crossbow"
         elseif itemType == "staff" then
             return subType == "staff"
+        elseif itemType == "one-handed sword" then
+            return subType == "one-handed sword"
+        elseif itemType == "two-handed sword" then
+            return subType == "two-handed sword"
+        elseif itemType == "one-handed axe" then
+            return subType == "one-handed axe"
+        elseif itemType == "two-handed axe" then
+            return subType == "two-handed axe"
+        elseif itemType == "one-handed mace" then
+            return subType == "one-handed mace"
+        elseif itemType == "two-handed mace" then
+            return subType == "two-handed mace"
+        elseif itemType == "polearm" then
+            return subType == "polearm"
+        elseif itemType == "dagger" then
+            return subType == "dagger"
+        elseif itemType == "fist weapon" then
+            return subType == "fist weapon"
+        elseif itemType == "shield" then
+            return subType == "shield"
         -- Accessories
         elseif itemType == "ring" then
             return equipLoc == "INVTYPE_FINGER"

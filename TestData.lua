@@ -274,6 +274,241 @@ AutoRollTestProfiles = {
                 expectedResult = "PASS"
             }
         }
+    },
+    
+    dps_warrior = {
+        ruleScript = {
+            "IF item.type == 'mail' AND user.level < 40 AND item.strength.isUpgrade() THEN need",
+            "IF item.type == 'plate' AND user.level >= 40 AND item.strength.isUpgrade() THEN need",
+            "IF (item.type == 'one-handed sword' OR item.type == 'two-handed sword' OR item.type == 'one-handed axe' OR item.type == 'two-handed axe' OR item.type == 'one-handed mace' OR item.type == 'two-handed mace' OR item.type == 'polearm' OR item.type == 'dagger' OR item.type == 'fist weapon') AND item.strength.isUpgrade() THEN need",
+            "IF (item.type == 'ring' OR item.type == 'trinket' OR item.type == 'necklace' OR item.type == 'cloak') AND item.strength.isUpgrade() THEN need",
+            "ELSE greed"
+        },
+        scenarios = {
+            {
+                name = "mail upgrade at low level",
+                player = {
+                    level = 35,
+                    class = "WARRIOR",
+                    spec = "Arms"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 16,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "plate upgrade at high level",
+                player = {
+                    level = 45,
+                    class = "WARRIOR",
+                    spec = "Arms"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "two-handed sword upgrade",
+                player = {
+                    level = 50,
+                    class = "WARRIOR",
+                    spec = "Arms"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Two-Handed Sword",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 18 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "ring upgrade",
+                player = {
+                    level = 55,
+                    class = "WARRIOR",
+                    spec = "Fury"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 14,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 10 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "non-upgrade fallback to greed",
+                player = {
+                    level = 45,
+                    class = "WARRIOR",
+                    spec = "Arms"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 18 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+    
+    tank_warrior = {
+        ruleScript = {
+            "IF item.type == 'mail' AND user.level < 40 AND item.strength.isUpgrade() THEN need",
+            "IF item.type == 'plate' AND user.level >= 40 AND item.strength.isUpgrade() THEN need",
+            "IF (item.type == 'one-handed sword' OR item.type == 'two-handed sword' OR item.type == 'one-handed axe' OR item.type == 'two-handed axe' OR item.type == 'one-handed mace' OR item.type == 'two-handed mace' OR item.type == 'polearm' OR item.type == 'dagger' OR item.type == 'fist weapon') AND item.strength.isUpgrade() THEN need",
+            "IF item.type == 'shield' AND item.strength.isUpgrade() THEN need",
+            "IF (item.type == 'ring' OR item.type == 'trinket' OR item.type == 'necklace' OR item.type == 'cloak') AND item.strength.isUpgrade() THEN need",
+            "ELSE greed"
+        },
+        scenarios = {
+            {
+                name = "mail upgrade at low level",
+                player = {
+                    level = 35,
+                    class = "WARRIOR",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 16,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "plate upgrade at high level",
+                player = {
+                    level = 45,
+                    class = "WARRIOR",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "shield upgrade",
+                player = {
+                    level = 50,
+                    class = "WARRIOR",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Shield",
+                    itemEquipLoc = "INVTYPE_SHIELD",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 14 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "one-handed mace upgrade",
+                player = {
+                    level = 55,
+                    class = "WARRIOR",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "One-Handed Mace",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "non-upgrade fallback to greed",
+                player = {
+                    level = 45,
+                    class = "WARRIOR",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Shield",
+                    itemEquipLoc = "INVTYPE_SHIELD",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
     }
 }
  
