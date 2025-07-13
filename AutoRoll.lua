@@ -111,20 +111,8 @@ AutoRoll.FilterEndStrings = {
     "Idol$",
 }
 
--- Make defaults globally accessible for GUI suggested rules
-AutoRollDefaults = {
-    -- defaultAction = "GREED", -- Removed default auto-greed fallback
-    ["rules"] = {},
-    ["profiles"] = {
-        priest_discipline = {
-            { item = "CLOTH",    stat = "INTELLECT", upgrade = true, action = "MANUAL" },
-            { item = "STAVES",   stat = "INTELLECT", upgrade = true, action = "MANUAL" },
-            { item = "RING",     stat = "INTELLECT", upgrade = true, action = "MANUAL" },
-            { item = "TRINKET",  stat = "INTELLECT", upgrade = true, action = "MANUAL" },
-            { item = "NECKLACE", stat = "INTELLECT", upgrade = true, action = "MANUAL" },
-            { item = "CLOAK",    stat = "INTELLECT", upgrade = true, action = "MANUAL" }
-        },
-    },
+-- Simple defaults
+local defaults = {
     ["printRolls"] = false,
     ["enabled"] = true,
     ["filterRolls"] = true,
@@ -134,8 +122,6 @@ AutoRollDefaults = {
 do -- Private Scope
 
     local ADDON_NAME = "AutoRollPlus"
-
-    local defaults = AutoRollDefaults
 
     --==============================
     -- Dynamic Upgrade Rule Helpers
@@ -240,41 +226,12 @@ do -- Private Scope
                 AutoRoll_PCDB[key] = value
             end
         end
-        -- Convert legacy table rules to array format for all profiles and global rules
-        if AutoRollPlus_PCDB and AutoRollPlus_PCDB["profiles"] then
-            for profileKey, rules in pairs(AutoRollPlus_PCDB["profiles"]) do
-                if type(rules) ~= "table" or type(rules[1]) ~= "table" then
-                    local newRules = {}
-                    if type(rules) == "table" then
-                        for k, v in pairs(rules) do
-                            if type(k) == "string" and type(v) == "number" then
-                                local action = AutoRollUtils and AutoRollUtils.getRuleString and AutoRollUtils:getRuleString(v)
-                                if action then
-                                    table.insert(newRules, { item = k:upper(), action = action:upper() })
-                                end
-                            end
-                        end
-                    end
-                    AutoRollPlus_PCDB["profiles"][profileKey] = newRules
-                end
-            end
+        -- Initialize profiles if not exists
+        if not AutoRollPlus_PCDB then
+            AutoRollPlus_PCDB = {}
         end
-        if AutoRollPlus_PCDB and AutoRollPlus_PCDB["rules"] then
-            local rules = AutoRollPlus_PCDB["rules"]
-            if type(rules) ~= "table" or type(rules[1]) ~= "table" then
-                local newRules = {}
-                if type(rules) == "table" then
-                    for k, v in pairs(rules) do
-                        if type(k) == "string" and type(v) == "number" then
-                            local action = AutoRollUtils and AutoRollUtils.getRuleString and AutoRollUtils:getRuleString(v)
-                            if action then
-                                table.insert(newRules, { item = k:upper(), action = action:upper() })
-                            end
-                        end
-                    end
-                end
-                AutoRollPlus_PCDB["rules"] = newRules
-            end
+        if not AutoRollPlus_PCDB["profiles"] then
+            AutoRollPlus_PCDB["profiles"] = {}
         end
     end
 
@@ -357,57 +314,7 @@ do -- Private Scope
         print("--       /ar IGNORE [item-link]")
     end
 
-    function SaveRule(key, rule)
-        -- Always use array-of-objects format for rules
-        local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
-        local rules
-        if profileKey then
-            AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
-            AutoRollPlus_PCDB["profiles"][profileKey] = AutoRollPlus_PCDB["profiles"][profileKey] or {}
-            rules = AutoRollPlus_PCDB["profiles"][profileKey]
-        else
-            AutoRollPlus_PCDB["rules"] = AutoRollPlus_PCDB["rules"] or {}
-            rules = AutoRollPlus_PCDB["rules"]
-        end
-        if type(rules) ~= "table" or type(rules[1]) ~= "table" then
-            rules = {}
-            if profileKey then
-                AutoRollPlus_PCDB["profiles"][profileKey] = rules
-            else
-                AutoRollPlus_PCDB["rules"] = rules
-            end
-        end
-        -- Remove rule if rule == nil
-        if rule == nil then
-            for i = #rules, 1, -1 do
-                if rules[i].item and rules[i].item:lower() == key:lower() then
-                    table.remove(rules, i)
-                end
-            end
-            print("Removed rule for "..key)
-        else
-            -- Add or update rule
-            local found = false
-            local actionString = rule:upper()
-            for i, r in ipairs(rules) do
-                if r.item and r.item:lower() == key:lower() then
-                    r.action = actionString
-                    found = true
-                    print("Updated "..rule:upper().." on "..key)
-                    break
-                end
-            end
-            if not found then
-                table.insert(rules, { item = key:upper(), action = actionString })
-                print("Remembered "..rule:upper().." on "..key)
-            end
-        end
-        if profileKey then
-            AutoRollPlus_PCDB["profiles"][profileKey] = rules
-        else
-            AutoRollPlus_PCDB["rules"] = rules
-        end
-    end
+
 
     --==============================
     -- Rule Parser and Evaluator
@@ -985,113 +892,11 @@ do -- Private Scope
                     end
                 end
             end
-            
-            -- Fallback to legacy array-of-objects format for rules
-            if not handled then
-                local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
-                if type(rules) == "table" and type(rules[1]) == "table" then
-            local playerLevel = UnitLevel("player")
-            for _, rule in ipairs(rules) do
-                local match = true
-                if rule.item and rule.item:upper() ~= (itemSubType and itemSubType:upper()) then
-                    match = false
-                end
-                if match and rule.stat and rule.upgrade then
-                    local statKey = STAT_KEYS[rule.stat:lower()]
-                    if not statKey or not IsItemStatUpgrade(itemLink, itemEquipLoc, statKey) then
-                        match = false
-                    end
-                end
-                if match and rule.levelMin and playerLevel < rule.levelMin then
-                    match = false
-                end
-                if match and rule.levelMax and playerLevel > rule.levelMax then
-                    match = false
-                end
-                if match then
-                    if rule.action == "MANUAL" or rule.action == "manualRoll" or rule.action == "MANUALROLL" then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: MANUAL required for "..(itemLink or "item:"..itemId))
-                        end
-                        handled = true
-                        break
-                    elseif (rule.action == "NEED" or rule.action == "rollNeed" or rule.action == "ROLLNEED") and canNeed then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: NEED on "..(itemLink or "item:"..itemId))
-                        end
-                        RollOnLoot(RollID, AutoRollUtils.ROLL.NEED)
-                        handled = true
-                        break
-                    elseif (rule.action == "GREED" or rule.action == "rollGreed" or rule.action == "ROLLGREED") and canGreed then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: GREED on "..(itemLink or "item:"..itemId))
-                        end
-                        RollOnLoot(RollID, AutoRollUtils.ROLL.GREED)
-                        handled = true
-                        break
-                    elseif rule.action == "PASS" or rule.action == "rollPass" or rule.action == "ROLLPASS" then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: PASS on "..(itemLink or "item:"..itemId))
-                        end
-                        RollOnLoot(RollID, AutoRollUtils.ROLL.PASS)
-                        handled = true
-                        break
-                            end
-                        end
-                    end
-                end
-            end
+
         end
     end
 
-    function CheckItemType(cmd, rule)
-        return SaveIfFound(cmd, rule, "cloth")
-        or SaveIfFound(cmd, rule, "leather")
-        or SaveIfFound(cmd, rule, "mail")
-        or SaveIfFound(cmd, rule, "plate")
-        or SaveIfFound(cmd, rule, "shields")
-        or SaveIfFound(cmd, rule, "trade goods")
-        or SaveIfFound(cmd, rule, "miscellaneous")
-    end
 
-    function CheckItemRarity(cmd, rule)
-        return SaveIfFound(cmd, rule, "poor")
-        or SaveIfFound(cmd, rule, "uncommon")
-        or SaveIfFound(cmd, rule, "common")
-        or SaveIfFound(cmd, rule, "rare")
-        or SaveIfFound(cmd, rule, "epic")
-        or SaveIfFound(cmd, rule, "legendary")
-    end
-
-    function SaveIfFound(cmd, rule, keyword)
-        if string.match(cmd, keyword) then
-            AutoRoll.SaveRule(keyword, rule)
-            return true
-        end
-        return false
-    end
-
-    function CheckRuleCombinations(cmd, rule)
-        for _,itemRarity in ipairs(AutoRoll.ItemRarities) do
-            for _,itemType in ipairs(AutoRoll.ItemSubTypes) do
-                if CheckRuleCombination(cmd, rule, itemRarity, itemType) then
-                    return true
-                end
-            end
-        end
-        return false
-    end
-
-    function CheckRuleCombination(cmd, rule, itemRarity, itemType)
-        local keyword = itemRarity:lower().."%+"..itemType:lower()
-        return SaveIfFound(cmd, rule, keyword)
-    end
-
-    -- Expose Functions
-    AutoRoll.SaveRule = SaveRule
-    AutoRoll.CheckItemType = CheckItemType
-    AutoRoll.CheckItemRarity = CheckItemRarity
-    AutoRoll.CheckRuleCombinations = CheckRuleCombinations
 
     -- Helper to get the current profile key
     function AutoRoll.GetCurrentProfileKey()
@@ -1127,16 +932,6 @@ do -- Private Scope
             return string.lower(classKey .. "_" .. specName):gsub("%s+", "")
         end
         return nil
-    end
-
-    -- Helper to get rules for current profile (or global fallback)
-    function AutoRoll.GetActiveRules()
-        if not AutoRollPlus_PCDB then return {} end
-        local key = AutoRoll.GetCurrentProfileKey()
-        if key and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][key] then
-            return AutoRollPlus_PCDB["profiles"][key]
-        end
-        return AutoRollPlus_PCDB["rules"]
     end
 
 end

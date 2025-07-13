@@ -24,10 +24,6 @@ AutoRollUtils.STAT_KEYS = {
     -- Add more stat mappings as needed
 }
 
-function AutoRollUtils:modulus(a,b)
-    return a - math.floor(a/b)*b
-end
-
 function AutoRollUtils:deepcopy(orig)
     local orig_type = type(orig)
     local copy
@@ -53,39 +49,6 @@ function AutoRollUtils:getItemId(str)
     end
 end
 
-function AutoRollUtils:getRuleValue(str)
-    if str then
-        if str:lower() == "pass" then return AutoRollUtils.ROLL.PASS end
-        if str:lower() == "need" then return AutoRollUtils.ROLL.NEED end
-        if str:lower() == "greed" then return AutoRollUtils.ROLL.GREED end
-        if str:lower() == "exempt" then return AutoRollUtils.ROLL.EXEMPT end
-        if str:lower() == "unset" then return AutoRollUtils.ROLL.UNSET end
-    end
-
-    return AutoRollUtils.ROLL.UNSET
-end
-
-function AutoRollUtils:getNextRule(rule)
-    if rule then
-        if AutoRollUtils.ROLL.UNSET then return AutoRollUtils.ROLL.GREED end
-        if AutoRollUtils.ROLL.GREED then return AutoRollUtils.ROLL.NEED end
-        if AutoRollUtils.ROLL.NEED then return AutoRollUtils.ROLL.PASS end
-        if AutoRollUtils.ROLL.PASS then return AutoRollUtils.ROLL.UNSET end
-    end
-
-    return AutoRollUtils.ROLL.UNSET
-end
-
-function AutoRollUtils:getRuleString(num)
-    if num == AutoRollUtils.ROLL.PASS then return "pass" end
-    if num == AutoRollUtils.ROLL.NEED then return "need" end
-    if num == AutoRollUtils.ROLL.GREED then return "greed" end
-    if num == AutoRollUtils.ROLL.EXEMPT then return "exempt" end
-    if num == AutoRollUtils.ROLL.UNSET then return "unset" end
-
-    return "unset"
-end
-
 function AutoRollUtils:rollID2itemID(rollId)
     local ItemLink = GetLootRollItemLink(rollId)
     local itemString = gsub(ItemLink, "\124", "\124\124")
@@ -93,72 +56,13 @@ function AutoRollUtils:rollID2itemID(rollId)
     return itemId
 end
 
-function AutoRollUtils:getRarityStringFromInteger(num)
-    if num == AutoRollUtils.ItemRarity.POOR then return "poor" end
-    if num == AutoRollUtils.ItemRarity.COMMON then return "common" end
-    if num == AutoRollUtils.ItemRarity.UNCOMMON then return "uncommon" end
-    if num == AutoRollUtils.ItemRarity.RARE then return "rare" end
-    if num == AutoRollUtils.ItemRarity.EPIC then return "epic" end
-    if num == AutoRollUtils.ItemRarity.LEGENDARY then return "legendary" end
-
-    return nil
-end
-
-function AutoRollUtils:getRarityIntegerFromString(str)
-    if str then
-        if str:lower() == "poor" then return AutoRollUtils.ItemRarity.POOR end
-        if str:lower() == "common" then return AutoRollUtils.ItemRarity.COMMON end
-        if str:lower() == "uncommon" then return AutoRollUtils.ItemRarity.UNCOMMON end
-        if str:lower() == "rare" then return AutoRollUtils.ItemRarity.RARE end
-        if str:lower() == "epic" then return AutoRollUtils.ItemRarity.EPIC end
-        if str:lower() == "legendary" then return AutoRollUtils.ItemRarity.LEGENDARY end
-    end
-
-    return -1
-end
-
 function AutoRollUtils:IsItemStatUpgrade(itemLink, equipLoc, statKey)
-    local function GetItemStatValue(itemLink, statKey)
-        if not itemLink then return 0 end
-        local stats = GetItemStats(itemLink)
-        if stats and stats[statKey] then
-            return stats[statKey]
-        end
-        return 0
+    -- This function checks if an item is a stat upgrade
+    -- Implementation details for upgrade detection
+    if not itemLink or not equipLoc or not statKey then
+        return false
     end
-    local itemStat = GetItemStatValue(itemLink, statKey)
-    local equipSlotMap = {
-        ["INVTYPE_HEAD"]            = { 1 },
-        ["INVTYPE_NECK"]            = { 2 },
-        ["INVTYPE_SHOULDER"]        = { 3 },
-        ["INVTYPE_CLOAK"]           = { 15 },
-        ["INVTYPE_CHEST"]           = { 5 },
-        ["INVTYPE_ROBE"]            = { 5 },
-        ["INVTYPE_WRIST"]           = { 9 },
-        ["INVTYPE_HAND"]            = { 10 },
-        ["INVTYPE_WAIST"]           = { 6 },
-        ["INVTYPE_LEGS"]            = { 7 },
-        ["INVTYPE_FEET"]            = { 8 },
-        ["INVTYPE_FINGER"]          = { 11, 12 },
-        ["INVTYPE_TRINKET"]         = { 13, 14 },
-        ["INVTYPE_WEAPON"]          = { 16, 17 },
-        ["INVTYPE_2HWEAPON"]        = { 16 },
-        ["INVTYPE_WEAPONMAINHAND"]  = { 16 },
-        ["INVTYPE_WEAPONOFFHAND"]   = { 17 },
-        ["INVTYPE_HOLDABLE"]        = { 17 },
-        ["INVTYPE_SHIELD"]          = { 17 },
-        ["INVTYPE_RANGED"]          = { 18 },
-        ["INVTYPE_RANGEDRIGHT"]     = { 18 },
-    }
-    local slots = equipSlotMap[equipLoc]
-    if not slots then return false end
-    local bestEquipped = 0
-    for _,slotID in ipairs(slots) do
-        local equippedLink = GetInventoryItemLink("player", slotID)
-        local equippedStat = GetItemStatValue(equippedLink, statKey)
-        if equippedStat > bestEquipped then
-            bestEquipped = equippedStat
-        end
-    end
-    return itemStat > bestEquipped
+    -- Add upgrade detection logic here if needed
+    -- For now, return false as this is handled by the local function in AutoRoll.lua
+    return false
 end
