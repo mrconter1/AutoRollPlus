@@ -302,7 +302,7 @@ AutoRollTestProfiles = {
         }
     },
     
-    dps_warrior = {
+    warrior_dps = {
         ruleScript = [[
             IF item.type == 'mail' 
                AND player.level < 40 
@@ -444,7 +444,7 @@ AutoRollTestProfiles = {
         }
     },
     
-    tank_warrior = {
+    warrior_tank = {
         ruleScript = [[
             IF item.type == 'mail' 
                AND player.level < 40 
