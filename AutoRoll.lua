@@ -267,11 +267,7 @@ do -- Private Scope
     function PrintHelp()
         local colorHex = "2979ff"
         print("|cff"..colorHex.."AutoRoll loaded")
-        print("-- Use the following commands: ")
-        print("--       /ar NEED [item-link]")
-        print("--       /ar GREED [item-link]")
-        print("--       /ar PASS [item-link]")
-        print("--       /ar IGNORE [item-link]")
+        print("-- Use /ar for available commands")
     end
 
 

@@ -21,43 +21,35 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 
 ## 🎮 Usage
 
-### Original Commands
+### Available Commands
 ```
 /ar rules                    # List all rules
-/ar pass/greed/need [item]   # Set item rules
-/ar greed leather           # Set item type rules
 /ar enable/disable          # Toggle addon
-```
-
-### New Enhanced Commands
-```
-# Smart upgrade detection
-/ar pass ifnotupgrade cloth intellect    # Auto-pass cloth that isn't INT upgrade
-
-# Manual override system  
-/ar exempt leather staves                # Always show manual roll
-
-# Testing
-/ar test [item-link]                     # Test how item would be handled
+/ar printing                # Toggle roll announcements
+/ar debug                   # Toggle debug output
+/ar filter rolls            # Toggle roll filtering
+/ar test [item-link]        # Test how item would be handled
+/ar test                    # Run unit tests
+/ar config                  # Open configuration GUI
 ```
 
 ## 🧠 How It Works
 
-1. **EXEMPT Check**: Force manual roll if item type is exempt
-2. **Upgrade Analysis**: Compare item stats to your best equipped gear
-3. **Smart Decision**: Roll if upgrade, auto-pass if not
-4. **Fallback**: Use original rules if no dynamic rule exists
+1. **Profile-Based**: Rules are automatically applied based on your character's class and specialization
+2. **Rule Evaluation**: Each item is evaluated against your current profile's rule set
+3. **Automatic Rolling**: Based on rule evaluation, the addon automatically rolls Need, Greed, or Pass
+4. **Manual Override**: Items can be configured to always show manual roll dialog
 
 ## 🎯 Example
 
-**Caster wanting only INT cloth upgrades:**
+**Testing how an item would be handled:**
 ```
-/ar pass ifnotupgrade cloth intellect
+/ar test [Shift-click an item to get its link]
 ```
 
-**Always manually decide on leather:**
+**View current rules for your class/spec:**
 ```
-/ar exempt leather
+/ar rules
 ```
 
 ## 🙏 Credits
@@ -66,8 +58,8 @@ Based on [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addons/autoroll-
 
 ## 🐛 Known Issues
 
-- Currently only supports Intellect stat comparison
-- Doesn't account for secondary stats or set bonuses
+- Rules are currently defined in Profiles.lua and require addon knowledge to modify
+- Profile selection is automatic based on class/spec and cannot be manually overridden
 - Some complex item types may not map correctly
 
 ## 🤝 Contributing
