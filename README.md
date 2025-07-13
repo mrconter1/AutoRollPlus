@@ -25,7 +25,7 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 ```
 /ar test                    # Open test GUI
 /ar test [item-link]        # Test how item would be handled
-/ar config                  # Open configuration GUI
+/ar profiles                # Open profiles GUI
 ```
 
 ## 🧠 How It Works
@@ -47,9 +47,9 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 /ar test
 ```
 
-**Open configuration GUI:**
+**Open profiles GUI:**
 ```
-/ar config
+/ar profiles
 ```
 
 ## 🙏 Credits

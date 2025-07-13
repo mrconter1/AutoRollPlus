@@ -91,7 +91,7 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
-    if cmd == "config" then
+    if cmd == "profiles" then
         -- Open the configuration GUI
         if AutoRollConfigGUI then
             AutoRollConfigGUI:Initialize()
@@ -111,7 +111,7 @@ SlashCmdList["AR"] = function(msg)
     print("--       /ar test         (open test GUI)")
     print("--       /ar test [item-link] (test specific item)")
     print("-- Configuration:")
-    print("--       /ar config       (open configuration GUI)")
+    print("--       /ar profiles     (open profiles GUI)")
     print("-- Note: Rules are automatically applied based on your class/spec")
     print("-- Edit rules in Profiles.lua or use /ar test for testing interface")
 
