@@ -321,7 +321,6 @@ do -- Private Scope
                             { item = "SIGILS", action = "GREED" },
                             { item = "TRADE GOODS", action = "GREED" },
                             { item = "MISCELLANEOUS", action = "GREED" },
-                            { item = "CLOAKS", action = "GREED" },
                         }
                         
                         AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
