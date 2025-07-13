@@ -156,37 +156,6 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
-    if cmd == "classspec" then
-        -- Print the player's class and spec
-        local _, classKey = UnitClass("player")
-        local specName = nil
-        -- MoP: Use GetPrimaryTalentTree if available
-        if GetPrimaryTalentTree then
-            local specIndex = GetPrimaryTalentTree()
-            local classSpecs = AutoRollMappings.classSpecs
-            local specs = classSpecs[classKey]
-            if specs and specIndex and specs[specIndex] then
-                specName = specs[specIndex]
-            end
-        elseif GetSpecialization and GetSpecializationInfo then
-            local specIndex = GetSpecialization()
-            if specIndex then
-                local _, sName = GetSpecializationInfo(specIndex)
-                specName = sName
-            end
-        end
-        local _, localizedClass = UnitClass("player")
-        print("AutoRoll: Your class is " .. (localizedClass or classKey or "Unknown"))
-        print("AutoRoll: Your spec is " .. (specName or "Unknown"))
-        return
-    end
-
-    if cmd == "level" then
-        local level = UnitLevel("player")
-        print("AutoRoll: Your level is " .. tostring(level))
-        return
-    end
-
     if cmd == "test" then
         -- Run the test runner (files loaded via TOC)
         if AutoRollTestRunner then
@@ -223,9 +192,6 @@ SlashCmdList["AR"] = function(msg)
     print("-- Testing:")
     print("--       /ar test [item-link]")
     print("--       /ar test         (run unit tests)")
-    print("-- Information:")
-    print("--       /ar classspec    (show class/spec)")
-    print("--       /ar level        (show level)")
     print("-- Configuration:")
     print("--       /ar config       (open configuration GUI)")
     print("-- Note: Rules are automatically applied based on your class/spec")
