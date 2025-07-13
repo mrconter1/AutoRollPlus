@@ -193,6 +193,56 @@ AutoRollRuleScripts = {
         THEN item.manualRoll()
 
         item.rollGreed()
+    ]],
+
+    -- Warlock intellect rules (manual roll for all upgrades)
+    warlock_intellect = [[
+        IF item.type == 'cloth' 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'staff' OR 
+            item.type == 'wand' OR 
+            item.type == 'dagger' OR 
+            item.type == 'one-handed sword' OR 
+            item.type == 'off-hand') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        item.rollGreed()
+    ]],
+
+    -- Death Knight strength rules (manual roll for all upgrades)
+    death_knight_strength = [[
+        IF item.type == 'plate' 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'one-handed sword' OR 
+            item.type == 'two-handed sword' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'two-handed axe' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'two-handed mace' OR 
+            item.type == 'polearm') 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        item.rollGreed()
     ]]
 }
 

@@ -1238,6 +1238,375 @@ AutoRollTestProfiles = {
                 expectedResult = "GREED"
             }
         }
+    },
+
+    warlock_affliction = {
+        ruleScript = AutoRollProfiles.warlock_affliction,
+        scenarios = {
+            {
+                name = "cloth intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "WARLOCK",
+                    spec = "Affliction"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "staff intellect upgrade",
+                player = {
+                    level = 50,
+                    class = "WARLOCK",
+                    spec = "Destruction"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 20 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "wand intellect upgrade",
+                player = {
+                    level = 35,
+                    class = "WARLOCK",
+                    spec = "Demonology"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Wand",
+                    itemEquipLoc = "INVTYPE_RANGED",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "dagger intellect upgrade",
+                player = {
+                    level = 40,
+                    class = "WARLOCK",
+                    spec = "Affliction"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Dagger",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "off-hand intellect upgrade",
+                player = {
+                    level = 50,
+                    class = "WARLOCK",
+                    spec = "Destruction"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_HOLDABLE",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_HOLDABLE"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 18 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "trinket intellect upgrade",
+                player = {
+                    level = 55,
+                    class = "WARLOCK",
+                    spec = "Demonology"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "non-intellect item fallback to greed",
+                player = {
+                    level = 45,
+                    class = "WARLOCK",
+                    spec = "Affliction"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "non-upgrade item fallback to greed",
+                player = {
+                    level = 45,
+                    class = "WARLOCK",
+                    spec = "Destruction"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 18 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+
+    death_knight_blood = {
+        ruleScript = AutoRollProfiles.death_knight_blood,
+        scenarios = {
+            {
+                name = "plate strength upgrade",
+                player = {
+                    level = 60,
+                    class = "DEATHKNIGHT",
+                    spec = "Blood"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 28,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 22 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "two-handed sword strength upgrade",
+                player = {
+                    level = 65,
+                    class = "DEATHKNIGHT",
+                    spec = "Unholy"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Two-Handed Sword",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 35,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 30 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "one-handed axe strength upgrade",
+                player = {
+                    level = 62,
+                    class = "DEATHKNIGHT",
+                    spec = "Frost"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "One-Handed Axe",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 20 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "polearm strength upgrade",
+                player = {
+                    level = 68,
+                    class = "DEATHKNIGHT",
+                    spec = "Unholy"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Polearm",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 32,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 28 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "ring strength upgrade",
+                player = {
+                    level = 65,
+                    class = "DEATHKNIGHT",
+                    spec = "Blood"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 14 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "trinket strength upgrade",
+                player = {
+                    level = 70,
+                    class = "DEATHKNIGHT",
+                    spec = "Frost"
+                },
+                item = {
+                    itemRarity = "Epic",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 4,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 20 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "cloak strength upgrade",
+                player = {
+                    level = 64,
+                    class = "DEATHKNIGHT",
+                    spec = "Blood"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_CLOAK",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CLOAK"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 12 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "non-strength item fallback to greed",
+                player = {
+                    level = 65,
+                    class = "DEATHKNIGHT",
+                    spec = "Frost"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 22 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "non-upgrade item fallback to greed",
+                player = {
+                    level = 65,
+                    class = "DEATHKNIGHT",
+                    spec = "Blood"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 25 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
     }
 }
  

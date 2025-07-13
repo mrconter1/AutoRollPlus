@@ -625,6 +625,8 @@ do -- Private Scope
                         return "necklace"
                     elseif equipLoc == "INVTYPE_CLOAK" then
                         return "cloak"
+                    elseif equipLoc == "INVTYPE_HOLDABLE" then
+                        return "off-hand"
                     else
                         return subType
                     end
@@ -726,6 +728,10 @@ do -- Private Scope
             return subType == "fist weapon"
         elseif itemType == "shield" then
             return subType == "shield"
+        elseif itemType == "wand" then
+            return subType == "wand"
+        elseif itemType == "thrown" then
+            return subType == "thrown"
         -- Accessories
         elseif itemType == "ring" then
             return equipLoc == "INVTYPE_FINGER"

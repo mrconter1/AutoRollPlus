@@ -82,6 +82,16 @@ AutoRollMappings.profileNameMap = {
         ["Brewmaster"] = "monk_brewmaster",
         ["Windwalker"] = "monk_windwalker",
         ["Mistweaver"] = "monk_mistweaver"
+    },
+    WARLOCK = {
+        ["Affliction"] = "warlock_affliction",
+        ["Demonology"] = "warlock_demonology",
+        ["Destruction"] = "warlock_destruction"
+    },
+    DEATHKNIGHT = {
+        ["Blood"] = "death_knight_blood",
+        ["Frost"] = "death_knight_frost",
+        ["Unholy"] = "death_knight_unholy"
     }
 }
 

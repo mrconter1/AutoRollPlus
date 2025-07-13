@@ -30,5 +30,15 @@ AutoRollProfiles = {
     -- Monk profiles
     monk_brewmaster = AutoRollRuleScripts.leather_agility,      -- Agility (tank)
     monk_windwalker = AutoRollRuleScripts.leather_agility,      -- Agility (DPS)
-    monk_mistweaver = AutoRollRuleScripts.leather_intellect     -- Intellect (healer)
+    monk_mistweaver = AutoRollRuleScripts.leather_intellect,    -- Intellect (healer)
+
+    -- Warlock profiles (all specs use intellect + manual rolling)
+    warlock_affliction = AutoRollRuleScripts.warlock_intellect,
+    warlock_demonology = AutoRollRuleScripts.warlock_intellect,
+    warlock_destruction = AutoRollRuleScripts.warlock_intellect,
+
+    -- Death Knight profiles (all specs use strength + manual rolling)
+    death_knight_blood = AutoRollRuleScripts.death_knight_strength,
+    death_knight_frost = AutoRollRuleScripts.death_knight_strength,
+    death_knight_unholy = AutoRollRuleScripts.death_knight_strength
 } 
