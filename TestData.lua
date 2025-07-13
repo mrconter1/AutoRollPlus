@@ -192,18 +192,4 @@ AutoRollTestProfiles = {
         }
     }
 }
-
--- Legacy compatibility: flatten profiles into old test format for existing test runner
-AutoRollTestData = {}
-for profileName, profile in pairs(AutoRollTestProfiles) do
-    for _, scenario in ipairs(profile.scenarios) do
-        table.insert(AutoRollTestData, {
-            name = profileName .. " - " .. scenario.name,
-            rules = profile.ruleScript,
-            player = scenario.player,
-            item = scenario.item,
-            equippedItems = scenario.equippedItems,
-            expectedResult = scenario.expectedResult
-        })
-    end
-end 
+ 
