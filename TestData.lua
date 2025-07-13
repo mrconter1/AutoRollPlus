@@ -49,12 +49,12 @@ AutoRollTestProfiles = {
             IF item.type == 'leather' 
                AND user.level < 50 
                AND item.agility.isUpgrade() 
-            THEN manual
+            THEN item.manualRoll()
 
             IF item.type == 'mail' 
                AND user.level >= 50 
                AND item.agility.isUpgrade() 
-            THEN manual
+            THEN item.manualRoll()
 
             IF (item.type == 'bow' OR 
                 item.type == 'gun' OR 
@@ -64,9 +64,9 @@ AutoRollTestProfiles = {
                 item.type == 'necklace' OR 
                 item.type == 'cloak') 
                AND item.agility.isUpgrade() 
-            THEN manual
+            THEN item.manualRoll()
 
-            item.greed()
+            item.rollGreed()
         ]],
         scenarios = {
             {
@@ -181,17 +181,17 @@ AutoRollTestProfiles = {
         ruleScript = [[
             IF item.type == 'cloth' 
                AND item.intellect.isUpgrade() 
-            THEN manual
+            THEN item.manualRoll()
 
             IF item.type == 'staff' 
                AND item.intellect.isUpgrade() 
-            THEN manual
+            THEN item.manualRoll()
 
             IF item.type == 'trinket' 
                AND item.intellect.isUpgrade() 
-            THEN manual
+            THEN item.manualRoll()
 
-            item.pass()
+            item.rollPass()
         ]],
         scenarios = {
             {
@@ -307,12 +307,12 @@ AutoRollTestProfiles = {
             IF item.type == 'mail' 
                AND user.level < 40 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
             IF item.type == 'plate' 
                AND user.level >= 40 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
             IF (item.type == 'one-handed sword' OR 
                 item.type == 'two-handed sword' OR 
@@ -324,16 +324,16 @@ AutoRollTestProfiles = {
                 item.type == 'dagger' OR 
                 item.type == 'fist weapon') 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
             IF (item.type == 'ring' OR 
                 item.type == 'trinket' OR 
                 item.type == 'necklace' OR 
                 item.type == 'cloak') 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
-            item.greed()
+            item.rollGreed()
         ]],
         scenarios = {
             {
@@ -449,12 +449,12 @@ AutoRollTestProfiles = {
             IF item.type == 'mail' 
                AND user.level < 40 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
             IF item.type == 'plate' 
                AND user.level >= 40 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
             IF (item.type == 'one-handed sword' OR 
                 item.type == 'two-handed sword' OR 
@@ -466,20 +466,20 @@ AutoRollTestProfiles = {
                 item.type == 'dagger' OR 
                 item.type == 'fist weapon') 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
             IF item.type == 'shield' 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
             IF (item.type == 'ring' OR 
                 item.type == 'trinket' OR 
                 item.type == 'necklace' OR 
                 item.type == 'cloak') 
                AND item.strength.isUpgrade() 
-            THEN need
+            THEN item.rollNeed()
 
-            item.greed()
+            item.rollGreed()
         ]],
         scenarios = {
             {

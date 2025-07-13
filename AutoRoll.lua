@@ -295,12 +295,12 @@ do -- Private Scope
                         IF item.type == 'leather' 
                            AND user.level < 50 
                            AND item.agility.isUpgrade() 
-                        THEN manual
+                        THEN item.manualRoll()
 
                         IF item.type == 'mail' 
                            AND user.level >= 50 
                            AND item.agility.isUpgrade() 
-                        THEN manual
+                        THEN item.manualRoll()
 
                         IF (item.type == 'bow' OR 
                             item.type == 'gun' OR 
@@ -310,9 +310,9 @@ do -- Private Scope
                             item.type == 'necklace' OR 
                             item.type == 'cloak') 
                            AND item.agility.isUpgrade() 
-                        THEN manual
+                        THEN item.manualRoll()
 
-                        item.greed()
+                        item.rollGreed()
                     ]]
                     
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
@@ -636,13 +636,27 @@ do -- Private Scope
                 consume("IF")
                 local condition = parseExpression()
                 consume("THEN")
-                local action = consume("IDENTIFIER")
                 
-                return {
-                    type = "IF_RULE",
-                    condition = condition,
-                    action = action and action.value
-                }
+                -- Check if the action is a method call (like item.rollNeed())
+                local nextToken = peek()
+                if nextToken and nextToken.type == "IDENTIFIER" and nextToken.value == "item" then
+                    local methodCall = parsePrimaryExpression()
+                    if methodCall and methodCall.type == "METHOD_CALL" then
+                        return {
+                            type = "IF_RULE",
+                            condition = condition,
+                            methodCall = methodCall
+                        }
+                    end
+                else
+                    -- Handle simple identifier actions (for backward compatibility)
+                    local action = consume("IDENTIFIER")
+                    return {
+                        type = "IF_RULE",
+                        condition = condition,
+                        action = action and action.value
+                    }
+                end
             elseif token and token.type == "ELSE" then
                 consume("ELSE")
                 local action = consume("IDENTIFIER")
@@ -674,7 +688,13 @@ do -- Private Scope
         
         if ast.type == "IF_RULE" then
             if self:evaluateCondition(ast.condition, context) then
-                return ast.action
+                -- Handle method call actions (like item.rollNeed())
+                if ast.methodCall then
+                    return self:evaluateMethodRule(ast.methodCall, context)
+                else
+                    -- Handle simple identifier actions (for backward compatibility)
+                    return ast.action
+                end
             end
             return nil
         elseif ast.type == "ELSE_RULE" then
@@ -786,8 +806,22 @@ do -- Private Scope
         if methodCall.object.type == "MEMBER" and 
            methodCall.object.object.type == "IDENTIFIER" and 
            methodCall.object.object.value == "item" then
-            -- This is a direct action call like item.greed(), item.pass(), etc.
-            return methodCall.object.member -- greed, pass, need, manual
+            -- This is a direct action call like item.rollGreed(), item.rollPass(), etc.
+            local methodName = methodCall.object.member
+            
+            -- Map method names to expected action names
+            if methodName == "rollNeed" then
+                return "NEED"
+            elseif methodName == "rollGreed" then
+                return "GREED"
+            elseif methodName == "rollPass" then
+                return "PASS"
+            elseif methodName == "manualRoll" then
+                return "MANUAL"
+            end
+            
+            -- Fallback to original behavior for backward compatibility
+            return methodName
         end
         
         return nil
@@ -871,7 +905,7 @@ do -- Private Scope
                     end
                     
                     -- Check if this completes a rule (ends with THEN action, is an ELSE, or is item.action())
-                    if line:match("THEN%s+%w+$") or line:match("^ELSE%s+%w+$") or line:match("^%s*item%.%w+%(%)%s*$") then
+                    if line:match("THEN%s+%w+$") or line:match("THEN%s+item%.%w+%(%)%s*$") or line:match("^ELSE%s+%w+$") or line:match("^%s*item%.%w+%(%)%s*$") then
                         table.insert(rules, currentRule)
                         currentRule = ""
                     end
@@ -937,24 +971,24 @@ do -- Private Scope
                     print("AutoRoll DEBUG: Rule evaluation result for "..(itemLink or "item:"..itemId)..": "..(action or "no match"))
                 end
                 if action then
-                    if action == "MANUAL" then
+                    if action == "MANUAL" or action == "manualRoll" or action == "MANUALROLL" then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: MANUAL required for "..(itemLink or "item:"..itemId))
                         end
                         handled = true
-                    elseif action == "NEED" and canNeed then
+                    elseif (action == "NEED" or action == "rollNeed" or action == "ROLLNEED") and canNeed then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: NEED on "..(itemLink or "item:"..itemId))
                         end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.NEED)
                         handled = true
-                    elseif action == "GREED" and canGreed then
+                    elseif (action == "GREED" or action == "rollGreed" or action == "ROLLGREED") and canGreed then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: GREED on "..(itemLink or "item:"..itemId))
                         end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.GREED)
                         handled = true
-                    elseif action == "PASS" then
+                    elseif action == "PASS" or action == "rollPass" or action == "ROLLPASS" then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: PASS on "..(itemLink or "item:"..itemId))
                         end
@@ -987,27 +1021,27 @@ do -- Private Scope
                     match = false
                 end
                 if match then
-                    if rule.action == "MANUAL" then
+                    if rule.action == "MANUAL" or rule.action == "manualRoll" or rule.action == "MANUALROLL" then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: MANUAL required for "..(itemLink or "item:"..itemId))
                         end
                         handled = true
                         break
-                    elseif rule.action == "NEED" and canNeed then
+                    elseif (rule.action == "NEED" or rule.action == "rollNeed" or rule.action == "ROLLNEED") and canNeed then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: NEED on "..(itemLink or "item:"..itemId))
                         end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.NEED)
                         handled = true
                         break
-                    elseif rule.action == "GREED" and canGreed then
+                    elseif (rule.action == "GREED" or rule.action == "rollGreed" or rule.action == "ROLLGREED") and canGreed then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: GREED on "..(itemLink or "item:"..itemId))
                         end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.GREED)
                         handled = true
                         break
-                    elseif rule.action == "PASS" then
+                    elseif rule.action == "PASS" or rule.action == "rollPass" or rule.action == "ROLLPASS" then
                         if AutoRoll_PCDB["printRolls"] then
                             print("AutoRoll: PASS on "..(itemLink or "item:"..itemId))
                         end

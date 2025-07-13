@@ -627,13 +627,13 @@ function AutoRollClassSpecGUI:Show()
             row.greedIcon:Hide()
             row.needIcon:Hide()
             row.manualIcon:Hide()
-            if action:upper() == "GREED" then
+            if action:upper() == "GREED" or action:upper() == "ROLLGREED" then
                 row.greedIcon:SetVertexColor(0.2, 1, 0.2, 1)
                 row.greedIcon:Show()
-            elseif action:upper() == "NEED" then
+            elseif action:upper() == "NEED" or action:upper() == "ROLLNEED" then
                 row.needIcon:SetVertexColor(0.2, 0.6, 1, 1)
                 row.needIcon:Show()
-            elseif action:upper() == "MANUAL" then
+            elseif action:upper() == "MANUAL" or action:upper() == "MANUALROLL" then
                 row.manualIcon:SetVertexColor(1, 0.85, 0.2, 1)
                 row.manualIcon:Show()
             end
