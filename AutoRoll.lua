@@ -317,7 +317,7 @@ do -- Private Scope
                         -- GREED rules
                         local greedTypes = {
                             "one-handed swords", "two-handed swords", "one-handed maces", "two-handed maces", "one-handed axes", "two-handed axes", "daggers", "polearms", "staves", "fist weapons", "wands", "thrown", "spears",
-                            "plate", "cloth", "shields", "librams", "idols", "totems", "sigils", "trade goods", "miscellaneous",
+                            "plate", "mail", "cloth", "shields", "librams", "idols", "totems", "sigils", "trade goods", "miscellaneous",
                             "rings", "trinkets", "necklaces", "cloaks"
                         }
                         local rulesArr = {}
