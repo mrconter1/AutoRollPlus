@@ -8,6 +8,7 @@
 
 Dependencies\AddonUtils.lua
 
+Profiles.lua
 AutoRoll.lua
 
 Modules\SlashCommands.lua

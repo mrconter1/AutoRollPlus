@@ -285,39 +285,27 @@ do -- Private Scope
                 AutoRollPlus_PCDB = {}
             end
             LoadOptions()
-            -- Automatically apply hunter rules on each load
-            local _, classKey = UnitClass("player")
-            if classKey == "HUNTER" then
-                local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
-                if profileKey then
-                    -- Hunter rules as parseable strings
-                    local hunterRules = [[
-                        IF item.type == 'leather' 
-                           AND player.level < 50 
-                           AND item.agility.isUpgrade() 
-                        THEN item.manualRoll()
-
-                        IF item.type == 'mail' 
-                           AND player.level >= 50 
-                           AND item.agility.isUpgrade() 
-                        THEN item.manualRoll()
-
-                        IF (item.type == 'bow' OR 
-                            item.type == 'gun' OR 
-                            item.type == 'crossbow' OR 
-                            item.type == 'ring' OR 
-                            item.type == 'trinket' OR 
-                            item.type == 'necklace' OR 
-                            item.type == 'cloak') 
-                           AND item.agility.isUpgrade() 
-                        THEN item.manualRoll()
-
-                        item.rollGreed()
-                    ]]
-                    
+            -- Automatically apply profile rules on each load
+            local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+            if profileKey then
+                -- Check if we have a centralized profile for this key
+                local profileRules = nil
+                if profileKey:find("hunter") then
+                    profileRules = AutoRollProfiles.hunter
+                elseif profileKey:find("priest") and profileKey:find("holy") then
+                    profileRules = AutoRollProfiles.priest_holy
+                elseif profileKey:find("warrior") then
+                    if profileKey:find("arms") or profileKey:find("fury") then
+                        profileRules = AutoRollProfiles.warrior_dps
+                    elseif profileKey:find("protection") then
+                        profileRules = AutoRollProfiles.warrior_tank
+                    end
+                end
+                
+                if profileRules then
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
-                    AutoRollPlus_PCDB["profiles"][profileKey] = { ruleStrings = hunterRules }
-                    print("AutoRoll: Hunter rules applied.")
+                    AutoRollPlus_PCDB["profiles"][profileKey] = { ruleStrings = profileRules }
+                    print("AutoRoll: Profile rules applied for " .. profileKey)
                 end
             end
             

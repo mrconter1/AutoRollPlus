@@ -45,29 +45,7 @@ end
 
 AutoRollTestProfiles = {
     hunter = {
-        ruleScript = [[
-            IF item.type == 'leather' 
-               AND player.level < 50 
-               AND item.agility.isUpgrade() 
-            THEN item.manualRoll()
-
-            IF item.type == 'mail' 
-               AND player.level >= 50 
-               AND item.agility.isUpgrade() 
-            THEN item.manualRoll()
-
-            IF (item.type == 'bow' OR 
-                item.type == 'gun' OR 
-                item.type == 'crossbow' OR 
-                item.type == 'ring' OR 
-                item.type == 'trinket' OR 
-                item.type == 'necklace' OR 
-                item.type == 'cloak') 
-               AND item.agility.isUpgrade() 
-            THEN item.manualRoll()
-
-            item.rollGreed()
-        ]],
+        ruleScript = AutoRollProfiles.hunter,
         scenarios = {
             {
                 name = "leather upgrade at low level",
@@ -178,21 +156,7 @@ AutoRollTestProfiles = {
     },
     
     priest_holy = {
-        ruleScript = [[
-            IF item.type == 'cloth' 
-               AND item.intellect.isUpgrade() 
-            THEN item.manualRoll()
-
-            IF item.type == 'staff' 
-               AND item.intellect.isUpgrade() 
-            THEN item.manualRoll()
-
-            IF item.type == 'trinket' 
-               AND item.intellect.isUpgrade() 
-            THEN item.manualRoll()
-
-            item.rollPass()
-        ]],
+        ruleScript = AutoRollProfiles.priest_holy,
         scenarios = {
             {
                 name = "cloth intellect upgrade",
@@ -303,38 +267,7 @@ AutoRollTestProfiles = {
     },
     
     warrior_dps = {
-        ruleScript = [[
-            IF item.type == 'mail' 
-               AND player.level < 40 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            IF item.type == 'plate' 
-               AND player.level >= 40 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            IF (item.type == 'one-handed sword' OR 
-                item.type == 'two-handed sword' OR 
-                item.type == 'one-handed axe' OR 
-                item.type == 'two-handed axe' OR 
-                item.type == 'one-handed mace' OR 
-                item.type == 'two-handed mace' OR 
-                item.type == 'polearm' OR 
-                item.type == 'dagger' OR 
-                item.type == 'fist weapon') 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            IF (item.type == 'ring' OR 
-                item.type == 'trinket' OR 
-                item.type == 'necklace' OR 
-                item.type == 'cloak') 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            item.rollGreed()
-        ]],
+        ruleScript = AutoRollProfiles.warrior_dps,
         scenarios = {
             {
                 name = "mail upgrade at low level",
@@ -445,42 +378,7 @@ AutoRollTestProfiles = {
     },
     
     warrior_tank = {
-        ruleScript = [[
-            IF item.type == 'mail' 
-               AND player.level < 40 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            IF item.type == 'plate' 
-               AND player.level >= 40 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            IF (item.type == 'one-handed sword' OR 
-                item.type == 'two-handed sword' OR 
-                item.type == 'one-handed axe' OR 
-                item.type == 'two-handed axe' OR 
-                item.type == 'one-handed mace' OR 
-                item.type == 'two-handed mace' OR 
-                item.type == 'polearm' OR 
-                item.type == 'dagger' OR 
-                item.type == 'fist weapon') 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            IF item.type == 'shield' 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            IF (item.type == 'ring' OR 
-                item.type == 'trinket' OR 
-                item.type == 'necklace' OR 
-                item.type == 'cloak') 
-               AND item.strength.isUpgrade() 
-            THEN item.rollNeed()
-
-            item.rollGreed()
-        ]],
+        ruleScript = AutoRollProfiles.warrior_tank,
         scenarios = {
             {
                 name = "mail upgrade at low level",
