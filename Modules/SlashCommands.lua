@@ -335,10 +335,7 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
-    if cmd == "config" or cmd == "gui" or cmd == "setup" then
-        AutoRollClassSpecGUI:Show()
-        return
-    end
+
 
     if cmd == "rules" then
         print("AutoRoll - Rules")
@@ -520,8 +517,6 @@ SlashCmdList["AR"] = function(msg)
     print("--       /ar test [item-link]")
     print("-- Debug mode (shows rule evaluation):")
     print("--       /ar debug")
-    print("-- Open Class/Spec configuration GUI:")
-    print("--       /ar config (or /ar gui or /ar setup)")
     print("-- Run rule evaluation tests:")
     print("--       /ar test")
 
