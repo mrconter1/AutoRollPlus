@@ -291,9 +291,9 @@ do -- Private Scope
                     if profileKey then
                         -- Hunter rules as parseable strings
                         local hunterRules = {
-                                    "IF leather AND user.level < 50 AND item.agility.isUpgrade() THEN manual",
-        "IF mail AND user.level >= 50 AND item.agility.isUpgrade() THEN manual",
-        "IF (bow OR gun OR crossbow OR ring OR trinket OR necklace OR cloak) AND item.agility.isUpgrade() THEN manual",
+                            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isUpgrade() THEN manual",
+                            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isUpgrade() THEN manual",
+                            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow' OR item.type == 'ring' OR item.type == 'trinket' OR item.type == 'necklace' OR item.type == 'cloak') AND item.agility.isUpgrade() THEN manual",
                             "ELSE greed"
                         }
                         

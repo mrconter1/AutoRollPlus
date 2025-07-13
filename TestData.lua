@@ -48,7 +48,7 @@ AutoRollTestProfiles = {
         ruleScript = {
             "IF item.type == 'leather' AND user.level < 50 AND item.agility.isUpgrade() THEN manual",
             "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isUpgrade() THEN manual",
-            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isUpgrade() THEN manual",
+            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow' OR item.type == 'ring' OR item.type == 'trinket' OR item.type == 'necklace' OR item.type == 'cloak') AND item.agility.isUpgrade() THEN manual",
             "ELSE greed"
         },
         scenarios = {
@@ -112,6 +112,48 @@ AutoRollTestProfiles = {
                 },
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 20 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "non-upgrade item fallback to greed",
+                player = {
+                    level = 45,
+                    class = "HUNTER",
+                    spec = "Beast Mastery"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_HAND",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 8,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_HAND"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "ring upgrade",
+                player = {
+                    level = 55,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
                 }),
                 expectedResult = "MANUAL"
             }
@@ -188,6 +230,48 @@ AutoRollTestProfiles = {
                     ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
                 }),
                 expectedResult = "MANUAL"
+            },
+            {
+                name = "non-upgrade item fallback to pass",
+                player = {
+                    level = 50,
+                    class = "PRIEST",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "PASS"
+            },
+            {
+                name = "plate armor non-match",
+                player = {
+                    level = 55,
+                    class = "PRIEST",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "PASS"
             }
         }
     }
