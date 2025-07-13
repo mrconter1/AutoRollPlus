@@ -44,17 +44,17 @@ AutoRollRuleScripts = {
         item.rollGreed()
     ]],
 
-    -- Warrior strength rules (need for all upgrades)
+    -- Warrior strength rules (manual roll for all upgrades)
     warrior_strength = [[
         IF item.type == 'mail' 
            AND player.level < 40 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF item.type == 'plate' 
            AND player.level >= 40 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'one-handed sword' OR 
             item.type == 'two-handed sword' OR 
@@ -66,14 +66,14 @@ AutoRollRuleScripts = {
             item.type == 'dagger' OR 
             item.type == 'fist weapon') 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
             item.type == 'trinket' OR 
             item.type == 'necklace' OR 
             item.type == 'cloak') 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         item.rollGreed()
     ]],
@@ -83,12 +83,12 @@ AutoRollRuleScripts = {
         IF item.type == 'mail' 
            AND player.level < 40 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF item.type == 'plate' 
            AND player.level >= 40 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'one-handed sword' OR 
             item.type == 'two-handed sword' OR 
@@ -100,27 +100,27 @@ AutoRollRuleScripts = {
             item.type == 'dagger' OR 
             item.type == 'fist weapon') 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF item.type == 'shield' 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
             item.type == 'trinket' OR 
             item.type == 'necklace' OR 
             item.type == 'cloak') 
            AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         item.rollGreed()
     ]],
 
-    -- Monk/Druid agility rules (need for all upgrades)
+    -- Monk/Druid agility rules (manual roll for all upgrades)
     leather_agility = [[
         IF item.type == 'leather' 
            AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'staff' OR 
             item.type == 'one-handed mace' OR 
@@ -131,23 +131,23 @@ AutoRollRuleScripts = {
             item.type == 'fist weapon' OR 
             item.type == 'polearm') 
            AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
             item.type == 'trinket' OR 
             item.type == 'necklace' OR 
             item.type == 'cloak') 
            AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         item.rollGreed()
     ]],
 
-    -- Druid/Monk intellect rules (need for all upgrades) 
+    -- Druid/Monk intellect rules (manual roll for all upgrades) 
     leather_intellect = [[
         IF item.type == 'leather' 
            AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'staff' OR 
             item.type == 'one-handed mace' OR 
@@ -158,23 +158,23 @@ AutoRollRuleScripts = {
             item.type == 'fist weapon' OR 
             item.type == 'polearm') 
            AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
             item.type == 'trinket' OR 
             item.type == 'necklace' OR 
             item.type == 'cloak') 
            AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         item.rollGreed()
     ]],
 
-    -- Rogue agility rules (leather + rogue weapons)
+    -- Rogue agility rules (manual roll for all upgrades)
     rogue_agility = [[
         IF item.type == 'leather' 
            AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'dagger' OR 
             item.type == 'one-handed sword' OR 
@@ -183,14 +183,14 @@ AutoRollRuleScripts = {
             item.type == 'fist weapon' OR 
             item.type == 'thrown') 
            AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
             item.type == 'trinket' OR 
             item.type == 'necklace' OR 
             item.type == 'cloak') 
            AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
+        THEN item.manualRoll()
 
         item.rollGreed()
     ]]
