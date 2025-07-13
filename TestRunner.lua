@@ -89,8 +89,8 @@ function TestRunner:runSingleTest(testCase)
     return true, result
 end
 
--- Run tests for a specific profile
-function TestRunner:runProfileTests(profileName)
+-- Run tests for a specific profile (concise mode)
+function TestRunner:runProfileTests(profileName, verbose)
     local profile = AutoRollTestProfiles[profileName]
     if not profile then
         print("Profile not found: " .. profileName)
@@ -101,14 +101,16 @@ function TestRunner:runProfileTests(profileName)
     local passedTests = 0
     local failedTests = {}
     
-    print("=== Testing Profile: " .. profileName .. " ===")
-    print("Rule Script:")
-    for i, rule in ipairs(profile.ruleScript) do
-        print("  " .. i .. ". " .. rule)
+    if verbose then
+        print("=== Testing Profile: " .. profileName .. " ===")
+        print("Rule Script:")
+        for i, rule in ipairs(profile.ruleScript) do
+            print("  " .. i .. ". " .. rule)
+        end
+        print()
+        print("Running " .. #profile.scenarios .. " scenarios...")
+        print()
     end
-    print()
-    print("Running " .. #profile.scenarios .. " scenarios...")
-    print()
     
     for i, scenario in ipairs(profile.scenarios) do
         totalTests = totalTests + 1
@@ -126,7 +128,9 @@ function TestRunner:runProfileTests(profileName)
         
         if success and actualResult == testCase.expectedResult then
             passedTests = passedTests + 1
-            print("✓ PASS: " .. scenario.name)
+            if verbose then
+                print("✓ PASS: " .. scenario.name)
+            end
         else
             local failureReason
             if not success then
@@ -143,24 +147,33 @@ function TestRunner:runProfileTests(profileName)
                 item = scenario.item
             })
             
-            print("✗ FAIL: " .. scenario.name)
-            print("  " .. failureReason)
+            if verbose then
+                print("✗ FAIL: " .. scenario.name)
+                print("  " .. failureReason)
+            end
         end
     end
     
-    print()
-    print("=== Profile Results ===")
-    print("Total tests: " .. totalTests)
-    print("Passed: " .. passedTests)
-    print("Failed: " .. (totalTests - passedTests))
+    -- Concise summary line
+    local status = (totalTests == passedTests) and "✓ PASS" or ("✗ FAIL (" .. (totalTests - passedTests) .. "/" .. totalTests .. ")")
+    print(profileName .. ": " .. status)
     
-    if #failedTests > 0 then
-        print()
-        print("=== Failed Test Details ===")
-        for _, failure in ipairs(failedTests) do
-            print("Test: " .. failure.name)
-            print("Reason: " .. failure.reason)
+    -- Show details only if verbose or if there are failures
+    if verbose or #failedTests > 0 then
+        if verbose then
             print()
+            print("=== Profile Results ===")
+            print("Total tests: " .. totalTests)
+            print("Passed: " .. passedTests)
+            print("Failed: " .. (totalTests - passedTests))
+        end
+        
+        if #failedTests > 0 then
+            print()
+            print("=== Failed Test Details for " .. profileName .. " ===")
+            for _, failure in ipairs(failedTests) do
+                print("  ✗ " .. failure.name .. ": " .. failure.reason)
+            end
         end
     end
     
@@ -180,27 +193,34 @@ function TestRunner:listProfiles()
     end
 end
 
--- Run all profiles with organization
-function TestRunner:runAllProfiles()
+-- Run all profiles with organization (concise mode)
+function TestRunner:runAllProfiles(verbose)
     local totalTests = 0
     local totalPassed = 0
     local totalFailed = 0
     
-    print("=== AutoRoll Test Runner - Profile Mode ===")
-    print()
+    if verbose then
+        print("=== AutoRoll Test Runner - Profile Mode ===")
+        print()
+    else
+        print("=== Running All Profiles ===")
+    end
     
     for profileName, profile in pairs(AutoRollTestProfiles) do
-        local passed, failed = self:runProfileTests(profileName)
+        local passed, failed = self:runProfileTests(profileName, verbose)
         totalTests = totalTests + #profile.scenarios
         totalPassed = totalPassed + passed
         totalFailed = totalFailed + failed
-        print()
+        if verbose then
+            print()
+        end
     end
     
+    if not verbose then
+        print()
+    end
     print("=== Overall Results ===")
-    print("Total tests: " .. totalTests)
-    print("Passed: " .. totalPassed)
-    print("Failed: " .. totalFailed)
+    print("Total: " .. totalTests .. " | Passed: " .. totalPassed .. " | Failed: " .. totalFailed)
     
     return totalPassed, totalFailed
 end
@@ -247,7 +267,8 @@ _G.AutoRollTestRunner = TestRunner
 
 -- Usage examples:
 -- TestRunner:listProfiles()                           -- List all available profiles
--- TestRunner:runAllProfiles()                         -- Run all profiles with organization
--- TestRunner:runProfileTests("hunter")                -- Run only hunter profile tests
--- TestRunner:runProfileTests("priest_holy")           -- Run only priest_holy profile tests
+-- TestRunner:runAllProfiles()                         -- Run all profiles (concise mode)
+-- TestRunner:runAllProfiles(true)                     -- Run all profiles (verbose mode)
+-- TestRunner:runProfileTests("hunter")                -- Run hunter profile (concise mode)
+-- TestRunner:runProfileTests("hunter", true)          -- Run hunter profile (verbose mode)
 -- TestRunner:runScenario("hunter", "bow upgrade")     -- Run specific scenario in profile 

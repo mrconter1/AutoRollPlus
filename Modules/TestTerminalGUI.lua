@@ -128,7 +128,7 @@ function TestTerminalGUI:Initialize()
     
     -- Initial welcome message
     self:AddOutput(COLORS.header .. "AutoRoll Test Terminal v1.0" .. COLORS.reset)
-    self:AddOutput(COLORS.info .. "Use the buttons below to run tests" .. COLORS.reset)
+    self:AddOutput(COLORS.info .. "Concise output mode - one line per profile, details on failures" .. COLORS.reset)
     self:AddOutput("")
     
     terminalFrame:Show()
@@ -184,13 +184,15 @@ function TestTerminalGUI:ExecuteCommand(command)
     
     if command == "help" then
         self:AddOutput(COLORS.header .. "AutoRoll Test Terminal" .. COLORS.reset)
-        self:AddOutput("Use the buttons below to run tests:")
-        self:AddOutput("  " .. COLORS.success .. "Run All" .. COLORS.reset .. " - Run all test profiles")
+        self:AddOutput("Use the buttons below to run tests (concise output):")
+        self:AddOutput("  " .. COLORS.success .. "Run All" .. COLORS.reset .. " - Run all profiles (one line per profile)")
         self:AddOutput("  " .. COLORS.success .. "List Profiles" .. COLORS.reset .. " - Show available profiles")
-        self:AddOutput("  " .. COLORS.success .. "Hunter" .. COLORS.reset .. " - Run hunter profile tests")
-        self:AddOutput("  " .. COLORS.success .. "Priest Holy" .. COLORS.reset .. " - Run priest holy profile tests")
+        self:AddOutput("  " .. COLORS.success .. "Hunter" .. COLORS.reset .. " - Run hunter profile only")
+        self:AddOutput("  " .. COLORS.success .. "Priest Holy" .. COLORS.reset .. " - Run priest holy profile only")
         self:AddOutput("  " .. COLORS.warning .. "Clear" .. COLORS.reset .. " - Clear terminal output")
         self:AddOutput("  " .. COLORS.info .. "Help" .. COLORS.reset .. " - Show this help")
+        self:AddOutput("")
+        self:AddOutput(COLORS.info .. "Note: Detailed failure info shown automatically on test failures" .. COLORS.reset)
         self:AddOutput("")
         return
     end
@@ -217,13 +219,13 @@ function TestTerminalGUI:ExecuteCommand(command)
         
         -- Execute the command
         if command == "runAllProfiles" then
-            AutoRollTestRunner:runAllProfiles()
+            AutoRollTestRunner:runAllProfiles(false) -- Use concise mode
         elseif command == "listProfiles" then
             AutoRollTestRunner:listProfiles()
         elseif command:match("^runProfileTests") then
             local profileName = command:match("runProfileTests%('(.+)'%)")
             if profileName then
-                AutoRollTestRunner:runProfileTests(profileName)
+                AutoRollTestRunner:runProfileTests(profileName, false) -- Use concise mode
             else
                 self:AddOutput(COLORS.error .. "Invalid profile name" .. COLORS.reset)
             end
