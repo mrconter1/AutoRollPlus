@@ -128,7 +128,7 @@ function TestTerminalGUI:Initialize()
     
     -- Initial welcome message
     self:AddOutput(COLORS.header .. "AutoRoll Test Terminal v1.0" .. COLORS.reset)
-    self:AddOutput(COLORS.info .. "Concise output mode - one line per profile, details on failures" .. COLORS.reset)
+    self:AddOutput(COLORS.info .. ".NET style test runner - clear stats per test suite" .. COLORS.reset)
     self:AddOutput("")
     
     terminalFrame:Show()
@@ -184,15 +184,15 @@ function TestTerminalGUI:ExecuteCommand(command)
     
     if command == "help" then
         self:AddOutput(COLORS.header .. "AutoRoll Test Terminal" .. COLORS.reset)
-        self:AddOutput("Use the buttons below to run tests (concise output):")
-        self:AddOutput("  " .. COLORS.success .. "Run All" .. COLORS.reset .. " - Run all profiles (one line per profile)")
+        self:AddOutput("Use the buttons below to run tests (.NET style output):")
+        self:AddOutput("  " .. COLORS.success .. "Run All" .. COLORS.reset .. " - Run all profiles")
         self:AddOutput("  " .. COLORS.success .. "List Profiles" .. COLORS.reset .. " - Show available profiles")
         self:AddOutput("  " .. COLORS.success .. "Hunter" .. COLORS.reset .. " - Run hunter profile only")
         self:AddOutput("  " .. COLORS.success .. "Priest Holy" .. COLORS.reset .. " - Run priest holy profile only")
         self:AddOutput("  " .. COLORS.warning .. "Clear" .. COLORS.reset .. " - Clear terminal output")
         self:AddOutput("  " .. COLORS.info .. "Help" .. COLORS.reset .. " - Show this help")
         self:AddOutput("")
-        self:AddOutput(COLORS.info .. "Note: Detailed failure info shown automatically on test failures" .. COLORS.reset)
+        self:AddOutput(COLORS.info .. "Output format: profile: X tests, Y passed, Z failed ✓/✗" .. COLORS.reset)
         self:AddOutput("")
         return
     end

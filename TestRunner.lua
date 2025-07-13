@@ -154,9 +154,9 @@ function TestRunner:runProfileTests(profileName, verbose)
         end
     end
     
-    -- Concise summary line
-    local status = (totalTests == passedTests) and "✓ PASS" or ("✗ FAIL (" .. (totalTests - passedTests) .. "/" .. totalTests .. ")")
-    print(profileName .. ": " .. status)
+    -- .NET style summary line
+    local statusIcon = (totalTests == passedTests) and "✓" or "✗"
+    print(profileName .. ": " .. totalTests .. " tests, " .. passedTests .. " passed, " .. (totalTests - passedTests) .. " failed " .. statusIcon)
     
     -- Show details only if verbose or if there are failures
     if verbose or #failedTests > 0 then
@@ -203,7 +203,8 @@ function TestRunner:runAllProfiles(verbose)
         print("=== AutoRoll Test Runner - Profile Mode ===")
         print()
     else
-        print("=== Running All Profiles ===")
+        print("Running tests...")
+        print()
     end
     
     for profileName, profile in pairs(AutoRollTestProfiles) do
@@ -219,8 +220,9 @@ function TestRunner:runAllProfiles(verbose)
     if not verbose then
         print()
     end
-    print("=== Overall Results ===")
-    print("Total: " .. totalTests .. " | Passed: " .. totalPassed .. " | Failed: " .. totalFailed)
+    
+    local overallStatus = (totalFailed == 0) and "✓" or "✗"
+    print("Test run finished: " .. totalTests .. " tests, " .. totalPassed .. " passed, " .. totalFailed .. " failed " .. overallStatus)
     
     return totalPassed, totalFailed
 end
