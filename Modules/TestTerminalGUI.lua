@@ -10,8 +10,6 @@ local scrollFrame = nil
 local isRunning = false
 local autoClearCheckbox = nil
 local autoClearEnabled = true
-local hotReloadCheckbox = nil
-local hotReloadEnabled = true
 
 -- Terminal colors
 local COLORS = {
@@ -145,115 +143,16 @@ function TestTerminalGUI:Initialize()
     autoClearLabel:SetText("Auto-clear")
     autoClearLabel:SetTextColor(1, 1, 1)
     
-    -- Create hot reload checkbox
-    hotReloadCheckbox = CreateFrame("CheckButton", nil, buttonPanel, "ChatConfigCheckButtonTemplate")
-    hotReloadCheckbox:SetSize(25, 25)
-    hotReloadCheckbox:SetPoint("RIGHT", autoClearLabel, "LEFT", -20, 0)
-    hotReloadCheckbox:SetChecked(hotReloadEnabled)
-    hotReloadCheckbox:SetScript("OnClick", function(self)
-        hotReloadEnabled = self:GetChecked()
-        if hotReloadEnabled then
-            TestTerminalGUI:InitializeFileWatcher()
-        end
-    end)
-    
-    -- Hot reload label
-    local hotReloadLabel = buttonPanel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    hotReloadLabel:SetPoint("RIGHT", hotReloadCheckbox, "LEFT", -5, 0)
-    hotReloadLabel:SetText("Hot reload")
-    hotReloadLabel:SetTextColor(1, 1, 1)
-    
-    -- Initialize file watcher for hot reload
-    self:InitializeFileWatcher()
-    
     -- Initial welcome message
     self:AddOutput(COLORS.header .. "AutoRoll Test Terminal v1.0" .. COLORS.reset)
-    self:AddOutput(COLORS.info .. "Simple test runner with auto-clear and hot reload options" .. COLORS.reset)
+    self:AddOutput(COLORS.info .. "Simple test runner with auto-clear option" .. COLORS.reset)
     self:AddOutput(COLORS.info .. "Select text directly in this window and press Ctrl+C to copy" .. COLORS.reset)
     self:AddOutput("")
     
     terminalFrame:Show()
 end
 
--- Initialize file watcher for hot reload
-function TestTerminalGUI:InitializeFileWatcher()
-    -- Hot reload is now handled at test run time, not periodically
-end
 
-
-
--- Reload test files
-function TestTerminalGUI:ReloadTestFiles(showSuccess)
-    local success, result = pcall(function()
-        -- Clear existing test globals
-        _G.AutoRollTestProfiles = nil
-        _G.AutoRollTestRunner = nil
-        
-        -- Try multiple approaches to reload test files
-        local reloadSuccess = false
-        
-        -- Approach 1: Try to use dofile with various path formats
-        local possiblePaths = {
-            "TestData.lua",
-            "Interface\\AddOns\\AutoRollPlus\\TestData.lua",
-            "Interface/AddOns/AutoRollPlus/TestData.lua",
-        }
-        
-        for _, path in ipairs(possiblePaths) do
-            local testDataChunk, testDataError = loadfile(path)
-            if testDataChunk then
-                testDataChunk()
-                local testRunnerChunk, testRunnerError = loadfile(path:gsub("TestData", "TestRunner"))
-                if testRunnerChunk then
-                    testRunnerChunk()
-                    reloadSuccess = true
-                    break
-                end
-            end
-        end
-        
-        -- Approach 2: Force re-evaluation by simulating addon reload
-        if not reloadSuccess then
-            -- This is a more aggressive approach - force the addon to re-read files
-            local addonName = "AutoRollPlus"
-            
-            -- Try to reload using WoW's addon system
-            if C_AddOns and C_AddOns.LoadAddOn then
-                C_AddOns.LoadAddOn(addonName)
-            elseif LoadAddOn then
-                LoadAddOn(addonName)
-            end
-            
-            -- Check if globals were restored
-            if _G.AutoRollTestProfiles and _G.AutoRollTestRunner then
-                reloadSuccess = true
-            end
-        end
-        
-        if not reloadSuccess then
-            error("Unable to reload test files using available methods")
-        end
-        
-        return true
-    end)
-    
-    if success then
-        if showSuccess then
-            self:AddOutput(COLORS.success .. "Hot reload: Test files reloaded successfully!" .. COLORS.reset)
-        end
-    else
-        self:AddOutput(COLORS.error .. "Hot reload: Failed to reload test files - " .. tostring(result) .. COLORS.reset)
-        self:AddOutput(COLORS.info .. "Hot reload: WoW Classic has limited hot reload capabilities" .. COLORS.reset)
-        self:AddOutput(COLORS.info .. "Hot reload: Please use /reload to apply changes, then reopen terminal" .. COLORS.reset)
-        
-        -- Suggest manual reload
-        self:AddOutput("")
-        self:AddOutput(COLORS.header .. "Quick reload steps:" .. COLORS.reset)
-        self:AddOutput(COLORS.info .. "1. Close this terminal" .. COLORS.reset)
-        self:AddOutput(COLORS.info .. "2. Type: /reload" .. COLORS.reset)
-        self:AddOutput(COLORS.info .. "3. Type: /artest" .. COLORS.reset)
-    end
-end
 
 -- Add text to output
 function TestTerminalGUI:AddOutput(text)
@@ -314,12 +213,6 @@ function TestTerminalGUI:ExecuteCommand(command)
     
     self:AddOutput(COLORS.info .. "> " .. command .. COLORS.reset)
     
-    -- Hot reload test files if enabled
-    if hotReloadEnabled then
-        self:AddOutput(COLORS.info .. "Hot reload: Reloading test files..." .. COLORS.reset)
-        self:ReloadTestFiles(true) -- Show success/failure messages
-    end
-    
     -- Run test command
     isRunning = true
     self:AddOutput(COLORS.warning .. "Running test..." .. COLORS.reset)
@@ -342,7 +235,12 @@ function TestTerminalGUI:ExecuteCommand(command)
         
         -- Execute the command
         if command == "runAllProfiles" then
-            AutoRollTestRunner:runAllProfiles(false) -- Use concise mode
+            if _G.AutoRollTestRunner and _G.AutoRollTestRunner.runAllProfiles then
+                AutoRollTestRunner:runAllProfiles(false) -- Use concise mode
+            else
+                self:AddOutput(COLORS.error .. "Test runner not available" .. COLORS.reset)
+                self:AddOutput(COLORS.info .. "Please use /reload to load test files, then reopen terminal" .. COLORS.reset)
+            end
         else
             self:AddOutput(COLORS.error .. "Unknown command: " .. command .. COLORS.reset)
         end
