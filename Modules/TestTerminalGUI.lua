@@ -107,8 +107,7 @@ function TestTerminalGUI:Initialize()
     -- Create buttons
     local buttons = {
         {text = "Run All Tests", command = "runAllProfiles", x = 10},
-        {text = "Clear", command = "clear", x = 150},
-        {text = "Help", command = "help", x = 250}
+        {text = "Clear", command = "clear", x = 650}
     }
     
     for _, btn in ipairs(buttons) do
@@ -176,18 +175,6 @@ function TestTerminalGUI:ExecuteCommand(command)
         if self.outputFontString then
             self.outputFontString:SetText("")
         end
-        return
-    end
-    
-    if command == "help" then
-        self:AddOutput(COLORS.header .. "AutoRoll Test Terminal" .. COLORS.reset)
-        self:AddOutput("Simple test runner with clear output:")
-        self:AddOutput("  " .. COLORS.success .. "Run All Tests" .. COLORS.reset .. " - Execute all test profiles")
-        self:AddOutput("  " .. COLORS.warning .. "Clear" .. COLORS.reset .. " - Clear terminal output")
-        self:AddOutput("  " .. COLORS.info .. "Help" .. COLORS.reset .. " - Show this help")
-        self:AddOutput("")
-        self:AddOutput(COLORS.info .. "Output format: profile: X tests, Y passed, Z failed ✓/✗" .. COLORS.reset)
-        self:AddOutput("")
         return
     end
     
