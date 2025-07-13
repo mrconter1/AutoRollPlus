@@ -311,15 +311,6 @@ do -- Private Scope
                     local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
                     local rules = profileKey and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey]
                     if not rules or #rules == 0 then
-                        -- NEED rules
-                        local needRules = {
-                            { item = "MAIL", stat = "AGILITY", upgrade = true, action = "NEED", levelMin = 40 },
-                            { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
-                            { item = "RING", stat = "AGILITY", upgrade = true, action = "NEED" },
-                            { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "NEED" },
-                            { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "NEED" },
-                            { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "NEED" }
-                        }
                         -- MANUAL rules
                         local manualRules = {
                             { item = "LEATHER", action = "MANUAL" },
@@ -330,10 +321,9 @@ do -- Private Scope
                         local greedTypes = {
                             "one-handed swords", "two-handed swords", "one-handed maces", "two-handed maces", "one-handed axes", "two-handed axes", "daggers", "polearms", "staves", "fist weapons", "wands", "thrown", "spears",
                             "plate", "mail", "cloth", "shields", "librams", "idols", "totems", "sigils", "trade goods", "miscellaneous",
-                            "rings", "trinkets", "necklaces", "cloaks"
+                            "rings", "trinkets", "necklaces", "cloaks", "crossbows"
                         }
                         local rulesArr = {}
-                        for _, r in ipairs(needRules) do table.insert(rulesArr, r) end
                         for _, r in ipairs(manualRules) do table.insert(rulesArr, r) end
                         for _, t in ipairs(greedTypes) do table.insert(rulesArr, { item = t:upper(), action = "GREED" }) end
                         AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
