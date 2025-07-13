@@ -234,5 +234,30 @@ AutoRollTestData = {
             ["INVTYPE_TRINKET_2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
         }),
         expectedResult = "NEED"
+    },
+    
+    {
+        name = "Shaman above level 40 needs item",
+        rules = {
+            "IF user.class == 'SHAMAN' AND user.level > 40 THEN need"
+        },
+        player = {
+            level = 45,
+            class = "SHAMAN",
+            spec = "Enhancement"
+        },
+        item = {
+            itemRarity = "Uncommon",
+            itemSubType = "Mail",
+            itemEquipLoc = "INVTYPE_CHEST",
+            quality = 2,
+            stats = {
+                ["ITEM_MOD_INTELLECT_SHORT"] = 12,
+            }
+        },
+        equippedItems = convertEquippedItems({
+            ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+        }),
+        expectedResult = "NEED"
     }
 } 
