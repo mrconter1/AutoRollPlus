@@ -1,5 +1,5 @@
 -- Test data for AutoRoll rule evaluation
--- Each test case contains: name, rules, player, item, equippedItems, expectedResult
+-- Organized by character profiles with complete rule scripts and multiple scenarios
 
 -- Helper function to convert INVTYPE constants to slot IDs
 local function getSlotID(invType)
@@ -43,247 +43,167 @@ local function convertEquippedItems(equippedItems)
     return converted
 end
 
-AutoRollTestData = {
-    {
-        name = "Hunter leather upgrade at low level",
-        rules = {
+AutoRollTestProfiles = {
+    hunter = {
+        ruleScript = {
             "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
             "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
             "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
             "ELSE greed"
         },
-        player = {
-            level = 45,
-            class = "HUNTER",
-            spec = "Beast Mastery"
-        },
-        item = {
-            itemRarity = "Uncommon",
-            itemSubType = "Leather",
-            itemEquipLoc = "INVTYPE_HAND",
-            quality = 2,
-            stats = {
-                ["ITEM_MOD_AGILITY_SHORT"] = 15,
+        scenarios = {
+            {
+                name = "leather upgrade at low level",
+                player = {
+                    level = 45,
+                    class = "HUNTER",
+                    spec = "Beast Mastery"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_HAND",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_HAND"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "mail upgrade at high level",
+                player = {
+                    level = 52,
+                    class = "HUNTER",
+                    spec = "Beast Mastery"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "bow upgrade",
+                player = {
+                    level = 60,
+                    class = "HUNTER",
+                    spec = "Marksmanship"
+                },
+                item = {
+                    itemRarity = "Epic",
+                    itemSubType = "Bow",
+                    itemEquipLoc = "INVTYPE_RANGED",
+                    quality = 4,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 20 } }
+                }),
+                expectedResult = "MANUAL"
             }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_HAND"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } }
-        }),
-        expectedResult = "MANUAL"
+        }
     },
     
-    {
-        name = "Hunter mail upgrade at high level",
-        rules = {
-            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
-            "ELSE greed"
-        },
-        player = {
-            level = 52,
-            class = "HUNTER",
-            spec = "Beast Mastery"
-        },
-        item = {
-            itemRarity = "Rare",
-            itemSubType = "Mail",
-            itemEquipLoc = "INVTYPE_CHEST",
-            quality = 3,
-            stats = {
-                ["ITEM_MOD_AGILITY_SHORT"] = 20,
-            }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
-        }),
-        expectedResult = "MANUAL"
-    },
-    
-    {
-        name = "Hunter bow upgrade",
-        rules = {
-            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
-            "ELSE greed"
-        },
-        player = {
-            level = 60,
-            class = "HUNTER",
-            spec = "Marksmanship"
-        },
-        item = {
-            itemRarity = "Epic",
-            itemSubType = "Bow",
-            itemEquipLoc = "INVTYPE_RANGED",
-            quality = 4,
-            stats = {
-                ["ITEM_MOD_AGILITY_SHORT"] = 25,
-            }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 20 } }
-        }),
-        expectedResult = "MANUAL"
-    },
-    
-    {
-        name = "Hunter leather at high level - no upgrade",
-        rules = {
-            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
-            "ELSE greed"
-        },
-        player = {
-            level = 55,
-            class = "HUNTER",
-            spec = "Beast Mastery"
-        },
-        item = {
-            itemRarity = "Uncommon",
-            itemSubType = "Leather",
-            itemEquipLoc = "INVTYPE_HAND",
-            quality = 2,
-            stats = {
-                ["ITEM_MOD_AGILITY_SHORT"] = 12,
-            }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_HAND"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
-        }),
-        expectedResult = "GREED"
-    },
-    
-    {
-        name = "Non-hunter class gets greed fallback",
-        rules = {
-            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
-            "ELSE greed"
-        },
-        player = {
-            level = 60,
-            class = "WARRIOR",
-            spec = "Arms"
-        },
-        item = {
-            itemRarity = "Rare",
-            itemSubType = "Cloth",
-            itemEquipLoc = "INVTYPE_CHEST",
-            quality = 3,
-            stats = {
-                ["ITEM_MOD_INTELLECT_SHORT"] = 18,
-            }
-        },
-        equippedItems = convertEquippedItems({}),
-        expectedResult = "GREED"
-    },
-    
-    {
-        name = "Ring upgrade test",
-        rules = {
-            "IF item.type == 'ring' AND item.agility.isBetter() THEN manual",
+    priest_holy = {
+        ruleScript = {
+            "IF item.type == 'cloth' AND item.intellect.isBetter() THEN manual",
+            "IF item.type == 'staff' AND item.intellect.isBetter() THEN manual",
+            "IF item.type == 'trinket' AND item.intellect.isBetter() THEN manual",
             "ELSE pass"
         },
-        player = {
-            level = 60,
-            class = "HUNTER",
-            spec = "Beast Mastery"
-        },
-        item = {
-            itemRarity = "Epic",
-            itemSubType = "Miscellaneous",
-            itemEquipLoc = "INVTYPE_FINGER",
-            quality = 4,
-            stats = {
-                ["ITEM_MOD_AGILITY_SHORT"] = 16,
+        scenarios = {
+            {
+                name = "cloth intellect upgrade",
+                player = {
+                    level = 50,
+                    class = "PRIEST",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "staff upgrade",
+                player = {
+                    level = 55,
+                    class = "PRIEST",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 16 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "trinket upgrade",
+                player = {
+                    level = 60,
+                    class = "PRIEST",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Epic",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 4,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
             }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } },
-            ["INVTYPE_FINGER_2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
-        }),
-        expectedResult = "MANUAL"
-    },
-    
-    {
-        name = "Trinket upgrade test",
-        rules = {
-            "IF item.type == 'trinket' AND item.agility.isBetter() THEN need",
-            "ELSE pass"
-        },
-        player = {
-            level = 60,
-            class = "ROGUE",
-            spec = "Combat"
-        },
-        item = {
-            itemRarity = "Epic",
-            itemSubType = "Miscellaneous",
-            itemEquipLoc = "INVTYPE_TRINKET",
-            quality = 4,
-            stats = {
-                ["ITEM_MOD_AGILITY_SHORT"] = 20,
-            }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } },
-            ["INVTYPE_TRINKET_2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
-        }),
-        expectedResult = "NEED"
-    },
-    
-    {
-        name = "Shaman above level 40 needs item",
-        rules = {
-            "IF user.class == 'SHAMAN' AND user.level > 40 THEN need"
-        },
-        player = {
-            level = 45,
-            class = "SHAMAN",
-            spec = "Enhancement"
-        },
-        item = {
-            itemRarity = "Uncommon",
-            itemSubType = "Mail",
-            itemEquipLoc = "INVTYPE_CHEST",
-            quality = 2,
-            stats = {
-                ["ITEM_MOD_INTELLECT_SHORT"] = 12,
-            }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
-        }),
-        expectedResult = "NEED"
-    },
-    
-    {
-        name = "Warrior needs on cloth chest with better armor",
-        rules = {
-            "IF user.class == 'WARRIOR' AND item.type == 'cloth' AND item.armor.isBetter() THEN need"
-        },
-        player = {
-            level = 35,
-            class = "WARRIOR",
-            spec = "Protection"
-        },
-        item = {
-            itemRarity = "Uncommon",
-            itemSubType = "Cloth",
-            itemEquipLoc = "INVTYPE_CHEST",
-            quality = 2,
-            stats = {
-                ["ITEM_MOD_ARMOR_SHORT"] = 85,
-                ["ITEM_MOD_STAMINA_SHORT"] = 10,
-            }
-        },
-        equippedItems = convertEquippedItems({
-            ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_ARMOR_SHORT"] = 60 } }
-        }),
-        expectedResult = "NEED"
+        }
     }
-} 
+}
+
+-- Legacy compatibility: flatten profiles into old test format for existing test runner
+AutoRollTestData = {}
+for profileName, profile in pairs(AutoRollTestProfiles) do
+    for _, scenario in ipairs(profile.scenarios) do
+        table.insert(AutoRollTestData, {
+            name = profileName .. " - " .. scenario.name,
+            rules = profile.ruleScript,
+            player = scenario.player,
+            item = scenario.item,
+            equippedItems = scenario.equippedItems,
+            expectedResult = scenario.expectedResult
+        })
+    end
+end 

@@ -760,6 +760,8 @@ do -- Private Scope
             return subType == "gun"
         elseif itemType == "crossbow" then
             return subType == "crossbow"
+        elseif itemType == "staff" then
+            return subType == "staff"
         -- Accessories
         elseif itemType == "ring" then
             return equipLoc == "INVTYPE_FINGER"

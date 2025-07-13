@@ -89,7 +89,123 @@ function TestRunner:runSingleTest(testCase)
     return true, result
 end
 
--- Run all tests
+-- Run tests for a specific profile
+function TestRunner:runProfileTests(profileName)
+    local profile = AutoRollTestProfiles[profileName]
+    if not profile then
+        print("Profile not found: " .. profileName)
+        return
+    end
+    
+    local totalTests = 0
+    local passedTests = 0
+    local failedTests = {}
+    
+    print("=== Testing Profile: " .. profileName .. " ===")
+    print("Rule Script:")
+    for i, rule in ipairs(profile.ruleScript) do
+        print("  " .. i .. ". " .. rule)
+    end
+    print()
+    print("Running " .. #profile.scenarios .. " scenarios...")
+    print()
+    
+    for i, scenario in ipairs(profile.scenarios) do
+        totalTests = totalTests + 1
+        
+        local testCase = {
+            name = profileName .. " - " .. scenario.name,
+            rules = profile.ruleScript,
+            player = scenario.player,
+            item = scenario.item,
+            equippedItems = scenario.equippedItems,
+            expectedResult = scenario.expectedResult
+        }
+        
+        local success, actualResult = self:runSingleTest(testCase)
+        
+        if success and actualResult == testCase.expectedResult then
+            passedTests = passedTests + 1
+            print("✓ PASS: " .. scenario.name)
+        else
+            local failureReason
+            if not success then
+                failureReason = actualResult -- Error message
+            else
+                failureReason = "Expected '" .. tostring(testCase.expectedResult) .. "' but got '" .. tostring(actualResult) .. "'"
+            end
+            
+            table.insert(failedTests, {
+                name = scenario.name,
+                reason = failureReason,
+                rules = profile.ruleScript,
+                player = scenario.player,
+                item = scenario.item
+            })
+            
+            print("✗ FAIL: " .. scenario.name)
+            print("  " .. failureReason)
+        end
+    end
+    
+    print()
+    print("=== Profile Results ===")
+    print("Total tests: " .. totalTests)
+    print("Passed: " .. passedTests)
+    print("Failed: " .. (totalTests - passedTests))
+    
+    if #failedTests > 0 then
+        print()
+        print("=== Failed Test Details ===")
+        for _, failure in ipairs(failedTests) do
+            print("Test: " .. failure.name)
+            print("Reason: " .. failure.reason)
+            print()
+        end
+    end
+    
+    return passedTests, totalTests - passedTests
+end
+
+-- List all available profiles
+function TestRunner:listProfiles()
+    print("=== Available Test Profiles ===")
+    for profileName, profile in pairs(AutoRollTestProfiles) do
+        print(profileName .. " (" .. #profile.scenarios .. " scenarios)")
+        print("  Rule Script:")
+        for i, rule in ipairs(profile.ruleScript) do
+            print("    " .. i .. ". " .. rule)
+        end
+        print()
+    end
+end
+
+-- Run all profiles with organization
+function TestRunner:runAllProfiles()
+    local totalTests = 0
+    local totalPassed = 0
+    local totalFailed = 0
+    
+    print("=== AutoRoll Test Runner - Profile Mode ===")
+    print()
+    
+    for profileName, profile in pairs(AutoRollTestProfiles) do
+        local passed, failed = self:runProfileTests(profileName)
+        totalTests = totalTests + #profile.scenarios
+        totalPassed = totalPassed + passed
+        totalFailed = totalFailed + failed
+        print()
+    end
+    
+    print("=== Overall Results ===")
+    print("Total tests: " .. totalTests)
+    print("Passed: " .. totalPassed)
+    print("Failed: " .. totalFailed)
+    
+    return totalPassed, totalFailed
+end
+
+-- Run all tests (legacy compatibility)
 function TestRunner:runAllTests()
     local totalTests = 0
     local passedTests = 0
@@ -179,5 +295,12 @@ _G.AutoRollTestRunner = TestRunner
 
 -- Auto-run tests if executed directly
 if not _G.AutoRollTestRunner_ManualMode then
-    TestRunner:runAllTests()
-end 
+    TestRunner:runAllProfiles()
+end
+
+-- Usage examples:
+-- TestRunner:listProfiles()                    -- List all available profiles
+-- TestRunner:runAllProfiles()                  -- Run all profiles with organization
+-- TestRunner:runProfileTests("hunter")         -- Run only hunter profile tests
+-- TestRunner:runProfileTests("priest_holy")    -- Run only priest_holy profile tests
+-- TestRunner:runAllTests()                     -- Run all tests (legacy mode) 
