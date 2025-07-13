@@ -22,31 +22,7 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
-    if cmd == "printing" then
-        local willPrint = not AutoRoll_PCDB["printRolls"]
 
-        if willPrint then
-            print("AutoRoll - Printing ENABLED")
-        else
-            print("AutoRoll - Printing DISABLED")
-        end
-
-        AutoRoll_PCDB["printRolls"] = willPrint
-        return
-    end
-
-    if cmd == "debug" then
-        local willDebug = not AutoRoll_PCDB["debug"]
-
-        if willDebug then
-            print("AutoRoll - Debug ENABLED")
-        else
-            print("AutoRoll - Debug DISABLED")
-        end
-
-        AutoRoll_PCDB["debug"] = willDebug
-        return
-    end
 
     if string.match(cmd, "^test%s+") then
         local itemLink = string.match(cmd, "^test%s+(.+)")
@@ -80,14 +56,8 @@ SlashCmdList["AR"] = function(msg)
                     }
                     
                     -- Enable debug temporarily for this test
-                    local wasDebug = AutoRoll_PCDB["debug"]
-                    AutoRoll_PCDB["debug"] = true
-                    
                     -- Call the parser from AutoRoll.lua
                     local action = AutoRoll.RuleParser and AutoRoll.RuleParser:evaluateRuleStrings(ruleStrings, context)
-                    
-                    -- Restore debug setting
-                    AutoRoll_PCDB["debug"] = wasDebug
                     
                     if action then
                         print("-- RESULT: "..action)
@@ -109,18 +79,7 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
-    if cmd == "filter rolls" then
-        local willFilter = not AutoRoll_PCDB["filterRolls"]
 
-        if willFilter then
-            print("AutoRoll - Filtering rolls ENABLED")
-        else
-            print("AutoRoll - Filtering rolls DISABLED")
-        end
-
-        AutoRoll_PCDB["filterRolls"] = willFilter
-        return
-    end
 
 
 
@@ -185,10 +144,7 @@ SlashCmdList["AR"] = function(msg)
     print("-- Control addon:")
     print("--       /ar enable")
     print("--       /ar disable")
-    print("-- Settings:")
-    print("--       /ar printing    (toggle roll announcements)")
-    print("--       /ar debug       (toggle debug output)")
-    print("--       /ar filter rolls (toggle roll filtering)")
+
     print("-- Testing:")
     print("--       /ar test [item-link]")
     print("--       /ar test         (run unit tests)")

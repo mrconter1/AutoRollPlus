@@ -113,10 +113,7 @@ AutoRoll.FilterEndStrings = {
 
 -- Simple defaults
 local defaults = {
-    ["printRolls"] = false,
     ["enabled"] = true,
-    ["filterRolls"] = true,
-    ["debug"] = false,
 }
 
 do -- Private Scope
@@ -171,7 +168,7 @@ do -- Private Scope
 
     -- REGISTER ROLL FILTER
     function rollFiler(_, _, message)
-        if AutoRoll_PCDB["filterRolls"] and not string.match(message, "won:") then
+        if not string.match(message, "won:") then
             for _, str in pairs(AutoRoll.FilterStrings) do
                 if string.match(message, str) then return true end
             end
@@ -776,17 +773,9 @@ do -- Private Scope
         end
         
         for i, ruleString in ipairs(rules) do
-            if AutoRoll_PCDB["debug"] then
-                print("AutoRoll DEBUG: Evaluating rule "..i..": "..ruleString)
-            end
-            
             local tokens = self:tokenize(ruleString)
             local ast = self:parse(tokens)
             local result = self:evaluate(ast, context)
-            
-            if AutoRoll_PCDB["debug"] then
-                print("AutoRoll DEBUG: Rule "..i.." result: "..(result or "false"))
-            end
             
             if result then
                 return result:upper()
@@ -824,31 +813,17 @@ do -- Private Scope
             
             if ruleStrings then
                 local action = RuleParser:evaluateRuleStrings(ruleStrings, context)
-                if AutoRoll_PCDB["debug"] then
-                    print("AutoRoll DEBUG: Rule evaluation result for "..(itemLink or "item:"..itemId)..": "..(action or "no match"))
-                end
+
                 if action then
                     if action == "MANUAL" or action == "manualRoll" or action == "MANUALROLL" then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: MANUAL required for "..(itemLink or "item:"..itemId))
-                        end
                         handled = true
                     elseif (action == "NEED" or action == "rollNeed" or action == "ROLLNEED") and canNeed then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: NEED on "..(itemLink or "item:"..itemId))
-                        end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.NEED)
                         handled = true
                     elseif (action == "GREED" or action == "rollGreed" or action == "ROLLGREED") and canGreed then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: GREED on "..(itemLink or "item:"..itemId))
-                        end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.GREED)
                         handled = true
                     elseif action == "PASS" or action == "rollPass" or action == "ROLLPASS" then
-                        if AutoRoll_PCDB["printRolls"] then
-                            print("AutoRoll: PASS on "..(itemLink or "item:"..itemId))
-                        end
                         RollOnLoot(RollID, AutoRollUtils.ROLL.PASS)
                         handled = true
                     end
