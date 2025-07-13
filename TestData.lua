@@ -794,6 +794,339 @@ AutoRollTestProfiles = {
                 expectedResult = "GREED"
             }
         }
+    },
+
+    monk_brewmaster = {
+        ruleScript = AutoRollProfiles.monk_brewmaster,
+        scenarios = {
+            {
+                name = "leather agility upgrade for tank",
+                player = {
+                    level = 35,
+                    class = "MONK",
+                    spec = "Brewmaster"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "fist weapon agility upgrade",
+                player = {
+                    level = 40,
+                    class = "MONK",
+                    spec = "Brewmaster"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Fist Weapon",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "trinket agility upgrade",
+                player = {
+                    level = 45,
+                    class = "MONK",
+                    spec = "Brewmaster"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 16,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "mail armor - wrong type results in greed",
+                player = {
+                    level = 30,
+                    class = "MONK",
+                    spec = "Brewmaster"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 16 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "intellect leather - wrong stat results in greed",
+                player = {
+                    level = 50,
+                    class = "MONK",
+                    spec = "Brewmaster"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 24,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+
+    monk_windwalker = {
+        ruleScript = AutoRollProfiles.monk_windwalker,
+        scenarios = {
+            {
+                name = "leather agility upgrade for dps",
+                player = {
+                    level = 35,
+                    class = "MONK",
+                    spec = "Windwalker"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_LEGS",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_LEGS"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "staff agility upgrade",
+                player = {
+                    level = 40,
+                    class = "MONK",
+                    spec = "Windwalker"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 28,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 22 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "one-handed sword agility upgrade",
+                player = {
+                    level = 50,
+                    class = "MONK",
+                    spec = "Windwalker"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "One-Handed Sword",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "plate armor - wrong type results in greed",
+                player = {
+                    level = 45,
+                    class = "MONK",
+                    spec = "Windwalker"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 30,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 20 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "non-upgrade fist weapon - results in greed",
+                player = {
+                    level = 55,
+                    class = "MONK",
+                    spec = "Windwalker"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Fist Weapon",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 25 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+
+    monk_mistweaver = {
+        ruleScript = AutoRollProfiles.monk_mistweaver,
+        scenarios = {
+            {
+                name = "leather intellect upgrade for healer",
+                player = {
+                    level = 35,
+                    class = "MONK",
+                    spec = "Mistweaver"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "staff intellect upgrade",
+                player = {
+                    level = 40,
+                    class = "MONK",
+                    spec = "Mistweaver"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 30,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 24 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "healing trinket upgrade",
+                player = {
+                    level = 50,
+                    class = "MONK",
+                    spec = "Mistweaver"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 18 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "mail armor - wrong type results in greed",
+                player = {
+                    level = 30,
+                    class = "MONK",
+                    spec = "Mistweaver"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "agility leather - wrong stat results in greed",
+                player = {
+                    level = 45,
+                    class = "MONK",
+                    spec = "Mistweaver"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 26,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 18 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
     }
 }
  

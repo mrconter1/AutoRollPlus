@@ -72,6 +72,11 @@ AutoRollMappings.profileNameMap = {
         ["Beast Mastery"] = "hunter",
         ["Marksmanship"] = "hunter",
         ["Survival"] = "hunter"
+    },
+    MONK = {
+        ["Brewmaster"] = "monk_brewmaster",
+        ["Windwalker"] = "monk_windwalker",
+        ["Mistweaver"] = "monk_mistweaver"
     }
 }
 

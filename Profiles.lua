@@ -182,5 +182,77 @@ AutoRollProfiles = {
         THEN item.rollNeed()
 
         item.rollGreed()
+    ]],
+
+    monk_brewmaster = [[
+        IF item.type == 'leather' 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'fist weapon' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'one-handed sword' OR 
+            item.type == 'polearm' OR 
+            item.type == 'staff') 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        item.rollGreed()
+    ]],
+
+    monk_windwalker = [[
+        IF item.type == 'leather' 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'fist weapon' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'one-handed sword' OR 
+            item.type == 'polearm' OR 
+            item.type == 'staff') 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        item.rollGreed()
+    ]],
+
+    monk_mistweaver = [[
+        IF item.type == 'leather' 
+           AND item.intellect.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'fist weapon' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'one-handed sword' OR 
+            item.type == 'polearm' OR 
+            item.type == 'staff') 
+           AND item.intellect.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.intellect.isUpgrade() 
+        THEN item.rollNeed()
+
+        item.rollGreed()
     ]]
 } 
