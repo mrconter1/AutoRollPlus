@@ -293,12 +293,12 @@ do -- Private Scope
                     -- Hunter rules as parseable strings
                     local hunterRules = [[
                         IF item.type == 'leather' 
-                           AND user.level < 50 
+                           AND player.level < 50 
                            AND item.agility.isUpgrade() 
                         THEN item.manualRoll()
 
                         IF item.type == 'mail' 
-                           AND user.level >= 50 
+                           AND player.level >= 50 
                            AND item.agility.isUpgrade() 
                         THEN item.manualRoll()
 
@@ -601,7 +601,7 @@ do -- Private Scope
                 local identifier = consume("IDENTIFIER")
                 local result = {type = "IDENTIFIER", value = identifier.value}
                 
-                -- Handle dot notation (user.level, item.agility.isUpgrade())
+                -- Handle dot notation (player.level, item.agility.isUpgrade())
                 while peek() and peek().type == "DOT" do
                     consume("DOT")
                     local member = consume("IDENTIFIER")
@@ -749,7 +749,7 @@ do -- Private Scope
         elseif value.type == "STRING" then
             return value.value
         elseif value.type == "MEMBER" then
-            if value.object.type == "IDENTIFIER" and value.object.value == "user" then
+            if value.object.type == "IDENTIFIER" and value.object.value == "player" then
                 if value.member == "level" then
                     return UnitLevel("player")
                 elseif value.member == "class" then

@@ -47,12 +47,12 @@ AutoRollTestProfiles = {
     hunter = {
         ruleScript = [[
             IF item.type == 'leather' 
-               AND user.level < 50 
+               AND player.level < 50 
                AND item.agility.isUpgrade() 
             THEN item.manualRoll()
 
             IF item.type == 'mail' 
-               AND user.level >= 50 
+               AND player.level >= 50 
                AND item.agility.isUpgrade() 
             THEN item.manualRoll()
 
@@ -305,12 +305,12 @@ AutoRollTestProfiles = {
     dps_warrior = {
         ruleScript = [[
             IF item.type == 'mail' 
-               AND user.level < 40 
+               AND player.level < 40 
                AND item.strength.isUpgrade() 
             THEN item.rollNeed()
 
             IF item.type == 'plate' 
-               AND user.level >= 40 
+               AND player.level >= 40 
                AND item.strength.isUpgrade() 
             THEN item.rollNeed()
 
@@ -447,12 +447,12 @@ AutoRollTestProfiles = {
     tank_warrior = {
         ruleScript = [[
             IF item.type == 'mail' 
-               AND user.level < 40 
+               AND player.level < 40 
                AND item.strength.isUpgrade() 
             THEN item.rollNeed()
 
             IF item.type == 'plate' 
-               AND user.level >= 40 
+               AND player.level >= 40 
                AND item.strength.isUpgrade() 
             THEN item.rollNeed()
 
