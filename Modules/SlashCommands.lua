@@ -197,6 +197,16 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
+    if cmd == "config" then
+        -- Open the configuration GUI
+        if AutoRollConfigGUI then
+            AutoRollConfigGUI:Initialize()
+        else
+            print("AutoRoll: Configuration GUI not available")
+        end
+        return
+    end
+
 
 
     -- No rules matched, print help
@@ -216,6 +226,8 @@ SlashCmdList["AR"] = function(msg)
     print("-- Information:")
     print("--       /ar classspec    (show class/spec)")
     print("--       /ar level        (show level)")
+    print("-- Configuration:")
+    print("--       /ar config       (open configuration GUI)")
     print("-- Note: Rules are automatically applied based on your class/spec")
     print("-- Edit rules in Profiles.lua or use /artest for testing interface")
 

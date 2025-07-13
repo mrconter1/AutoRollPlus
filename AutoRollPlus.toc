@@ -15,6 +15,7 @@ AutoRoll.lua
 
 Modules\SlashCommands.lua
 Modules\TestTerminalGUI.lua
+Modules\ConfigGUI.lua
 
 TestData.lua
 TestRunner.lua
