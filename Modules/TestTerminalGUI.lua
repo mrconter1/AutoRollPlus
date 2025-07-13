@@ -8,6 +8,8 @@ local terminalFrame = nil
 local outputText = ""
 local scrollFrame = nil
 local isRunning = false
+local autoClearCheckbox = nil
+local autoClearEnabled = true
 
 -- Terminal colors
 local COLORS = {
@@ -104,27 +106,35 @@ function TestTerminalGUI:Initialize()
     })
     buttonPanel:SetBackdropColor(0.05, 0.05, 0.05, 1)
     
-    -- Create buttons
-    local buttons = {
-        {text = "Run All Tests", command = "runAllProfiles", x = 10},
-        {text = "Clear", command = "clear", x = 650}
-    }
+    -- Create run button
+    local runButton = CreateFrame("Button", nil, buttonPanel, "GameMenuButtonTemplate")
+    runButton:SetSize(120, 25)
+    runButton:SetPoint("LEFT", buttonPanel, "LEFT", 10, 0)
+    runButton:SetText("Run All Tests")
+    runButton:SetScript("OnClick", function() 
+        if not isRunning then
+            self:ExecuteCommand("runAllProfiles")
+        end
+    end)
     
-    for _, btn in ipairs(buttons) do
-        local button = CreateFrame("Button", nil, buttonPanel, "GameMenuButtonTemplate")
-        button:SetSize(120, 25)
-        button:SetPoint("LEFT", buttonPanel, "LEFT", btn.x, 0)
-        button:SetText(btn.text)
-        button:SetScript("OnClick", function() 
-            if not isRunning then
-                self:ExecuteCommand(btn.command)
-            end
-        end)
-    end
+    -- Create auto-clear checkbox
+    autoClearCheckbox = CreateFrame("CheckButton", nil, buttonPanel, "ChatConfigCheckButtonTemplate")
+    autoClearCheckbox:SetSize(25, 25)
+    autoClearCheckbox:SetPoint("RIGHT", buttonPanel, "RIGHT", -10, 0)
+    autoClearCheckbox:SetChecked(autoClearEnabled)
+    autoClearCheckbox:SetScript("OnClick", function(self)
+        autoClearEnabled = self:GetChecked()
+    end)
+    
+    -- Auto-clear label
+    local autoClearLabel = buttonPanel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    autoClearLabel:SetPoint("RIGHT", autoClearCheckbox, "LEFT", -5, 0)
+    autoClearLabel:SetText("Auto-clear")
+    autoClearLabel:SetTextColor(1, 1, 1)
     
     -- Initial welcome message
     self:AddOutput(COLORS.header .. "AutoRoll Test Terminal v1.0" .. COLORS.reset)
-    self:AddOutput(COLORS.info .. "Simple test runner with clear stats per test suite" .. COLORS.reset)
+    self:AddOutput(COLORS.info .. "Simple test runner with auto-clear option" .. COLORS.reset)
     self:AddOutput("")
     
     terminalFrame:Show()
@@ -168,15 +178,15 @@ function TestTerminalGUI:ExecuteCommand(command)
         return
     end
     
-    self:AddOutput(COLORS.info .. "> " .. command .. COLORS.reset)
-    
-    if command == "clear" then
+    -- Auto-clear output if enabled
+    if autoClearEnabled then
         outputText = ""
         if self.outputFontString then
             self.outputFontString:SetText("")
         end
-        return
     end
+    
+    self:AddOutput(COLORS.info .. "> " .. command .. COLORS.reset)
     
     -- Run test command
     isRunning = true
