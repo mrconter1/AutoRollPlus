@@ -92,6 +92,21 @@ AutoRollMappings.profileNameMap = {
         ["Blood"] = "death_knight_blood",
         ["Frost"] = "death_knight_frost",
         ["Unholy"] = "death_knight_unholy"
+    },
+    PALADIN = {
+        ["Holy"] = "paladin_holy",
+        ["Protection"] = "paladin_protection",
+        ["Retribution"] = "paladin_retribution"
+    },
+    SHAMAN = {
+        ["Enhancement"] = "shaman_enhancement",
+        ["Elemental"] = "shaman_elemental",
+        ["Restoration"] = "shaman_restoration"
+    },
+    MAGE = {
+        ["Arcane"] = "mage_arcane",
+        ["Fire"] = "mage_fire",
+        ["Frost"] = "mage_frost"
     }
 }
 

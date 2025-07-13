@@ -243,6 +243,179 @@ AutoRollRuleScripts = {
         THEN item.manualRoll()
 
         item.rollGreed()
+    ]],
+
+    -- Paladin Holy rules (intellect, mail->plate progression)
+    paladin_holy = [[
+        IF item.type == 'mail' 
+           AND player.level < 40 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'plate' 
+           AND player.level >= 40 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'one-handed sword' OR 
+            item.type == 'two-handed sword' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'two-handed mace' OR 
+            item.type == 'polearm' OR 
+            item.type == 'dagger' OR 
+            item.type == 'staff') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'shield' 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        item.rollGreed()
+    ]],
+
+    -- Paladin Ret/Prot rules (strength, mail->plate progression)
+    paladin_strength = [[
+        IF item.type == 'mail' 
+           AND player.level < 40 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'plate' 
+           AND player.level >= 40 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'one-handed sword' OR 
+            item.type == 'two-handed sword' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'two-handed mace' OR 
+            item.type == 'polearm' OR 
+            item.type == 'dagger' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'two-handed axe') 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'shield' 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.strength.isUpgrade() 
+        THEN item.manualRoll()
+
+        item.rollGreed()
+    ]],
+
+    -- Shaman Enhancement rules (agility, leather->mail progression)
+    shaman_agility = [[
+        IF item.type == 'leather' 
+           AND player.level < 40 
+           AND item.agility.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'mail' 
+           AND player.level >= 40 
+           AND item.agility.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'one-handed sword' OR 
+            item.type == 'two-handed sword' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'two-handed mace' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'two-handed axe' OR 
+            item.type == 'dagger' OR 
+            item.type == 'fist weapon' OR 
+            item.type == 'staff') 
+           AND item.agility.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'shield' 
+           AND item.agility.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.agility.isUpgrade() 
+        THEN item.manualRoll()
+
+        item.rollGreed()
+    ]],
+
+    -- Shaman Elemental/Resto rules (intellect, leather->mail progression)
+    shaman_intellect = [[
+        IF item.type == 'leather' 
+           AND player.level < 40 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'mail' 
+           AND player.level >= 40 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'one-handed sword' OR 
+            item.type == 'two-handed sword' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'two-handed mace' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'two-handed axe' OR 
+            item.type == 'dagger' OR 
+            item.type == 'fist weapon' OR 
+            item.type == 'staff') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF item.type == 'shield' 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        item.rollGreed()
+    ]],
+
+    -- Mage rules (intellect, cloth only)
+    mage_intellect = [[
+        IF item.type == 'cloth' 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'staff' OR 
+            item.type == 'wand' OR 
+            item.type == 'dagger' OR 
+            item.type == 'one-handed sword' OR 
+            item.type == 'off-hand') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.intellect.isUpgrade() 
+        THEN item.manualRoll()
+
+        item.rollGreed()
     ]]
 }
 

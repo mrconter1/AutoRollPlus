@@ -40,5 +40,20 @@ AutoRollProfiles = {
     -- Death Knight profiles (all specs use strength + manual rolling)
     death_knight_blood = AutoRollRuleScripts.death_knight_strength,
     death_knight_frost = AutoRollRuleScripts.death_knight_strength,
-    death_knight_unholy = AutoRollRuleScripts.death_knight_strength
+    death_knight_unholy = AutoRollRuleScripts.death_knight_strength,
+
+    -- Paladin profiles
+    paladin_holy = AutoRollRuleScripts.paladin_holy,
+    paladin_protection = AutoRollRuleScripts.paladin_strength,
+    paladin_retribution = AutoRollRuleScripts.paladin_strength,
+
+    -- Shaman profiles
+    shaman_enhancement = AutoRollRuleScripts.shaman_agility,
+    shaman_elemental = AutoRollRuleScripts.shaman_intellect,
+    shaman_restoration = AutoRollRuleScripts.shaman_intellect,
+
+    -- Mage profiles (all specs use intellect + manual rolling)
+    mage_arcane = AutoRollRuleScripts.mage_intellect,
+    mage_fire = AutoRollRuleScripts.mage_intellect,
+    mage_frost = AutoRollRuleScripts.mage_intellect
 } 

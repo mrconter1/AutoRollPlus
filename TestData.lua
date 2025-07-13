@@ -1607,6 +1607,699 @@ AutoRollTestProfiles = {
                 expectedResult = "GREED"
             }
         }
+    },
+
+    -- Paladin Holy tests
+    paladin_holy = {
+        ruleScript = AutoRollProfiles.paladin_holy,
+        scenarios = {
+            {
+                name = "mail intellect upgrade at low level",
+                player = {
+                    level = 35,
+                    class = "PALADIN",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "plate intellect upgrade at high level",
+                player = {
+                    level = 50,
+                    class = "PALADIN",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "shield intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "PALADIN",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Shield",
+                    itemEquipLoc = "INVTYPE_SHIELD",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 6 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "leather armor - wrong type",
+                player = {
+                    level = 30,
+                    class = "PALADIN",
+                    spec = "Holy"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+
+    -- Paladin Protection tests
+    paladin_protection = {
+        ruleScript = AutoRollProfiles.paladin_protection,
+        scenarios = {
+            {
+                name = "mail strength upgrade at low level",
+                player = {
+                    level = 35,
+                    class = "PALADIN",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "plate strength upgrade at high level",
+                player = {
+                    level = 50,
+                    class = "PALADIN",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "shield strength upgrade",
+                player = {
+                    level = 45,
+                    class = "PALADIN",
+                    spec = "Protection"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Shield",
+                    itemEquipLoc = "INVTYPE_SHIELD",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 6 } }
+                }),
+                expectedResult = "MANUAL"
+            }
+        }
+    },
+
+    -- Paladin Retribution tests
+    paladin_retribution = {
+        ruleScript = AutoRollProfiles.paladin_retribution,
+        scenarios = {
+            {
+                name = "two-handed sword strength upgrade",
+                player = {
+                    level = 50,
+                    class = "PALADIN",
+                    spec = "Retribution"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Two-Handed Sword",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 18 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "trinket strength upgrade",
+                player = {
+                    level = 45,
+                    class = "PALADIN",
+                    spec = "Retribution"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Trinket",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 8,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 5 } }
+                }),
+                expectedResult = "MANUAL"
+            }
+        }
+    },
+
+    -- Shaman Enhancement tests
+    shaman_enhancement = {
+        ruleScript = AutoRollProfiles.shaman_enhancement,
+        scenarios = {
+            {
+                name = "leather agility upgrade at low level",
+                player = {
+                    level = 35,
+                    class = "SHAMAN",
+                    spec = "Enhancement"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "mail agility upgrade at high level",
+                player = {
+                    level = 50,
+                    class = "SHAMAN",
+                    spec = "Enhancement"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "fist weapon agility upgrade",
+                player = {
+                    level = 45,
+                    class = "SHAMAN",
+                    spec = "Enhancement"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Fist Weapon",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 6 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "plate armor - wrong type",
+                player = {
+                    level = 45,
+                    class = "SHAMAN",
+                    spec = "Enhancement"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 8 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+
+    -- Shaman Elemental tests
+    shaman_elemental = {
+        ruleScript = AutoRollProfiles.shaman_elemental,
+        scenarios = {
+            {
+                name = "leather intellect upgrade at low level",
+                player = {
+                    level = 35,
+                    class = "SHAMAN",
+                    spec = "Elemental"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "mail intellect upgrade at high level",
+                player = {
+                    level = 50,
+                    class = "SHAMAN",
+                    spec = "Elemental"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "shield intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "SHAMAN",
+                    spec = "Elemental"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Shield",
+                    itemEquipLoc = "INVTYPE_SHIELD",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 6 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "staff intellect upgrade",
+                player = {
+                    level = 40,
+                    class = "SHAMAN",
+                    spec = "Elemental"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
+                }),
+                expectedResult = "MANUAL"
+            }
+        }
+    },
+
+    -- Shaman Restoration tests
+    shaman_restoration = {
+        ruleScript = AutoRollProfiles.shaman_restoration,
+        scenarios = {
+            {
+                name = "leather intellect upgrade at low level",
+                player = {
+                    level = 35,
+                    class = "SHAMAN",
+                    spec = "Restoration"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "ring intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "SHAMAN",
+                    spec = "Restoration"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Ring",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 8,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 5 } }
+                }),
+                expectedResult = "MANUAL"
+            }
+        }
+    },
+
+    -- Mage Arcane tests
+    mage_arcane = {
+        ruleScript = AutoRollProfiles.mage_arcane,
+        scenarios = {
+            {
+                name = "cloth intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "MAGE",
+                    spec = "Arcane"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 10 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "staff intellect upgrade",
+                player = {
+                    level = 40,
+                    class = "MAGE",
+                    spec = "Arcane"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "wand intellect upgrade",
+                player = {
+                    level = 35,
+                    class = "MAGE",
+                    spec = "Arcane"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Wand",
+                    itemEquipLoc = "INVTYPE_RANGED",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 8,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 5 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "off-hand intellect upgrade",
+                player = {
+                    level = 50,
+                    class = "MAGE",
+                    spec = "Arcane"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Off-Hand",
+                    itemEquipLoc = "INVTYPE_HOLDABLE",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_HOLDABLE"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "leather armor - wrong type",
+                player = {
+                    level = 40,
+                    class = "MAGE",
+                    spec = "Arcane"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 10 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+
+    -- Mage Fire tests
+    mage_fire = {
+        ruleScript = AutoRollProfiles.mage_fire,
+        scenarios = {
+            {
+                name = "cloth intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "MAGE",
+                    spec = "Fire"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 10 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "dagger intellect upgrade",
+                player = {
+                    level = 35,
+                    class = "MAGE",
+                    spec = "Fire"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Dagger",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 8,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 5 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "trinket intellect upgrade",
+                player = {
+                    level = 50,
+                    class = "MAGE",
+                    spec = "Fire"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Trinket",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 6 } }
+                }),
+                expectedResult = "MANUAL"
+            }
+        }
+    },
+
+    -- Mage Frost tests
+    mage_frost = {
+        ruleScript = AutoRollProfiles.mage_frost,
+        scenarios = {
+            {
+                name = "cloth intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "MAGE",
+                    spec = "Frost"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Cloth",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 15,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 10 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "one-handed sword intellect upgrade",
+                player = {
+                    level = 40,
+                    class = "MAGE",
+                    spec = "Frost"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "One-Handed Sword",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "necklace intellect upgrade",
+                player = {
+                    level = 35,
+                    class = "MAGE",
+                    spec = "Frost"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Necklace",
+                    itemEquipLoc = "INVTYPE_NECK",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 7,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_NECK"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 4 } }
+                }),
+                expectedResult = "MANUAL"
+            }
+        }
     }
 }
  
