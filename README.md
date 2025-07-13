@@ -1,6 +1,6 @@
 # 🎲 AutoRollPlus
 
-**AutoRollPlus automatically handles loot rolling decisions in World of Warcraft Classic using customizable profile-based rules that adapt to your character's class and specialization.**
+**AutoRollPlus automatically handles loot rolling decisions in World of Warcraft Classic MOP using customizable profile-based rules that adapt to your character's class and specialization.**
 
 ## ✨ Main Features
 
@@ -48,7 +48,7 @@
 
 ## 🛠️ Technical Details
 
-- **Requirements**: World of Warcraft Classic (any version)
+- **Requirements**: World of Warcraft Classic MOP
 - **Performance**: Lightweight with minimal memory footprint
 - **Customization**: Visual rule editor, priority organization, manual override options
 
