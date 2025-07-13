@@ -171,9 +171,9 @@ end
 function ConfigGUI:BuildClassTree()
     local yOffset = -10
     
-    -- Clear existing buttons
-    for _, button in pairs(classButtons) do
-        button:Hide()
+    -- Clear existing elements
+    for _, header in pairs(classButtons) do
+        header:Hide()
     end
     for _, button in pairs(specButtons) do
         button:Hide()
@@ -187,20 +187,20 @@ function ConfigGUI:BuildClassTree()
     
     -- Build tree for each class
     for className, specs in pairs(AutoRollMappings.classSpecs) do
-        -- Create class button
-        local classButton = CreateFrame("Button", nil, self.treeContent, "GameMenuButtonTemplate")
-        classButton:SetSize(240, 25)
-        classButton:SetPoint("TOPLEFT", self.treeContent, "TOPLEFT", 10, yOffset)
+        -- Create class header (non-clickable)
+        local classHeader = CreateFrame("Frame", nil, self.treeContent)
+        classHeader:SetSize(240, 25)
+        classHeader:SetPoint("TOPLEFT", self.treeContent, "TOPLEFT", 10, yOffset)
+        
+        -- Class text
+        local classText = classHeader:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        classText:SetPoint("LEFT", classHeader, "LEFT", 5, 0)
         
         -- Highlight current class
         local classColor = (className == currentClass) and COLORS.current or COLORS.class
-        classButton:SetText(classColor .. className .. COLORS.reset)
+        classText:SetText(classColor .. className .. COLORS.reset)
         
-        classButton:SetScript("OnClick", function()
-            self:SelectClass(className)
-        end)
-        
-        table.insert(classButtons, classButton)
+        table.insert(classButtons, classHeader)
         yOffset = yOffset - 30
         
         -- Create spec buttons for this class
@@ -227,15 +227,6 @@ function ConfigGUI:BuildClassTree()
     -- Update tree content height
     self.treeContent:SetHeight(math.abs(yOffset) + 20)
     self.treeScrollFrame:UpdateScrollChildRect()
-end
-
--- Select a class (show all specs)
-function ConfigGUI:SelectClass(className)
-    selectedClass = className
-    selectedSpec = nil
-    
-    -- Update display
-    self:UpdateRuleDisplay()
 end
 
 -- Select a specific spec
