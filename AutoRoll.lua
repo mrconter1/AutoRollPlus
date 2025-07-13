@@ -293,6 +293,10 @@ do -- Private Scope
                             { item = "LEATHER", action = "MANUAL" },
                             { item = "GUNS", action = "MANUAL" },
                             { item = "BOWS", action = "MANUAL" },
+                            { item = "CROSSBOWS", action = "MANUAL" },
+                            { item = "RINGS", action = "MANUAL" },
+                            { item = "TRINKETS", action = "MANUAL" },
+                            { item = "NECKLACES", action = "MANUAL" },
                             -- GREED rules
                             { item = "ONE-HANDED SWORDS", action = "GREED" },
                             { item = "TWO-HANDED SWORDS", action = "GREED" },
@@ -307,7 +311,6 @@ do -- Private Scope
                             { item = "WANDS", action = "GREED" },
                             { item = "THROWN", action = "GREED" },
                             { item = "SPEARS", action = "GREED" },
-                            { item = "CROSSBOWS", action = "GREED" },
                             { item = "PLATE", action = "GREED" },
                             { item = "MAIL", action = "GREED" },
                             { item = "CLOTH", action = "GREED" },
@@ -318,9 +321,6 @@ do -- Private Scope
                             { item = "SIGILS", action = "GREED" },
                             { item = "TRADE GOODS", action = "GREED" },
                             { item = "MISCELLANEOUS", action = "GREED" },
-                            { item = "RINGS", action = "GREED" },
-                            { item = "TRINKETS", action = "GREED" },
-                            { item = "NECKLACES", action = "GREED" },
                             { item = "CLOAKS", action = "GREED" },
                         }
                         
