@@ -7,7 +7,6 @@ local TestTerminalGUI = {}
 local terminalFrame = nil
 local outputText = ""
 local scrollFrame = nil
-local editBox = nil
 local isRunning = false
 
 -- Terminal colors
@@ -71,10 +70,32 @@ function TestTerminalGUI:Initialize()
     closeButton:SetPoint("RIGHT", titleBar, "RIGHT", -5, 0)
     closeButton:SetScript("OnClick", function() terminalFrame:Hide() end)
     
-    -- Button panel
+    -- Output scroll frame (takes up most of the space)
+    scrollFrame = CreateFrame("ScrollFrame", "TestTerminalScrollFrame", terminalFrame, "UIPanelScrollFrameTemplate")
+    scrollFrame:SetPoint("TOPLEFT", titleBar, "BOTTOMLEFT", 10, -10)
+    scrollFrame:SetPoint("BOTTOMRIGHT", terminalFrame, "BOTTOMRIGHT", -35, 55)
+    
+    -- Output text
+    local outputFrame = CreateFrame("Frame", nil, scrollFrame)
+    outputFrame:SetSize(scrollFrame:GetWidth(), 1)
+    scrollFrame:SetScrollChild(outputFrame)
+    
+    local outputFontString = outputFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    outputFontString:SetPoint("TOPLEFT", outputFrame, "TOPLEFT", 5, -5)
+    outputFontString:SetPoint("TOPRIGHT", outputFrame, "TOPRIGHT", -5, -5)
+    outputFontString:SetJustifyH("LEFT")
+    outputFontString:SetJustifyV("TOP")
+    outputFontString:SetFont("Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
+    outputFontString:SetText("")
+    
+    -- Store reference to output
+    self.outputFontString = outputFontString
+    self.outputFrame = outputFrame
+    
+    -- Button panel at bottom
     local buttonPanel = CreateFrame("Frame", nil, terminalFrame, "BackdropTemplate")
     buttonPanel:SetSize(784, 40)
-    buttonPanel:SetPoint("TOP", titleBar, "BOTTOM", 0, -5)
+    buttonPanel:SetPoint("BOTTOM", terminalFrame, "BOTTOM", 0, 8)
     buttonPanel:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
         tile = true,
@@ -105,65 +126,9 @@ function TestTerminalGUI:Initialize()
         end)
     end
     
-    -- Output scroll frame
-    scrollFrame = CreateFrame("ScrollFrame", "TestTerminalScrollFrame", terminalFrame, "UIPanelScrollFrameTemplate")
-    scrollFrame:SetPoint("TOPLEFT", buttonPanel, "BOTTOMLEFT", 10, -10)
-    scrollFrame:SetPoint("BOTTOMRIGHT", terminalFrame, "BOTTOMRIGHT", -35, 45)
-    
-    -- Output text
-    local outputFrame = CreateFrame("Frame", nil, scrollFrame)
-    outputFrame:SetSize(scrollFrame:GetWidth(), 1)
-    scrollFrame:SetScrollChild(outputFrame)
-    
-    local outputFontString = outputFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    outputFontString:SetPoint("TOPLEFT", outputFrame, "TOPLEFT", 5, -5)
-    outputFontString:SetPoint("TOPRIGHT", outputFrame, "TOPRIGHT", -5, -5)
-    outputFontString:SetJustifyH("LEFT")
-    outputFontString:SetJustifyV("TOP")
-    outputFontString:SetFont("Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
-    outputFontString:SetText("")
-    
-    -- Store reference to output
-    self.outputFontString = outputFontString
-    self.outputFrame = outputFrame
-    
-    -- Input box
-    local inputFrame = CreateFrame("Frame", nil, terminalFrame, "BackdropTemplate")
-    inputFrame:SetSize(784, 30)
-    inputFrame:SetPoint("BOTTOM", terminalFrame, "BOTTOM", 0, 8)
-    inputFrame:SetBackdrop({
-        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-        tile = true,
-        tileSize = 16,
-        insets = { left = 4, right = 4, top = 4, bottom = 4 }
-    })
-    inputFrame:SetBackdropColor(0.05, 0.05, 0.05, 1)
-    
-    -- Prompt
-    local promptText = inputFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    promptText:SetPoint("LEFT", inputFrame, "LEFT", 10, 0)
-    promptText:SetText(COLORS.info .. ">" .. COLORS.reset)
-    
-    -- Input editbox
-    editBox = CreateFrame("EditBox", nil, inputFrame)
-    editBox:SetSize(740, 20)
-    editBox:SetPoint("LEFT", promptText, "RIGHT", 5, 0)
-    editBox:SetFont("Fonts\\FRIZQT__.TTF", 11, "OUTLINE")
-    editBox:SetAutoFocus(false)
-    editBox:SetScript("OnEnterPressed", function(self) 
-        local command = self:GetText()
-        if command ~= "" then
-            TestTerminalGUI:ExecuteCommand(command)
-            self:SetText("")
-        end
-    end)
-    editBox:SetScript("OnEscapePressed", function(self) 
-        self:ClearFocus()
-    end)
-    
     -- Initial welcome message
     self:AddOutput(COLORS.header .. "AutoRoll Test Terminal v1.0" .. COLORS.reset)
-    self:AddOutput(COLORS.info .. "Type 'help' for available commands" .. COLORS.reset)
+    self:AddOutput(COLORS.info .. "Use the buttons below to run tests" .. COLORS.reset)
     self:AddOutput("")
     
     terminalFrame:Show()
@@ -180,13 +145,23 @@ function TestTerminalGUI:AddOutput(text)
     if self.outputFontString then
         self.outputFontString:SetText(outputText)
         
+        -- Force the frame to update its size
+        self.outputFontString:SetWidth(scrollFrame:GetWidth() - 20)
+        
         -- Resize output frame to fit content
         local textHeight = self.outputFontString:GetStringHeight()
         self.outputFrame:SetHeight(math.max(textHeight + 20, scrollFrame:GetHeight()))
         
-        -- Auto-scroll to bottom
-        local maxScroll = math.max(0, self.outputFrame:GetHeight() - scrollFrame:GetHeight())
-        scrollFrame:SetVerticalScroll(maxScroll)
+        -- Force scroll frame to update
+        scrollFrame:UpdateScrollChildRect()
+        
+        -- Auto-scroll to bottom with a small delay to ensure proper rendering
+        C_Timer.After(0.01, function()
+            if scrollFrame then
+                local maxScroll = math.max(0, self.outputFrame:GetHeight() - scrollFrame:GetHeight())
+                scrollFrame:SetVerticalScroll(maxScroll)
+            end
+        end)
     end
 end
 
@@ -208,13 +183,14 @@ function TestTerminalGUI:ExecuteCommand(command)
     end
     
     if command == "help" then
-        self:AddOutput(COLORS.header .. "Available Commands:" .. COLORS.reset)
-        self:AddOutput("  runAllProfiles() - Run all test profiles")
-        self:AddOutput("  listProfiles() - List available profiles")
-        self:AddOutput("  runProfileTests('profile_name') - Run specific profile")
-        self:AddOutput("  runScenario('profile', 'scenario') - Run specific scenario")
-        self:AddOutput("  clear - Clear terminal output")
-        self:AddOutput("  help - Show this help")
+        self:AddOutput(COLORS.header .. "AutoRoll Test Terminal" .. COLORS.reset)
+        self:AddOutput("Use the buttons below to run tests:")
+        self:AddOutput("  " .. COLORS.success .. "Run All" .. COLORS.reset .. " - Run all test profiles")
+        self:AddOutput("  " .. COLORS.success .. "List Profiles" .. COLORS.reset .. " - Show available profiles")
+        self:AddOutput("  " .. COLORS.success .. "Hunter" .. COLORS.reset .. " - Run hunter profile tests")
+        self:AddOutput("  " .. COLORS.success .. "Priest Holy" .. COLORS.reset .. " - Run priest holy profile tests")
+        self:AddOutput("  " .. COLORS.warning .. "Clear" .. COLORS.reset .. " - Clear terminal output")
+        self:AddOutput("  " .. COLORS.info .. "Help" .. COLORS.reset .. " - Show this help")
         self:AddOutput("")
         return
     end
@@ -259,13 +235,7 @@ function TestTerminalGUI:ExecuteCommand(command)
                 self:AddOutput(COLORS.error .. "Invalid scenario command format" .. COLORS.reset)
             end
         else
-            -- Try to execute as raw Lua
-            local func = loadstring("AutoRollTestRunner:" .. command)
-            if func then
-                func()
-            else
-                self:AddOutput(COLORS.error .. "Unknown command: " .. command .. COLORS.reset)
-            end
+            self:AddOutput(COLORS.error .. "Unknown command: " .. command .. COLORS.reset)
         end
         
         -- Restore print function
