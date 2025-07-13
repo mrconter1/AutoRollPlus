@@ -366,42 +366,6 @@ SlashCmdList["AR"] = function(msg)
         end
     end
 
-    if cmd == "apply hunter" then
-        -- Convert legacy table rules to array if needed
-        local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
-        if profileKey and AutoRollPlus_PCDB and AutoRollPlus_PCDB["profiles"] then
-            local rules = AutoRollPlus_PCDB["profiles"][profileKey]
-            if type(rules) ~= "table" or type(rules[1]) ~= "table" then
-                -- Convert legacy table to array
-                local newRules = {}
-                if type(rules) == "table" then
-                    for k, v in pairs(rules) do
-                        if type(k) == "string" and type(v) == "number" then
-                            local action = AutoRollUtils and AutoRollUtils.getRuleString and AutoRollUtils:getRuleString(v)
-                            if action then
-                                table.insert(newRules, { item = k:upper(), action = action:upper() })
-                            end
-                        end
-                    end
-                end
-                AutoRollPlus_PCDB["profiles"][profileKey] = newRules
-            end
-        end
-        -- Add GREED rules as array objects
-        local greedTypes = {
-            "one-handed swords", "two-handed swords", "one-handed maces", "two-handed maces", "one-handed axes", "two-handed axes", "daggers", "polearms", "staves", "fist weapons", "wands", "thrown", "spears",
-            "plate", "cloth", "shields", "librams", "idols", "totems", "sigils", "trade goods", "miscellaneous",
-            "rings", "trinkets", "necklaces", "cloaks"
-        }
-        local rulesArr = AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey]
-        if type(rulesArr) ~= "table" then rulesArr = {}; AutoRollPlus_PCDB["profiles"][profileKey] = rulesArr end
-        for _, t in ipairs(greedTypes) do
-            table.insert(rulesArr, { item = t:upper(), action = "GREED" })
-        end
-        print("AutoRoll: Applied GREED rules for all standard hunter non-NEED types (array format).")
-        return
-    end
-
     if cmd == "clearall" then
         local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
         if profileKey and AutoRollPlus_PCDB and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey] then

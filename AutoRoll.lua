@@ -128,14 +128,23 @@ AutoRollDefaults = {
         hunter_beastmastery = {
             { item = "ONE-HANDED SWORDS", action = "GREED" },
             { item = "TWO-HANDED SWORDS", action = "GREED" },
+            { item = "GUNS", action = "MANUAL" },
+            { item = "LEATHER", action = "MANUAL" },
+            { item = "BOWS", action = "MANUAL" },
         },
         hunter_marksmanship = {
             { item = "ONE-HANDED SWORDS", action = "GREED" },
             { item = "TWO-HANDED SWORDS", action = "GREED" },
+            { item = "GUNS", action = "MANUAL" },
+            { item = "LEATHER", action = "MANUAL" },
+            { item = "BOWS", action = "MANUAL" },
         },
         hunter_survival = {
             { item = "ONE-HANDED SWORDS", action = "GREED" },
             { item = "TWO-HANDED SWORDS", action = "GREED" },
+            { item = "GUNS", action = "MANUAL" },
+            { item = "LEATHER", action = "MANUAL" },
+            { item = "BOWS", action = "MANUAL" },
         },
         -- Add more class+spec profiles as needed
     },
@@ -304,15 +313,18 @@ do -- Private Scope
                     if not rules or #rules == 0 then
                         -- NEED rules
                         local needRules = {
-                            { item = "LEATHER", stat = "AGILITY", upgrade = true, action = "NEED", levelMax = 39 },
                             { item = "MAIL", stat = "AGILITY", upgrade = true, action = "NEED", levelMin = 40 },
-                            { item = "BOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
-                            { item = "GUNS", stat = "AGILITY", upgrade = true, action = "NEED" },
                             { item = "CROSSBOWS", stat = "AGILITY", upgrade = true, action = "NEED" },
                             { item = "RING", stat = "AGILITY", upgrade = true, action = "NEED" },
                             { item = "TRINKET", stat = "AGILITY", upgrade = true, action = "NEED" },
                             { item = "NECKLACE", stat = "AGILITY", upgrade = true, action = "NEED" },
                             { item = "CLOAK", stat = "AGILITY", upgrade = true, action = "NEED" }
+                        }
+                        -- MANUAL rules
+                        local manualRules = {
+                            { item = "LEATHER", action = "MANUAL" },
+                            { item = "GUNS", action = "MANUAL" },
+                            { item = "BOWS", action = "MANUAL" }
                         }
                         -- GREED rules
                         local greedTypes = {
@@ -322,6 +334,7 @@ do -- Private Scope
                         }
                         local rulesArr = {}
                         for _, r in ipairs(needRules) do table.insert(rulesArr, r) end
+                        for _, r in ipairs(manualRules) do table.insert(rulesArr, r) end
                         for _, t in ipairs(greedTypes) do table.insert(rulesArr, { item = t:upper(), action = "GREED" }) end
                         AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
                         AutoRollPlus_PCDB["profiles"][profileKey] = rulesArr
