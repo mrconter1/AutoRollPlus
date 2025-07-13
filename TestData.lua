@@ -528,6 +528,48 @@ AutoRollTestProfiles = {
                     ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } }
                 }),
                 expectedResult = "NEED"
+            },
+            {
+                name = "mail armor - wrong type results in greed",
+                player = {
+                    level = 25,
+                    class = "DRUID",
+                    spec = "Feral"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "non-upgrade leather - results in greed",
+                player = {
+                    level = 40,
+                    class = "DRUID",
+                    spec = "Feral"
+                },
+                item = {
+                    itemRarity = "Common",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 1,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 10,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
+                }),
+                expectedResult = "GREED"
             }
         }
     },
@@ -576,6 +618,69 @@ AutoRollTestProfiles = {
                     ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
                 }),
                 expectedResult = "NEED"
+            },
+            {
+                name = "trinket intellect upgrade",
+                player = {
+                    level = 45,
+                    class = "DRUID",
+                    spec = "Balance"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 16,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "plate armor - wrong type results in greed",
+                player = {
+                    level = 50,
+                    class = "DRUID",
+                    spec = "Balance"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Plate",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 30,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 20 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "agility leather - wrong stat results in greed",
+                player = {
+                    level = 35,
+                    class = "DRUID",
+                    spec = "Balance"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "GREED"
             }
         }
     },
@@ -603,6 +708,90 @@ AutoRollTestProfiles = {
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
                 }),
                 expectedResult = "NEED"
+            },
+            {
+                name = "restoration staff upgrade",
+                player = {
+                    level = 40,
+                    class = "DRUID",
+                    spec = "Restoration"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 28,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 22 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "healing trinket upgrade",
+                player = {
+                    level = 50,
+                    class = "DRUID",
+                    spec = "Restoration"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 16 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "mail armor - wrong type results in greed",
+                player = {
+                    level = 30,
+                    class = "DRUID",
+                    spec = "Restoration"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "strength leather - wrong stat results in greed",
+                player = {
+                    level = 45,
+                    class = "DRUID",
+                    spec = "Restoration"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 18 } }
+                }),
+                expectedResult = "GREED"
             }
         }
     }
