@@ -292,16 +292,27 @@ do -- Private Scope
                 if profileKey then
                     -- Hunter rules as parseable strings
                     local hunterRules = [[
-                        IF item.type == 'leather' AND user.level < 50 AND item.agility.isUpgrade() THEN manual
-                        IF item.type == 'mail' AND user.level >= 50 AND item.agility.isUpgrade() THEN manual
+                        IF item.type == 'leather' 
+                           AND user.level < 50 
+                           AND item.agility.isUpgrade() 
+                        THEN manual
+
+                        IF item.type == 'mail' 
+                           AND user.level >= 50 
+                           AND item.agility.isUpgrade() 
+                        THEN manual
+
                         IF (item.type == 'bow' OR 
                             item.type == 'gun' OR 
                             item.type == 'crossbow' OR 
                             item.type == 'ring' OR 
                             item.type == 'trinket' OR 
                             item.type == 'necklace' OR 
-                            item.type == 'cloak') AND item.agility.isUpgrade() THEN manual
-                        ELSE greed
+                            item.type == 'cloak') 
+                           AND item.agility.isUpgrade() 
+                        THEN manual
+
+                        item.greed()
                     ]]
                     
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
@@ -640,6 +651,15 @@ do -- Private Scope
                     type = "ELSE_RULE",
                     action = action and action.value
                 }
+            elseif token and token.type == "IDENTIFIER" and token.value == "item" then
+                -- Handle item.action() calls
+                local methodCall = parsePrimaryExpression()
+                if methodCall and methodCall.type == "METHOD_CALL" then
+                    return {
+                        type = "METHOD_RULE",
+                        methodCall = methodCall
+                    }
+                end
             end
             
             return nil
@@ -659,6 +679,8 @@ do -- Private Scope
             return nil
         elseif ast.type == "ELSE_RULE" then
             return ast.action
+        elseif ast.type == "METHOD_RULE" then
+            return self:evaluateMethodRule(ast.methodCall, context)
         end
         
         return nil
@@ -759,6 +781,18 @@ do -- Private Scope
         return false
     end
     
+    function RuleParser:evaluateMethodRule(methodCall, context)
+        -- Handle item.action() calls
+        if methodCall.object.type == "MEMBER" and 
+           methodCall.object.object.type == "IDENTIFIER" and 
+           methodCall.object.object.value == "item" then
+            -- This is a direct action call like item.greed(), item.pass(), etc.
+            return methodCall.object.member -- greed, pass, need, manual
+        end
+        
+        return nil
+    end
+    
     function RuleParser:checkItemType(itemType, context)
         if not context.itemSubType and not context.itemEquipLoc then return false end
         
@@ -836,8 +870,8 @@ do -- Private Scope
                         currentRule = currentRule .. " " .. line
                     end
                     
-                    -- Check if this completes a rule (ends with THEN action or is an ELSE)
-                    if line:match("THEN%s+%w+$") or line:match("^ELSE%s+%w+$") then
+                    -- Check if this completes a rule (ends with THEN action, is an ELSE, or is item.action())
+                    if line:match("THEN%s+%w+$") or line:match("^ELSE%s+%w+$") or line:match("^%s*item%.%w+%(%)%s*$") then
                         table.insert(rules, currentRule)
                         currentRule = ""
                     end

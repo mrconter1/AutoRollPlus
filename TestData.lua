@@ -46,16 +46,27 @@ end
 AutoRollTestProfiles = {
     hunter = {
         ruleScript = [[
-            IF item.type == 'leather' AND user.level < 50 AND item.agility.isUpgrade() THEN manual
-            IF item.type == 'mail' AND user.level >= 50 AND item.agility.isUpgrade() THEN manual
+            IF item.type == 'leather' 
+               AND user.level < 50 
+               AND item.agility.isUpgrade() 
+            THEN manual
+
+            IF item.type == 'mail' 
+               AND user.level >= 50 
+               AND item.agility.isUpgrade() 
+            THEN manual
+
             IF (item.type == 'bow' OR 
                 item.type == 'gun' OR 
                 item.type == 'crossbow' OR 
                 item.type == 'ring' OR 
                 item.type == 'trinket' OR 
                 item.type == 'necklace' OR 
-                item.type == 'cloak') AND item.agility.isUpgrade() THEN manual
-            ELSE greed
+                item.type == 'cloak') 
+               AND item.agility.isUpgrade() 
+            THEN manual
+
+            item.greed()
         ]],
         scenarios = {
             {
@@ -168,10 +179,19 @@ AutoRollTestProfiles = {
     
     priest_holy = {
         ruleScript = [[
-            IF item.type == 'cloth' AND item.intellect.isUpgrade() THEN manual
-            IF item.type == 'staff' AND item.intellect.isUpgrade() THEN manual
-            IF item.type == 'trinket' AND item.intellect.isUpgrade() THEN manual
-            ELSE pass
+            IF item.type == 'cloth' 
+               AND item.intellect.isUpgrade() 
+            THEN manual
+
+            IF item.type == 'staff' 
+               AND item.intellect.isUpgrade() 
+            THEN manual
+
+            IF item.type == 'trinket' 
+               AND item.intellect.isUpgrade() 
+            THEN manual
+
+            item.pass()
         ]],
         scenarios = {
             {
@@ -284,8 +304,16 @@ AutoRollTestProfiles = {
     
     dps_warrior = {
         ruleScript = [[
-            IF item.type == 'mail' AND user.level < 40 AND item.strength.isUpgrade() THEN need
-            IF item.type == 'plate' AND user.level >= 40 AND item.strength.isUpgrade() THEN need
+            IF item.type == 'mail' 
+               AND user.level < 40 
+               AND item.strength.isUpgrade() 
+            THEN need
+
+            IF item.type == 'plate' 
+               AND user.level >= 40 
+               AND item.strength.isUpgrade() 
+            THEN need
+
             IF (item.type == 'one-handed sword' OR 
                 item.type == 'two-handed sword' OR 
                 item.type == 'one-handed axe' OR 
@@ -294,12 +322,18 @@ AutoRollTestProfiles = {
                 item.type == 'two-handed mace' OR 
                 item.type == 'polearm' OR 
                 item.type == 'dagger' OR 
-                item.type == 'fist weapon') AND item.strength.isUpgrade() THEN need
+                item.type == 'fist weapon') 
+               AND item.strength.isUpgrade() 
+            THEN need
+
             IF (item.type == 'ring' OR 
                 item.type == 'trinket' OR 
                 item.type == 'necklace' OR 
-                item.type == 'cloak') AND item.strength.isUpgrade() THEN need
-            ELSE greed
+                item.type == 'cloak') 
+               AND item.strength.isUpgrade() 
+            THEN need
+
+            item.greed()
         ]],
         scenarios = {
             {
@@ -412,8 +446,16 @@ AutoRollTestProfiles = {
     
     tank_warrior = {
         ruleScript = [[
-            IF item.type == 'mail' AND user.level < 40 AND item.strength.isUpgrade() THEN need
-            IF item.type == 'plate' AND user.level >= 40 AND item.strength.isUpgrade() THEN need
+            IF item.type == 'mail' 
+               AND user.level < 40 
+               AND item.strength.isUpgrade() 
+            THEN need
+
+            IF item.type == 'plate' 
+               AND user.level >= 40 
+               AND item.strength.isUpgrade() 
+            THEN need
+
             IF (item.type == 'one-handed sword' OR 
                 item.type == 'two-handed sword' OR 
                 item.type == 'one-handed axe' OR 
@@ -422,13 +464,22 @@ AutoRollTestProfiles = {
                 item.type == 'two-handed mace' OR 
                 item.type == 'polearm' OR 
                 item.type == 'dagger' OR 
-                item.type == 'fist weapon') AND item.strength.isUpgrade() THEN need
-            IF item.type == 'shield' AND item.strength.isUpgrade() THEN need
+                item.type == 'fist weapon') 
+               AND item.strength.isUpgrade() 
+            THEN need
+
+            IF item.type == 'shield' 
+               AND item.strength.isUpgrade() 
+            THEN need
+
             IF (item.type == 'ring' OR 
                 item.type == 'trinket' OR 
                 item.type == 'necklace' OR 
-                item.type == 'cloak') AND item.strength.isUpgrade() THEN need
-            ELSE greed
+                item.type == 'cloak') 
+               AND item.strength.isUpgrade() 
+            THEN need
+
+            item.greed()
         ]],
         scenarios = {
             {
