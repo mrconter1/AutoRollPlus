@@ -245,11 +245,6 @@ end
 -- Export the test runner
 _G.AutoRollTestRunner = TestRunner
 
--- Auto-run tests if executed directly
-if not _G.AutoRollTestRunner_ManualMode then
-    TestRunner:runAllProfiles()
-end
-
 -- Usage examples:
 -- TestRunner:listProfiles()                           -- List all available profiles
 -- TestRunner:runAllProfiles()                         -- Run all profiles with organization
