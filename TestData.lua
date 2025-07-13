@@ -461,6 +461,150 @@ AutoRollTestProfiles = {
                 expectedResult = "GREED"
             }
         }
+    },
+
+    druid_feral = {
+        ruleScript = AutoRollProfiles.druid_feral,
+        scenarios = {
+            {
+                name = "leather agility upgrade",
+                player = {
+                    level = 35,
+                    class = "DRUID",
+                    spec = "Feral"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "feral weapon upgrade",
+                player = {
+                    level = 40,
+                    class = "DRUID",
+                    spec = "Feral"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "ring upgrade (works for both cat and bear)",
+                player = {
+                    level = 45,
+                    class = "DRUID",
+                    spec = "Feral"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 14,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } }
+                }),
+                expectedResult = "NEED"
+            }
+        }
+    },
+
+    druid_balance = {
+        ruleScript = AutoRollProfiles.druid_balance,
+        scenarios = {
+            {
+                name = "leather intellect upgrade",
+                player = {
+                    level = 35,
+                    class = "DRUID",
+                    spec = "Balance"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "balance weapon upgrade",
+                player = {
+                    level = 40,
+                    class = "DRUID",
+                    spec = "Balance"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Staff",
+                    itemEquipLoc = "INVTYPE_2HWEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
+                }),
+                expectedResult = "NEED"
+            }
+        }
+    },
+
+    druid_restoration = {
+        ruleScript = AutoRollProfiles.druid_restoration,
+        scenarios = {
+            {
+                name = "leather intellect upgrade for healer",
+                player = {
+                    level = 35,
+                    class = "DRUID",
+                    spec = "Restoration"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_INTELLECT_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            }
+        }
     }
 }
  

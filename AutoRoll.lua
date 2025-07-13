@@ -217,18 +217,7 @@ do -- Private Scope
             local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
             if profileKey then
                 -- Check if we have a centralized profile for this key
-                local profileRules = nil
-                if profileKey:find("hunter") then
-                    profileRules = AutoRollProfiles.hunter
-                elseif profileKey:find("priest") and profileKey:find("holy") then
-                    profileRules = AutoRollProfiles.priest_holy
-                elseif profileKey:find("warrior") then
-                    if profileKey:find("arms") or profileKey:find("fury") then
-                        profileRules = AutoRollProfiles.warrior_dps
-                    elseif profileKey:find("protection") then
-                        profileRules = AutoRollProfiles.warrior_tank
-                    end
-                end
+                local profileRules = AutoRollProfiles[profileKey]
                 
                 if profileRules then
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
@@ -887,7 +876,15 @@ do -- Private Scope
                 specName = sName
             end
         end
+        
         if classKey and specName then
+            -- Use profile name mapping if available
+            local profileNameMap = AutoRollMappings.profileNameMap
+            if profileNameMap and profileNameMap[classKey] and profileNameMap[classKey][specName] then
+                return profileNameMap[classKey][specName]
+            end
+            
+            -- Fallback to old format for unmapped classes
             return string.lower(classKey .. "_" .. specName):gsub("%s+", "")
         end
         return nil

@@ -51,6 +51,30 @@ AutoRollMappings.classSpecs = {
     MONK = {"Brewmaster", "Mistweaver", "Windwalker"},
 }
 
+-- Profile name mapping for specs that need more granular profiles
+AutoRollMappings.profileNameMap = {
+    DRUID = {
+        ["Balance"] = "druid_balance",
+        ["Feral"] = "druid_feral",
+        ["Restoration"] = "druid_restoration"
+    },
+    WARRIOR = {
+        ["Arms"] = "warrior_dps",
+        ["Fury"] = "warrior_dps",
+        ["Protection"] = "warrior_tank"
+    },
+    PRIEST = {
+        ["Holy"] = "priest_holy",
+        ["Discipline"] = "priest_holy",  -- Can be differentiated later if needed
+        ["Shadow"] = "priest_holy"  -- Can be differentiated later if needed
+    },
+    HUNTER = {
+        ["Beast Mastery"] = "hunter",
+        ["Marksmanship"] = "hunter",
+        ["Survival"] = "hunter"
+    }
+}
+
 -- Helper function to get single slot ID (for TestData compatibility)
 function AutoRollMappings:getSlotID(invType)
     local slots = self.equipSlotMap[invType]

@@ -197,6 +197,8 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
+
+
     -- No rules matched, print help
     print("AutoRoll - Commands")
     print("-- View current rules:")
