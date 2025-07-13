@@ -106,17 +106,14 @@ function TestTerminalGUI:Initialize()
     
     -- Create buttons
     local buttons = {
-        {text = "Run All", command = "runAllProfiles", x = 10},
-        {text = "List Profiles", command = "listProfiles", x = 110},
-        {text = "Hunter", command = "runProfileTests('hunter')", x = 210},
-        {text = "Priest Holy", command = "runProfileTests('priest_holy')", x = 310},
-        {text = "Clear", command = "clear", x = 450},
-        {text = "Help", command = "help", x = 550}
+        {text = "Run All Tests", command = "runAllProfiles", x = 10},
+        {text = "Clear", command = "clear", x = 150},
+        {text = "Help", command = "help", x = 250}
     }
     
     for _, btn in ipairs(buttons) do
         local button = CreateFrame("Button", nil, buttonPanel, "GameMenuButtonTemplate")
-        button:SetSize(90, 25)
+        button:SetSize(120, 25)
         button:SetPoint("LEFT", buttonPanel, "LEFT", btn.x, 0)
         button:SetText(btn.text)
         button:SetScript("OnClick", function() 
@@ -128,7 +125,7 @@ function TestTerminalGUI:Initialize()
     
     -- Initial welcome message
     self:AddOutput(COLORS.header .. "AutoRoll Test Terminal v1.0" .. COLORS.reset)
-    self:AddOutput(COLORS.info .. ".NET style test runner - clear stats per test suite" .. COLORS.reset)
+    self:AddOutput(COLORS.info .. "Simple test runner with clear stats per test suite" .. COLORS.reset)
     self:AddOutput("")
     
     terminalFrame:Show()
@@ -184,11 +181,8 @@ function TestTerminalGUI:ExecuteCommand(command)
     
     if command == "help" then
         self:AddOutput(COLORS.header .. "AutoRoll Test Terminal" .. COLORS.reset)
-        self:AddOutput("Use the buttons below to run tests (.NET style output):")
-        self:AddOutput("  " .. COLORS.success .. "Run All" .. COLORS.reset .. " - Run all profiles")
-        self:AddOutput("  " .. COLORS.success .. "List Profiles" .. COLORS.reset .. " - Show available profiles")
-        self:AddOutput("  " .. COLORS.success .. "Hunter" .. COLORS.reset .. " - Run hunter profile only")
-        self:AddOutput("  " .. COLORS.success .. "Priest Holy" .. COLORS.reset .. " - Run priest holy profile only")
+        self:AddOutput("Simple test runner with clear output:")
+        self:AddOutput("  " .. COLORS.success .. "Run All Tests" .. COLORS.reset .. " - Execute all test profiles")
         self:AddOutput("  " .. COLORS.warning .. "Clear" .. COLORS.reset .. " - Clear terminal output")
         self:AddOutput("  " .. COLORS.info .. "Help" .. COLORS.reset .. " - Show this help")
         self:AddOutput("")
@@ -220,22 +214,6 @@ function TestTerminalGUI:ExecuteCommand(command)
         -- Execute the command
         if command == "runAllProfiles" then
             AutoRollTestRunner:runAllProfiles(false) -- Use concise mode
-        elseif command == "listProfiles" then
-            AutoRollTestRunner:listProfiles()
-        elseif command:match("^runProfileTests") then
-            local profileName = command:match("runProfileTests%('(.+)'%)")
-            if profileName then
-                AutoRollTestRunner:runProfileTests(profileName, false) -- Use concise mode
-            else
-                self:AddOutput(COLORS.error .. "Invalid profile name" .. COLORS.reset)
-            end
-        elseif command:match("^runScenario") then
-            local profileName, scenarioName = command:match("runScenario%('(.+)',%s*'(.+)'%)")
-            if profileName and scenarioName then
-                AutoRollTestRunner:runScenario(profileName, scenarioName)
-            else
-                self:AddOutput(COLORS.error .. "Invalid scenario command format" .. COLORS.reset)
-            end
         else
             self:AddOutput(COLORS.error .. "Unknown command: " .. command .. COLORS.reset)
         end
