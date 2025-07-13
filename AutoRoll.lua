@@ -124,29 +124,6 @@ AutoRollDefaults = {
             { item = "NECKLACE", stat = "INTELLECT", upgrade = true, action = "MANUAL" },
             { item = "CLOAK",    stat = "INTELLECT", upgrade = true, action = "MANUAL" }
         },
-        -- Hunter profiles (all specs)
-        hunter_beastmastery = {
-            { item = "ONE-HANDED SWORDS", action = "GREED" },
-            { item = "TWO-HANDED SWORDS", action = "GREED" },
-            { item = "GUNS", action = "MANUAL" },
-            { item = "LEATHER", action = "MANUAL" },
-            { item = "BOWS", action = "MANUAL" },
-        },
-        hunter_marksmanship = {
-            { item = "ONE-HANDED SWORDS", action = "GREED" },
-            { item = "TWO-HANDED SWORDS", action = "GREED" },
-            { item = "GUNS", action = "MANUAL" },
-            { item = "LEATHER", action = "MANUAL" },
-            { item = "BOWS", action = "MANUAL" },
-        },
-        hunter_survival = {
-            { item = "ONE-HANDED SWORDS", action = "GREED" },
-            { item = "TWO-HANDED SWORDS", action = "GREED" },
-            { item = "GUNS", action = "MANUAL" },
-            { item = "LEATHER", action = "MANUAL" },
-            { item = "BOWS", action = "MANUAL" },
-        },
-        -- Add more class+spec profiles as needed
     },
     ["printRolls"] = false,
     ["enabled"] = true,
@@ -305,30 +282,51 @@ do -- Private Scope
                     AutoRollPlus_PCDB = {}
                 end
                 LoadOptions()
-                -- Automatically apply hunter profile if player is a hunter and has no rules
+                -- Automatically apply hunter rules on each load
                 local _, classKey = UnitClass("player")
                 if classKey == "HUNTER" then
                     local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
-                    local rules = profileKey and AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey]
-                    if not rules or #rules == 0 then
-                        -- MANUAL rules
-                        local manualRules = {
+                    if profileKey then
+                        -- Always ensure hunter has the correct rules
+                        local hunterRules = {
+                            -- MANUAL rules
                             { item = "LEATHER", action = "MANUAL" },
                             { item = "GUNS", action = "MANUAL" },
-                            { item = "BOWS", action = "MANUAL" }
+                            { item = "BOWS", action = "MANUAL" },
+                            -- GREED rules
+                            { item = "ONE-HANDED SWORDS", action = "GREED" },
+                            { item = "TWO-HANDED SWORDS", action = "GREED" },
+                            { item = "ONE-HANDED MACES", action = "GREED" },
+                            { item = "TWO-HANDED MACES", action = "GREED" },
+                            { item = "ONE-HANDED AXES", action = "GREED" },
+                            { item = "TWO-HANDED AXES", action = "GREED" },
+                            { item = "DAGGERS", action = "GREED" },
+                            { item = "POLEARMS", action = "GREED" },
+                            { item = "STAVES", action = "GREED" },
+                            { item = "FIST WEAPONS", action = "GREED" },
+                            { item = "WANDS", action = "GREED" },
+                            { item = "THROWN", action = "GREED" },
+                            { item = "SPEARS", action = "GREED" },
+                            { item = "CROSSBOWS", action = "GREED" },
+                            { item = "PLATE", action = "GREED" },
+                            { item = "MAIL", action = "GREED" },
+                            { item = "CLOTH", action = "GREED" },
+                            { item = "SHIELDS", action = "GREED" },
+                            { item = "LIBRAMS", action = "GREED" },
+                            { item = "IDOLS", action = "GREED" },
+                            { item = "TOTEMS", action = "GREED" },
+                            { item = "SIGILS", action = "GREED" },
+                            { item = "TRADE GOODS", action = "GREED" },
+                            { item = "MISCELLANEOUS", action = "GREED" },
+                            { item = "RINGS", action = "GREED" },
+                            { item = "TRINKETS", action = "GREED" },
+                            { item = "NECKLACES", action = "GREED" },
+                            { item = "CLOAKS", action = "GREED" },
                         }
-                        -- GREED rules
-                        local greedTypes = {
-                            "one-handed swords", "two-handed swords", "one-handed maces", "two-handed maces", "one-handed axes", "two-handed axes", "daggers", "polearms", "staves", "fist weapons", "wands", "thrown", "spears",
-                            "plate", "mail", "cloth", "shields", "librams", "idols", "totems", "sigils", "trade goods", "miscellaneous",
-                            "rings", "trinkets", "necklaces", "cloaks", "crossbows"
-                        }
-                        local rulesArr = {}
-                        for _, r in ipairs(manualRules) do table.insert(rulesArr, r) end
-                        for _, t in ipairs(greedTypes) do table.insert(rulesArr, { item = t:upper(), action = "GREED" }) end
+                        
                         AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
-                        AutoRollPlus_PCDB["profiles"][profileKey] = rulesArr
-                        print("AutoRoll: Hunter profile applied automatically.")
+                        AutoRollPlus_PCDB["profiles"][profileKey] = hunterRules
+                        print("AutoRoll: Hunter rules applied.")
                     end
                 end
                 PrintHelp()
