@@ -129,6 +129,15 @@ function TestTerminalGUI:Initialize()
         end
     end)
     
+    -- Create reload button
+    local reloadButton = CreateFrame("Button", nil, buttonPanel, "GameMenuButtonTemplate")
+    reloadButton:SetSize(120, 25)
+    reloadButton:SetPoint("LEFT", runButton, "RIGHT", 10, 0)
+    reloadButton:SetText("Reload Addon")
+    reloadButton:SetScript("OnClick", function() 
+        ReloadUI()
+    end)
+    
     -- Create auto-clear checkbox
     autoClearCheckbox = CreateFrame("CheckButton", nil, buttonPanel, "ChatConfigCheckButtonTemplate")
     autoClearCheckbox:SetSize(25, 25)
