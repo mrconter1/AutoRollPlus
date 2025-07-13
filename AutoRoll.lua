@@ -291,12 +291,18 @@ do -- Private Scope
                 local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
                 if profileKey then
                     -- Hunter rules as parseable strings
-                    local hunterRules = {
-                        "IF item.type == 'leather' AND user.level < 50 AND item.agility.isUpgrade() THEN manual",
-                        "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isUpgrade() THEN manual",
-                        "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow' OR item.type == 'ring' OR item.type == 'trinket' OR item.type == 'necklace' OR item.type == 'cloak') AND item.agility.isUpgrade() THEN manual",
-                        "ELSE greed"
-                    }
+                    local hunterRules = [[
+                        IF item.type == 'leather' AND user.level < 50 AND item.agility.isUpgrade() THEN manual
+                        IF item.type == 'mail' AND user.level >= 50 AND item.agility.isUpgrade() THEN manual
+                        IF (item.type == 'bow' OR 
+                            item.type == 'gun' OR 
+                            item.type == 'crossbow' OR 
+                            item.type == 'ring' OR 
+                            item.type == 'trinket' OR 
+                            item.type == 'necklace' OR 
+                            item.type == 'cloak') AND item.agility.isUpgrade() THEN manual
+                        ELSE greed
+                    ]]
                     
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
                     AutoRollPlus_PCDB["profiles"][profileKey] = { ruleStrings = hunterRules }
@@ -815,7 +821,36 @@ do -- Private Scope
     function RuleParser:evaluateRuleStrings(ruleStrings, context)
         if not ruleStrings then return nil end
         
-        for i, ruleString in ipairs(ruleStrings) do
+        -- Convert multi-line string to array if needed
+        local rules = ruleStrings
+        if type(ruleStrings) == "string" then
+            rules = {}
+            local currentRule = ""
+            
+            for line in ruleStrings:gmatch("[^\r\n]+") do
+                line = line:match("^%s*(.-)%s*$") -- trim whitespace
+                if line ~= "" then
+                    if currentRule == "" then
+                        currentRule = line
+                    else
+                        currentRule = currentRule .. " " .. line
+                    end
+                    
+                    -- Check if this completes a rule (ends with THEN action or is an ELSE)
+                    if line:match("THEN%s+%w+$") or line:match("^ELSE%s+%w+$") then
+                        table.insert(rules, currentRule)
+                        currentRule = ""
+                    end
+                end
+            end
+            
+            -- Add any remaining rule
+            if currentRule ~= "" then
+                table.insert(rules, currentRule)
+            end
+        end
+        
+        for i, ruleString in ipairs(rules) do
             if AutoRoll_PCDB["debug"] then
                 print("AutoRoll DEBUG: Evaluating rule "..i..": "..ruleString)
             end
