@@ -2300,6 +2300,35 @@ AutoRollTestProfiles = {
                 expectedResult = "MANUAL"
             }
         }
+    },
+
+    hunter_survival = {
+        ruleScript = AutoRollProfiles.hunter_survival,
+        scenarios = {
+            {
+                name = "ring with agility and spirit at level 30",
+                player = {
+                    level = 30,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 3,
+                        ["ITEM_MOD_SPIRIT_SHORT"] = 3,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_STAMINA_SHORT"] = 5 } },
+                    ["INVTYPE_FINGER2"] = { stats = { ["ITEM_MOD_STAMINA_SHORT"] = 6, ["ITEM_MOD_DODGE_SHORT"] = 6 } }
+                }),
+                expectedResult = "MANUAL"
+            }
+        }
     }
 }
  
