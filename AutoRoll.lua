@@ -113,7 +113,6 @@ AutoRoll.FilterEndStrings = {
 
 -- Simple defaults
 local defaults = {
-    ["enabled"] = true,
 }
 
 do -- Private Scope
@@ -243,21 +242,14 @@ do -- Private Scope
         -- For all other events, do nothing if AutoRollPlus_PCDB is not initialized
         if not AutoRollPlus_PCDB then return end
 
-        if AutoRoll_PCDB["enabled"] then
-            if event == "START_LOOT_ROLL" then
-                EvaluateActiveRolls()
-            end
-
-            if event == "PLAYER_ENTERING_WORLD" then
-                EvaluateActiveRolls()
-            end
-
-            if event == "CONFIRM_LOOT_ROLL" then
-                local rollId = select(1, ...)
-                local roll = select(2, ...)
-
-                ConfirmLootRoll(rollId, roll)
-            end
+        if event == "START_LOOT_ROLL" then
+            EvaluateActiveRolls()
+        elseif event == "PLAYER_ENTERING_WORLD" then
+            EvaluateActiveRolls()
+        elseif event == "CONFIRM_LOOT_ROLL" then
+            local rollId = select(1, ...)
+            local roll = select(2, ...)
+            ConfirmLootRoll(rollId, roll)
         end
     end
 

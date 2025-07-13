@@ -10,17 +10,7 @@ SlashCmdList["AR"] = function(msg)
     local rule = string.match(cmd, "^(%S*)")
     local itemIdString = AutoRollUtils:getItemId(cmd)
 
-    if (rule == "enable") then
-        AutoRoll_PCDB["enabled"] = true
-        print("AutoRoll Enabled.")
-        return
-    end
 
-    if (rule == "disable") then
-        AutoRoll_PCDB["enabled"] = false
-        print("AutoRoll Disabled.")
-        return
-    end
 
 
 
@@ -83,30 +73,7 @@ SlashCmdList["AR"] = function(msg)
 
 
 
-    if cmd == "rules" then
-        print("AutoRoll - Rules")
 
-        -- Check for rule strings
-        local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
-        local ruleStrings = nil
-        if profileKey then
-            local profile = AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey]
-            if profile and profile.ruleStrings then
-                ruleStrings = profile.ruleStrings
-            end
-        end
-        
-        if ruleStrings then
-            print("-- Current Rule Strings:")
-            for i, ruleString in ipairs(ruleStrings) do
-                print("   "..i..". "..ruleString)
-            end
-        else
-            print("-- No rule strings found for current profile: " .. (profileKey or "unknown"))
-            print("-- Rule strings are automatically applied based on your class/spec")
-        end
-        return
-    end
 
     if cmd == "clearall" then
         print("AutoRoll: Rule strings are centrally managed in Profiles.lua")
@@ -139,11 +106,7 @@ SlashCmdList["AR"] = function(msg)
 
     -- No rules matched, print help
     print("AutoRoll - Commands")
-    print("-- View current rules:")
-    print("--       /ar rules")
-    print("-- Control addon:")
-    print("--       /ar enable")
-    print("--       /ar disable")
+
 
     print("-- Testing:")
     print("--       /ar test [item-link]")

@@ -23,8 +23,6 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 
 ### Available Commands
 ```
-/ar rules                    # List all rules
-/ar enable/disable          # Toggle addon
 /ar test [item-link]        # Test how item would be handled
 /ar test                    # Run unit tests
 /ar config                  # Open configuration GUI
@@ -44,9 +42,9 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 /ar test [Shift-click an item to get its link]
 ```
 
-**View current rules for your class/spec:**
+**Open configuration GUI:**
 ```
-/ar rules
+/ar config
 ```
 
 ## 🙏 Credits
