@@ -481,6 +481,16 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
+    if cmd == "test" then
+        -- Run the test runner (files loaded via TOC)
+        if AutoRollTestRunner then
+            AutoRollTestRunner:runAllTests()
+        else
+            print("AutoRoll: Test runner not available")
+        end
+        return
+    end
+
     -- No rules matched, print help
     print("AutoRoll - Commands")
     print("-- Adding custom rules:")
@@ -512,5 +522,7 @@ SlashCmdList["AR"] = function(msg)
     print("--       /ar debug")
     print("-- Open Class/Spec configuration GUI:")
     print("--       /ar config (or /ar gui or /ar setup)")
+    print("-- Run rule evaluation tests:")
+    print("--       /ar test")
 
 end

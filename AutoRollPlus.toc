@@ -12,3 +12,6 @@ AutoRoll.lua
 
 Modules\SlashCommands.lua
 Modules\ClassSpecGUI.lua
+
+TestData.lua
+TestRunner.lua
