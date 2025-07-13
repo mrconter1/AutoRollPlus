@@ -22,7 +22,7 @@ SlashCmdList["AR"] = function(msg)
         return
     end
 
-    if (rule == "need") or (rule == "greed") or (rule == "pass") or (rule == "exempt") then
+    if (rule == "need") or (rule == "greed") or (rule == "pass") or (rule == "manual") then
         -- Item Link Rules
         if itemIdString then
             AutoRoll.SaveRule(itemIdString, rule)
@@ -38,20 +38,6 @@ SlashCmdList["AR"] = function(msg)
             AutoRoll.SaveRule(itemType:lower(), rule)
             print("AutoRoll - "..rule:upper().." on "..itemType)
             return
-        end
-
-        -- NEW FEATURE: "/ar exempt <item-type> [<item-type> ...]"
-        -- Example: /ar exempt leather staves
-        -- This will set EXEMPT rules so these items always show manual roll window
-        if (rule == "exempt") then
-            local itemTypeList = string.match(cmd, "^exempt%s+(.+)")
-            if itemTypeList then
-                for word in string.gmatch(itemTypeList, "%S+") do
-                    AutoRoll.SaveRule(word:lower(), "exempt")
-                end
-                print("AutoRoll - EXEMPT (manual roll) for: " .. itemTypeList)
-                return
-            end
         end
         
         if (rule == "pass") then
@@ -476,10 +462,10 @@ SlashCmdList["AR"] = function(msg)
     -- No rules matched, print help
     print("AutoRoll - Commands")
     print("-- Adding custom rules:")
-    print("--       /ar [need,greed,pass] [item-link]")
-    print("--       /ar [need,greed,pass] [item-rarity]+[item-type] e.g. /ar need rare+wrands")
+    print("--       /ar [need,greed,pass,manual] [item-link]")
+    print("--       /ar [need,greed,pass,manual] [item-rarity]+[item-type] e.g. /ar need rare+wrands")
     print("-- Adding predefined rules:")
-    print("--       /ar [need,greed,pass] [coins,bijous,scarabs,idols]")
+    print("--       /ar [need,greed,pass,manual] [coins,bijous,scarabs,idols]")
     print("-- List current rules:")
     print("--       /ar rules")
     print("-- Removing rules:")
@@ -493,7 +479,7 @@ SlashCmdList["AR"] = function(msg)
     print("--       /ar enable")
     print("--       /ar disable")
     print("-- Set items to always show manual roll:")
-    print("--       /ar exempt <item-type> [<item-type> ...]")
+    print("--       /ar manual <item-type> [<item-type> ...]")
     print("-- Pass non-upgrade items:")
     print("--       /ar pass ifnotupgrade <item-type> intellect")
     print("-- Clear that rule:")

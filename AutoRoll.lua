@@ -394,16 +394,17 @@ do -- Private Scope
         else
             -- Add or update rule
             local found = false
+            local actionString = rule:upper()
             for i, r in ipairs(rules) do
                 if r.item and r.item:lower() == key:lower() then
-                    r.action = AutoRollUtils:getRuleValue(rule):upper()
+                    r.action = actionString
                     found = true
                     print("Updated "..rule:upper().." on "..key)
                     break
                 end
             end
             if not found then
-                table.insert(rules, { item = key:upper(), action = AutoRollUtils:getRuleValue(rule):upper() })
+                table.insert(rules, { item = key:upper(), action = actionString })
                 print("Remembered "..rule:upper().." on "..key)
             end
         end

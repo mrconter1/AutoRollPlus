@@ -477,15 +477,10 @@ function AutoRollClassSpecGUI:Show()
                 table.insert(rulesList, string.format("Otherwise, auto-%s", AutoRollDefaults.defaultAction:upper()))
             end
         else
+            -- Legacy format handling (table-based rules)
             for k, v in pairs(rules) do
                 if k:find("dynamic_pass_ifnotupgrade_intellect_cloth") and v then
                     table.insert(rulesList, "PASS if not upgrade (cloth, intellect)")
-                elseif k == "leather" and v == AutoRollUtils.ROLL.EXEMPT then
-                    table.insert(rulesList, "EXEMPT leather (manual roll)")
-                elseif k == "mail" and v == AutoRollUtils.ROLL.EXEMPT then
-                    table.insert(rulesList, "EXEMPT mail (manual roll)")
-                elseif k == "plate" and v == AutoRollUtils.ROLL.EXEMPT then
-                    table.insert(rulesList, "EXEMPT plate (manual roll)")
                 elseif k == "staves" and v == AutoRollUtils.ROLL.NEED then
                     table.insert(rulesList, "NEED staves")
                 elseif type(v) == "number" then
