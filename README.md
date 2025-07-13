@@ -1,52 +1,63 @@
 # 🎲 AutoRollPlus
 
-Enhanced auto-rolling addon for World of Warcraft Classic that intelligently handles loot rolls based on your character's class and specialization.
+**AutoRollPlus automatically handles loot rolling decisions in World of Warcraft Classic using customizable profile-based rules that adapt to your character's class and specialization.**
 
-## ⚡ Quick Start
+## ✨ Main Features
 
-1. Extract to `Interface/AddOns/AutoRollPlus`
-2. `/reload` 
-3. Restart WoW or `/reload`
+- **🤖 Intelligent Automation**: Automatically makes Need/Greed/Pass decisions without manual intervention
+- **🎯 Profile-Based Rules**: Different rule sets for each class and specialization combination
+- **🔧 Visual Configuration**: Easy-to-use graphical interface for managing profiles and rules
+- **🧪 Item Testing**: Test how any item would be handled before encountering it in dungeons/raids
+- **⚡ Zero Configuration**: Works immediately after installation with smart defaults
 
-## 🎮 Usage
+## 📋 Commands
 
-### Available Commands
 ```
+/arp profiles                # Browse profiles rollScripts
 /arp test                    # Open test GUI
-/arp test [item-link]        # Test how item would be handled
-/arp profiles                # Open profiles GUI
+/arp test [item-link]        # Test how a specific item would be handled
 ```
+
+## 🖥️ User Interfaces
+
+**Profile Configuration GUI (`/arp profiles`)**
+- View rule scripts for different class/spec combinations
+- Browse rolling logic for different character types
+- See how rules are structured and prioritized
+
+**Test Terminal GUI (`/arp test`)**
+- Drag items or paste item links to see how they would be handled
+- See exactly which rules matched and why a decision was made
+- Test items against different class/spec profiles with instant feedback
 
 ## 🧠 How It Works
 
-1. **Profile-Based**: Rules are automatically applied based on your character's class and specialization
-2. **Rule Evaluation**: Each item is evaluated against your current profile's rule set
-3. **Automatic Rolling**: Based on rule evaluation, the addon automatically rolls Need, Greed, or Pass
-4. **Manual Override**: Items can be configured to always show manual roll dialog
+1. **Automatic Profile Selection**: Detects your character's class and specialization, applies appropriate rules
+2. **Rule-Based Decisions**: Items are evaluated against your profile's rule set in priority order
+3. **Automatic Rolling**: Based on matching rules, addon automatically rolls Need, Greed, or Pass
+4. **Manual Fallback**: Items with no matching rules show the normal roll dialog
 
-## 🎯 Example
+## 🎯 Perfect For
 
-**Testing how an item would be handled:**
-```
-/arp test [Shift-click an item to get its link]
-```
+- Players who want to focus on gameplay instead of constant loot decisions
+- Frequent dungeon/raid runners with consistent rolling preferences
+- Anyone wanting to avoid accidentally rolling on wrong items
+- Testing item compatibility before raids
 
-**Open test GUI:**
-```
-/arp test
-```
+**Example**: Tank warrior automatically passes on caster gear and needs plate armor, while priest healer needs healing gear and passes on melee weapons.
 
-**Open profiles GUI:**
-```
-/arp profiles
-```
+## 🛠️ Technical Details
+
+- **Requirements**: World of Warcraft Classic (any version)
+- **Performance**: Lightweight with minimal memory footprint
+- **Customization**: Visual rule editor, priority organization, manual override options
 
 ## 🙏 Credits
 
-Based on [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addons/autoroll-classic)
+Loosely built upon [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addons/autoroll-classic), though the codebase has been completely rewritten with new features and enhanced functionality.
 
-## 🐛 Known Issues
+## 📝 Known Limitations
 
-- Rules are currently defined in Profiles.lua and require addon knowledge to modify
-- Profile selection is automatic based on class/spec and cannot be manually overridden
-- Some complex item types may not map correctly 
+- Profile selection is automatic based on class/spec detection
+- Some complex item types may require manual rule creation
+- Rule modifications require UI reload to take effect 
