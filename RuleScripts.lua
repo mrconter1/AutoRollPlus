@@ -41,7 +41,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        item.rollPass()
+        item.rollGreed()
     ]],
 
     -- Warrior strength rules (need for all upgrades)
@@ -165,6 +165,31 @@ AutoRollRuleScripts = {
             item.type == 'necklace' OR 
             item.type == 'cloak') 
            AND item.intellect.isUpgrade() 
+        THEN item.rollNeed()
+
+        item.rollGreed()
+    ]],
+
+    -- Rogue agility rules (leather + rogue weapons)
+    rogue_agility = [[
+        IF item.type == 'leather' 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'dagger' OR 
+            item.type == 'one-handed sword' OR 
+            item.type == 'one-handed axe' OR 
+            item.type == 'one-handed mace' OR 
+            item.type == 'fist weapon' OR 
+            item.type == 'thrown') 
+           AND item.agility.isUpgrade() 
+        THEN item.rollNeed()
+
+        IF (item.type == 'ring' OR 
+            item.type == 'trinket' OR 
+            item.type == 'necklace' OR 
+            item.type == 'cloak') 
+           AND item.agility.isUpgrade() 
         THEN item.rollNeed()
 
         item.rollGreed()

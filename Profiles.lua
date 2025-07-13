@@ -7,7 +7,7 @@ AutoRollProfiles = {
     hunter_marksmanship = AutoRollRuleScripts.hunter_agility,
     hunter_survival = AutoRollRuleScripts.hunter_agility,
 
-    -- Priest profiles (all specs use intellect + manual rolling + pass)
+    -- Priest profiles (all specs use intellect + manual rolling + greed)
     priest_holy = AutoRollRuleScripts.priest_intellect,
     priest_discipline = AutoRollRuleScripts.priest_intellect,
     priest_shadow = AutoRollRuleScripts.priest_intellect,
@@ -16,6 +16,11 @@ AutoRollProfiles = {
     warrior_arms = AutoRollRuleScripts.warrior_strength,
     warrior_fury = AutoRollRuleScripts.warrior_strength,
     warrior_protection = AutoRollRuleScripts.warrior_tank_strength,
+
+    -- Rogue profiles (all specs use agility + need rolling)
+    rogue_assassination = AutoRollRuleScripts.rogue_agility,
+    rogue_combat = AutoRollRuleScripts.rogue_agility,
+    rogue_subtlety = AutoRollRuleScripts.rogue_agility,
 
     -- Druid profiles 
     druid_feral = AutoRollRuleScripts.leather_agility,          -- Agility (both cat/bear)

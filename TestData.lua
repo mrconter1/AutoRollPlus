@@ -46,7 +46,7 @@ AutoRollTestProfiles = {
             {
                 name = "mail upgrade at high level",
                 player = {
-                    level = 52,
+                    level = 55,
                     class = "HUNTER",
                     spec = "Beast Mastery"
                 },
@@ -60,28 +60,28 @@ AutoRollTestProfiles = {
                     }
                 },
                 equippedItems = convertEquippedItems({
-                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 16 } }
                 }),
                 expectedResult = "MANUAL"
             },
             {
                 name = "bow upgrade",
                 player = {
-                    level = 60,
+                    level = 50,
                     class = "HUNTER",
                     spec = "Marksmanship"
                 },
                 item = {
-                    itemRarity = "Epic",
+                    itemRarity = "Rare",
                     itemSubType = "Bow",
                     itemEquipLoc = "INVTYPE_RANGED",
-                    quality = 4,
+                    quality = 3,
                     stats = {
-                        ["ITEM_MOD_AGILITY_SHORT"] = 25,
+                        ["ITEM_MOD_AGILITY_SHORT"] = 22,
                     }
                 },
                 equippedItems = convertEquippedItems({
-                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 20 } }
+                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
                 }),
                 expectedResult = "MANUAL"
             },
@@ -176,17 +176,17 @@ AutoRollTestProfiles = {
                 expectedResult = "MANUAL"
             },
             {
-                name = "trinket upgrade",
+                name = "trinket intellect upgrade",
                 player = {
                     level = 60,
                     class = "PRIEST",
                     spec = "Holy"
                 },
                 item = {
-                    itemRarity = "Epic",
+                    itemRarity = "Rare",
                     itemSubType = "Miscellaneous",
                     itemEquipLoc = "INVTYPE_TRINKET",
-                    quality = 4,
+                    quality = 3,
                     stats = {
                         ["ITEM_MOD_INTELLECT_SHORT"] = 20,
                     }
@@ -197,25 +197,25 @@ AutoRollTestProfiles = {
                 expectedResult = "MANUAL"
             },
             {
-                name = "non-upgrade item fallback to pass",
+                name = "wrong stat item fallback to greed",
                 player = {
-                    level = 50,
+                    level = 45,
                     class = "PRIEST",
                     spec = "Holy"
                 },
                 item = {
-                    itemRarity = "Common",
+                    itemRarity = "Rare",
                     itemSubType = "Cloth",
                     itemEquipLoc = "INVTYPE_CHEST",
-                    quality = 1,
+                    quality = 3,
                     stats = {
-                        ["ITEM_MOD_INTELLECT_SHORT"] = 10,
+                        ["ITEM_MOD_STRENGTH_SHORT"] = 20,
                     }
                 },
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
                 }),
-                expectedResult = "PASS"
+                expectedResult = "GREED"
             },
             {
                 name = "plate armor non-match",
@@ -236,7 +236,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
                 }),
-                expectedResult = "PASS"
+                expectedResult = "GREED"
             }
         }
     },
@@ -457,6 +457,117 @@ AutoRollTestProfiles = {
                 },
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
+                }),
+                expectedResult = "GREED"
+            }
+        }
+    },
+
+    rogue_assassination = {
+        ruleScript = AutoRollProfiles.rogue_assassination,
+        scenarios = {
+            {
+                name = "leather agility upgrade",
+                player = {
+                    level = 35,
+                    class = "ROGUE",
+                    spec = "Assassination"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Leather",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "dagger agility upgrade",
+                player = {
+                    level = 40,
+                    class = "ROGUE",
+                    spec = "Assassination"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Dagger",
+                    itemEquipLoc = "INVTYPE_WEAPON",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 22,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "thrown weapon agility upgrade",
+                player = {
+                    level = 45,
+                    class = "ROGUE",
+                    spec = "Combat"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Thrown",
+                    itemEquipLoc = "INVTYPE_RANGED",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 16,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
+                }),
+                expectedResult = "NEED"
+            },
+            {
+                name = "mail armor - wrong type results in greed",
+                player = {
+                    level = 30,
+                    class = "ROGUE",
+                    spec = "Assassination"
+                },
+                item = {
+                    itemRarity = "Uncommon",
+                    itemSubType = "Mail",
+                    itemEquipLoc = "INVTYPE_CHEST",
+                    quality = 2,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 20,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
+                }),
+                expectedResult = "GREED"
+            },
+            {
+                name = "bow weapon - wrong type results in greed",
+                player = {
+                    level = 50,
+                    class = "ROGUE",
+                    spec = "Subtlety"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Bow",
+                    itemEquipLoc = "INVTYPE_RANGED",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 25,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
                 }),
                 expectedResult = "GREED"
             }
