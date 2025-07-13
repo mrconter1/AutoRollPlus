@@ -19,8 +19,8 @@ local function convertEquippedItems(equippedItems)
 end
 
 AutoRollTestProfiles = {
-    hunter = {
-        ruleScript = AutoRollProfiles.hunter,
+    hunter_beastmastery = {
+        ruleScript = AutoRollProfiles.hunter_beastmastery,
         scenarios = {
             {
                 name = "leather upgrade at low level",
@@ -241,8 +241,8 @@ AutoRollTestProfiles = {
         }
     },
     
-    warrior_dps = {
-        ruleScript = AutoRollProfiles.warrior_dps,
+    warrior_arms = {
+        ruleScript = AutoRollProfiles.warrior_arms,
         scenarios = {
             {
                 name = "mail upgrade at low level",
@@ -352,8 +352,8 @@ AutoRollTestProfiles = {
         }
     },
     
-    warrior_tank = {
-        ruleScript = AutoRollProfiles.warrior_tank,
+    warrior_protection = {
+        ruleScript = AutoRollProfiles.warrior_protection,
         scenarios = {
             {
                 name = "mail upgrade at low level",

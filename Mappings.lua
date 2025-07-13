@@ -59,19 +59,19 @@ AutoRollMappings.profileNameMap = {
         ["Restoration"] = "druid_restoration"
     },
     WARRIOR = {
-        ["Arms"] = "warrior_dps",
-        ["Fury"] = "warrior_dps",
-        ["Protection"] = "warrior_tank"
+        ["Arms"] = "warrior_arms",
+        ["Fury"] = "warrior_fury",
+        ["Protection"] = "warrior_protection"
     },
     PRIEST = {
         ["Holy"] = "priest_holy",
-        ["Discipline"] = "priest_holy",  -- Can be differentiated later if needed
-        ["Shadow"] = "priest_holy"  -- Can be differentiated later if needed
+        ["Discipline"] = "priest_discipline",
+        ["Shadow"] = "priest_shadow"
     },
     HUNTER = {
-        ["Beast Mastery"] = "hunter",
-        ["Marksmanship"] = "hunter",
-        ["Survival"] = "hunter"
+        ["Beast Mastery"] = "hunter_beastmastery",
+        ["Marksmanship"] = "hunter_marksmanship",
+        ["Survival"] = "hunter_survival"
     },
     MONK = {
         ["Brewmaster"] = "monk_brewmaster",

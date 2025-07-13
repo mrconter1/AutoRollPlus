@@ -1,258 +1,29 @@
--- AutoRoll Profile Rules
--- Centralized rule scripts for all class/spec profiles
+-- AutoRoll Profile Rules  
+-- Maps profile names to shared rule scripts
 
 AutoRollProfiles = {
-    hunter = [[
-        IF item.type == 'leather' 
-           AND player.level < 50 
-           AND item.agility.isUpgrade() 
-        THEN item.manualRoll()
+    -- Hunter profiles (all specs use agility + manual rolling)
+    hunter_beastmastery = AutoRollRuleScripts.hunter_agility,
+    hunter_marksmanship = AutoRollRuleScripts.hunter_agility,
+    hunter_survival = AutoRollRuleScripts.hunter_agility,
 
-        IF item.type == 'mail' 
-           AND player.level >= 50 
-           AND item.agility.isUpgrade() 
-        THEN item.manualRoll()
+    -- Priest profiles (all specs use intellect + manual rolling + pass)
+    priest_holy = AutoRollRuleScripts.priest_intellect,
+    priest_discipline = AutoRollRuleScripts.priest_intellect,
+    priest_shadow = AutoRollRuleScripts.priest_intellect,
 
-        IF (item.type == 'bow' OR 
-            item.type == 'gun' OR 
-            item.type == 'crossbow' OR 
-            item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.agility.isUpgrade() 
-        THEN item.manualRoll()
+    -- Warrior profiles use strength + need rolling
+    warrior_arms = AutoRollRuleScripts.warrior_strength,
+    warrior_fury = AutoRollRuleScripts.warrior_strength,
+    warrior_protection = AutoRollRuleScripts.warrior_tank_strength,
 
-        item.rollGreed()
-    ]],
+    -- Druid profiles 
+    druid_feral = AutoRollRuleScripts.leather_agility,          -- Agility (both cat/bear)
+    druid_balance = AutoRollRuleScripts.leather_intellect,      -- Intellect (caster DPS)
+    druid_restoration = AutoRollRuleScripts.leather_intellect,  -- Intellect (healer)
 
-    priest_holy = [[
-        IF item.type == 'cloth' 
-           AND item.intellect.isUpgrade() 
-        THEN item.manualRoll()
-
-        IF item.type == 'staff' 
-           AND item.intellect.isUpgrade() 
-        THEN item.manualRoll()
-
-        IF item.type == 'trinket' 
-           AND item.intellect.isUpgrade() 
-        THEN item.manualRoll()
-
-        item.rollPass()
-    ]],
-
-    warrior_dps = [[
-        IF item.type == 'mail' 
-           AND player.level < 40 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF item.type == 'plate' 
-           AND player.level >= 40 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'polearm' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon') 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]],
-
-    warrior_tank = [[
-        IF item.type == 'mail' 
-           AND player.level < 40 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF item.type == 'plate' 
-           AND player.level >= 40 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'polearm' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon') 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF item.type == 'shield' 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.strength.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]],
-
-    druid_feral = [[
-        IF item.type == 'leather' 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'staff' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'polearm') 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]],
-
-    druid_balance = [[
-        IF item.type == 'leather' 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'staff' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'polearm') 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]],
-
-    druid_restoration = [[
-        IF item.type == 'leather' 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'staff' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'polearm') 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]],
-
-    monk_brewmaster = [[
-        IF item.type == 'leather' 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'fist weapon' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'polearm' OR 
-            item.type == 'staff') 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]],
-
-    monk_windwalker = [[
-        IF item.type == 'leather' 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'fist weapon' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'polearm' OR 
-            item.type == 'staff') 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.agility.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]],
-
-    monk_mistweaver = [[
-        IF item.type == 'leather' 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'fist weapon' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'polearm' OR 
-            item.type == 'staff') 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
-            item.type == 'necklace' OR 
-            item.type == 'cloak') 
-           AND item.intellect.isUpgrade() 
-        THEN item.rollNeed()
-
-        item.rollGreed()
-    ]]
+    -- Monk profiles
+    monk_brewmaster = AutoRollRuleScripts.leather_agility,      -- Agility (tank)
+    monk_windwalker = AutoRollRuleScripts.leather_agility,      -- Agility (DPS)
+    monk_mistweaver = AutoRollRuleScripts.leather_intellect     -- Intellect (healer)
 } 

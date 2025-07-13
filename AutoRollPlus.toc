@@ -9,6 +9,7 @@
 Dependencies\AddonUtils.lua
 
 Mappings.lua
+RuleScripts.lua
 Profiles.lua
 AutoRoll.lua
 
