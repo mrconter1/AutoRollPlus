@@ -47,9 +47,9 @@ AutoRollTestData = {
     {
         name = "Hunter leather upgrade at low level",
         rules = {
-            "IF leather AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF mail AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (bow OR gun OR crossbow) AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
+            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
             "ELSE greed"
         },
         player = {
@@ -75,9 +75,9 @@ AutoRollTestData = {
     {
         name = "Hunter mail upgrade at high level",
         rules = {
-            "IF leather AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF mail AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (bow OR gun OR crossbow) AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
+            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
             "ELSE greed"
         },
         player = {
@@ -103,9 +103,9 @@ AutoRollTestData = {
     {
         name = "Hunter bow upgrade",
         rules = {
-            "IF leather AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF mail AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (bow OR gun OR crossbow) AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
+            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
             "ELSE greed"
         },
         player = {
@@ -131,9 +131,9 @@ AutoRollTestData = {
     {
         name = "Hunter leather at high level - no upgrade",
         rules = {
-            "IF leather AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF mail AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (bow OR gun OR crossbow) AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
+            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
             "ELSE greed"
         },
         player = {
@@ -159,9 +159,9 @@ AutoRollTestData = {
     {
         name = "Non-hunter class gets greed fallback",
         rules = {
-            "IF leather AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF mail AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (bow OR gun OR crossbow) AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
+            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
             "ELSE greed"
         },
         player = {
@@ -185,7 +185,7 @@ AutoRollTestData = {
     {
         name = "Ring upgrade test",
         rules = {
-            "IF ring AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'ring' AND item.agility.isBetter() THEN manual",
             "ELSE pass"
         },
         player = {
@@ -212,7 +212,7 @@ AutoRollTestData = {
     {
         name = "Trinket upgrade test",
         rules = {
-            "IF trinket AND item.agility.isBetter() THEN need",
+            "IF item.type == 'trinket' AND item.agility.isBetter() THEN need",
             "ELSE pass"
         },
         player = {
@@ -264,7 +264,7 @@ AutoRollTestData = {
     {
         name = "Warrior needs on cloth chest with better armor",
         rules = {
-            "IF user.class == 'WARRIOR' AND cloth AND item.armor.isBetter() THEN need"
+            "IF user.class == 'WARRIOR' AND item.type == 'cloth' AND item.armor.isBetter() THEN need"
         },
         player = {
             level = 35,

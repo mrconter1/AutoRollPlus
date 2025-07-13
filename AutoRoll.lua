@@ -452,6 +452,19 @@ do -- Private Scope
                     i = i + 1
                 end
                 table.insert(tokens, {type = "NUMBER", value = tonumber(num)})
+            -- Handle string literals
+            elseif char == "'" or char == '"' then
+                local quote = char
+                local str = ""
+                i = i + 1 -- Skip opening quote
+                while i <= len and ruleString:sub(i, i) ~= quote do
+                    str = str .. ruleString:sub(i, i)
+                    i = i + 1
+                end
+                if i <= len then
+                    i = i + 1 -- Skip closing quote
+                end
+                table.insert(tokens, {type = "STRING", value = str})
             -- Handle identifiers and keywords
             elseif char:match("%a") then
                 local word = ""
@@ -576,6 +589,9 @@ do -- Private Scope
             elseif token and token.type == "NUMBER" then
                 local num = consume("NUMBER")
                 return {type = "NUMBER", value = num.value}
+            elseif token and token.type == "STRING" then
+                local str = consume("STRING")
+                return {type = "STRING", value = str.value}
             end
             
             return nil
@@ -667,10 +683,33 @@ do -- Private Scope
         
         if value.type == "NUMBER" then
             return value.value
+        elseif value.type == "STRING" then
+            return value.value
         elseif value.type == "MEMBER" then
             if value.object.type == "IDENTIFIER" and value.object.value == "user" then
                 if value.member == "level" then
                     return UnitLevel("player")
+                elseif value.member == "class" then
+                    local _, classKey = UnitClass("player")
+                    return classKey
+                end
+            elseif value.object.type == "IDENTIFIER" and value.object.value == "item" then
+                if value.member == "type" then
+                    -- Handle special cases where type is determined by equipment location
+                    local equipLoc = context.itemEquipLoc
+                    local subType = context.itemSubType and context.itemSubType:lower()
+                    
+                    if equipLoc == "INVTYPE_FINGER" then
+                        return "ring"
+                    elseif equipLoc == "INVTYPE_TRINKET" then
+                        return "trinket"
+                    elseif equipLoc == "INVTYPE_NECK" then
+                        return "necklace"
+                    elseif equipLoc == "INVTYPE_CLOAK" then
+                        return "cloak"
+                    else
+                        return subType
+                    end
                 end
             end
         end
