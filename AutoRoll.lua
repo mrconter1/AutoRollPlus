@@ -144,6 +144,7 @@ do -- Private Scope
     -- Map simple stat names to GetItemStats keys
     local STAT_KEYS = {
         intellect = "ITEM_MOD_INTELLECT_SHORT",
+        agility = "ITEM_MOD_AGILITY_SHORT",
     }
 
     -- Map equip locations to inventory slot IDs
@@ -287,44 +288,16 @@ do -- Private Scope
                 if classKey == "HUNTER" then
                     local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
                     if profileKey then
-                        -- Always ensure hunter has the correct rules
+                        -- Hunter rules as parseable strings
                         local hunterRules = {
-                            -- MANUAL rules
-                            { item = "LEATHER", action = "MANUAL" },
-                            { item = "GUNS", action = "MANUAL" },
-                            { item = "BOWS", action = "MANUAL" },
-                            { item = "CROSSBOWS", action = "MANUAL" },
-                            { item = "RINGS", action = "MANUAL" },
-                            { item = "TRINKETS", action = "MANUAL" },
-                            { item = "NECKLACES", action = "MANUAL" },
-                            -- GREED rules
-                            { item = "ONE-HANDED SWORDS", action = "GREED" },
-                            { item = "TWO-HANDED SWORDS", action = "GREED" },
-                            { item = "ONE-HANDED MACES", action = "GREED" },
-                            { item = "TWO-HANDED MACES", action = "GREED" },
-                            { item = "ONE-HANDED AXES", action = "GREED" },
-                            { item = "TWO-HANDED AXES", action = "GREED" },
-                            { item = "DAGGERS", action = "GREED" },
-                            { item = "POLEARMS", action = "GREED" },
-                            { item = "STAVES", action = "GREED" },
-                            { item = "FIST WEAPONS", action = "GREED" },
-                            { item = "WANDS", action = "GREED" },
-                            { item = "THROWN", action = "GREED" },
-                            { item = "SPEARS", action = "GREED" },
-                            { item = "PLATE", action = "GREED" },
-                            { item = "MAIL", action = "GREED" },
-                            { item = "CLOTH", action = "GREED" },
-                            { item = "SHIELDS", action = "GREED" },
-                            { item = "LIBRAMS", action = "GREED" },
-                            { item = "IDOLS", action = "GREED" },
-                            { item = "TOTEMS", action = "GREED" },
-                            { item = "SIGILS", action = "GREED" },
-                            { item = "TRADE GOODS", action = "GREED" },
-                            { item = "MISCELLANEOUS", action = "GREED" },
+                            "IF leather AND user.level < 50 AND item.agility.isBetter() THEN manual",
+                            "IF mail AND user.level >= 50 AND item.agility.isBetter() THEN manual",
+                            "IF (bow OR gun OR crossbow OR ring OR trinket OR necklace OR cloak) AND item.agility.isBetter() THEN manual",
+                            "ELSE greed"
                         }
                         
                         AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
-                        AutoRollPlus_PCDB["profiles"][profileKey] = hunterRules
+                        AutoRollPlus_PCDB["profiles"][profileKey] = { ruleStrings = hunterRules }
                         print("AutoRoll: Hunter rules applied.")
                     end
                 end
@@ -415,15 +388,440 @@ do -- Private Scope
         end
     end
 
+    --==============================
+    -- Rule Parser and Evaluator
+    --==============================
+
+    local RuleParser = {}
+    
+    -- Make RuleParser globally accessible for testing
+    AutoRoll.RuleParser = RuleParser
+
+    -- Tokenizer
+    function RuleParser:tokenize(ruleString)
+        local tokens = {}
+        local i = 1
+        local len = #ruleString
+        
+        while i <= len do
+            local char = ruleString:sub(i, i)
+            
+            -- Skip whitespace
+            if char:match("%s") then
+                i = i + 1
+            -- Handle operators and punctuation
+            elseif char == "(" then
+                table.insert(tokens, {type = "LPAREN", value = "("})
+                i = i + 1
+            elseif char == ")" then
+                table.insert(tokens, {type = "RPAREN", value = ")"})
+                i = i + 1
+            elseif char == "." then
+                table.insert(tokens, {type = "DOT", value = "."})
+                i = i + 1
+            elseif char == "<" then
+                if i + 1 <= len and ruleString:sub(i + 1, i + 1) == "=" then
+                    table.insert(tokens, {type = "OPERATOR", value = "<="})
+                    i = i + 2
+                else
+                    table.insert(tokens, {type = "OPERATOR", value = "<"})
+                    i = i + 1
+                end
+            elseif char == ">" then
+                if i + 1 <= len and ruleString:sub(i + 1, i + 1) == "=" then
+                    table.insert(tokens, {type = "OPERATOR", value = ">="})
+                    i = i + 2
+                else
+                    table.insert(tokens, {type = "OPERATOR", value = ">"})
+                    i = i + 1
+                end
+            elseif char == "=" then
+                if i + 1 <= len and ruleString:sub(i + 1, i + 1) == "=" then
+                    table.insert(tokens, {type = "OPERATOR", value = "=="})
+                    i = i + 2
+                else
+                    table.insert(tokens, {type = "OPERATOR", value = "="})
+                    i = i + 1
+                end
+            -- Handle numbers
+            elseif char:match("%d") then
+                local num = ""
+                while i <= len and ruleString:sub(i, i):match("%d") do
+                    num = num .. ruleString:sub(i, i)
+                    i = i + 1
+                end
+                table.insert(tokens, {type = "NUMBER", value = tonumber(num)})
+            -- Handle identifiers and keywords
+            elseif char:match("%a") then
+                local word = ""
+                while i <= len and ruleString:sub(i, i):match("[%w_]") do
+                    word = word .. ruleString:sub(i, i)
+                    i = i + 1
+                end
+                
+                local upperWord = word:upper()
+                if upperWord == "IF" then
+                    table.insert(tokens, {type = "IF", value = word})
+                elseif upperWord == "THEN" then
+                    table.insert(tokens, {type = "THEN", value = word})
+                elseif upperWord == "ELSE" then
+                    table.insert(tokens, {type = "ELSE", value = word})
+                elseif upperWord == "AND" then
+                    table.insert(tokens, {type = "AND", value = word})
+                elseif upperWord == "OR" then
+                    table.insert(tokens, {type = "OR", value = word})
+                else
+                    table.insert(tokens, {type = "IDENTIFIER", value = word})
+                end
+            else
+                -- Unknown character, skip
+                i = i + 1
+            end
+        end
+        
+        return tokens
+    end
+
+    -- Parser
+    function RuleParser:parse(tokens)
+        local pos = 1
+        
+        local function peek()
+            return tokens[pos]
+        end
+        
+        local function consume(expectedType)
+            local token = tokens[pos]
+            if token and (not expectedType or token.type == expectedType) then
+                pos = pos + 1
+                return token
+            end
+            return nil
+        end
+        
+        -- Forward declarations
+        local parseExpression, parseOrExpression, parseAndExpression, parseComparisonExpression, parsePrimaryExpression
+        
+        parseExpression = function()
+            return parseOrExpression()
+        end
+        
+        parseOrExpression = function()
+            local left = parseAndExpression()
+            
+            while peek() and peek().type == "OR" do
+                consume("OR")
+                local right = parseAndExpression()
+                left = {type = "OR", left = left, right = right}
+            end
+            
+            return left
+        end
+        
+        parseAndExpression = function()
+            local left = parseComparisonExpression()
+            
+            while peek() and peek().type == "AND" do
+                consume("AND")
+                local right = parseComparisonExpression()
+                left = {type = "AND", left = left, right = right}
+            end
+            
+            return left
+        end
+        
+        parseComparisonExpression = function()
+            local left = parsePrimaryExpression()
+            
+            local token = peek()
+            if token and token.type == "OPERATOR" then
+                local op = consume("OPERATOR")
+                local right = parsePrimaryExpression()
+                return {type = "COMPARISON", operator = op.value, left = left, right = right}
+            end
+            
+            return left
+        end
+        
+        parsePrimaryExpression = function()
+            local token = peek()
+            
+            if token and token.type == "LPAREN" then
+                consume("LPAREN")
+                local expr = parseExpression()
+                consume("RPAREN")
+                return expr
+            elseif token and token.type == "IDENTIFIER" then
+                local identifier = consume("IDENTIFIER")
+                local result = {type = "IDENTIFIER", value = identifier.value}
+                
+                -- Handle dot notation (user.level, item.agility.isBetter())
+                while peek() and peek().type == "DOT" do
+                    consume("DOT")
+                    local member = consume("IDENTIFIER")
+                    if member then
+                        result = {type = "MEMBER", object = result, member = member.value}
+                        
+                        -- Handle method calls
+                        if peek() and peek().type == "LPAREN" then
+                            consume("LPAREN")
+                            consume("RPAREN")
+                            result = {type = "METHOD_CALL", object = result}
+                        end
+                    end
+                end
+                
+                return result
+            elseif token and token.type == "NUMBER" then
+                local num = consume("NUMBER")
+                return {type = "NUMBER", value = num.value}
+            end
+            
+            return nil
+        end
+        
+        local function parseRule()
+            local token = peek()
+            
+            if token and token.type == "IF" then
+                consume("IF")
+                local condition = parseExpression()
+                consume("THEN")
+                local action = consume("IDENTIFIER")
+                
+                return {
+                    type = "IF_RULE",
+                    condition = condition,
+                    action = action and action.value
+                }
+            elseif token and token.type == "ELSE" then
+                consume("ELSE")
+                local action = consume("IDENTIFIER")
+                
+                return {
+                    type = "ELSE_RULE",
+                    action = action and action.value
+                }
+            end
+            
+            return nil
+        end
+        
+        return parseRule()
+    end
+
+    -- Evaluator
+    function RuleParser:evaluate(ast, context)
+        if not ast then return nil end
+        
+        if ast.type == "IF_RULE" then
+            if self:evaluateCondition(ast.condition, context) then
+                return ast.action
+            end
+            return nil
+        elseif ast.type == "ELSE_RULE" then
+            return ast.action
+        end
+        
+        return nil
+    end
+    
+    function RuleParser:evaluateCondition(condition, context)
+        if not condition then return false end
+        
+        if condition.type == "AND" then
+            return self:evaluateCondition(condition.left, context) and 
+                   self:evaluateCondition(condition.right, context)
+        elseif condition.type == "OR" then
+            return self:evaluateCondition(condition.left, context) or 
+                   self:evaluateCondition(condition.right, context)
+        elseif condition.type == "COMPARISON" then
+            local left = self:evaluateValue(condition.left, context)
+            local right = self:evaluateValue(condition.right, context)
+            
+            if condition.operator == "<" then
+                return left < right
+            elseif condition.operator == "<=" then
+                return left <= right
+            elseif condition.operator == ">" then
+                return left > right
+            elseif condition.operator == ">=" then
+                return left >= right
+            elseif condition.operator == "==" then
+                return left == right
+            end
+        elseif condition.type == "IDENTIFIER" then
+            -- Item type checks (leather, mail, bow, etc.)
+            local itemType = condition.value:lower()
+            return self:checkItemType(itemType, context)
+        elseif condition.type == "METHOD_CALL" then
+            return self:evaluateMethodCall(condition, context)
+        end
+        
+        return false
+    end
+    
+    function RuleParser:evaluateValue(value, context)
+        if not value then return nil end
+        
+        if value.type == "NUMBER" then
+            return value.value
+        elseif value.type == "MEMBER" then
+            if value.object.type == "IDENTIFIER" and value.object.value == "user" then
+                if value.member == "level" then
+                    return UnitLevel("player")
+                end
+            end
+        end
+        
+        return nil
+    end
+    
+    function RuleParser:evaluateMethodCall(methodCall, context)
+        -- Handle item.stat.isBetter() structure
+        if methodCall.object.type == "MEMBER" and 
+           methodCall.object.member == "isBetter" then
+            
+            -- Check if this is item.stat.isBetter()
+            if methodCall.object.object.type == "MEMBER" and
+               methodCall.object.object.object.type == "IDENTIFIER" and
+               methodCall.object.object.object.value == "item" then
+                
+                local statName = methodCall.object.object.member
+                local statKey = STAT_KEYS[statName:lower()]
+                if statKey and context.itemLink and context.itemEquipLoc then
+                    return IsItemStatUpgrade(context.itemLink, context.itemEquipLoc, statKey)
+                end
+            end
+        end
+        
+        return false
+    end
+    
+    function RuleParser:checkItemType(itemType, context)
+        if not context.itemSubType and not context.itemEquipLoc then return false end
+        
+        local subType = context.itemSubType and context.itemSubType:lower()
+        local equipLoc = context.itemEquipLoc
+        
+        -- Armor types
+        if itemType == "leather" then
+            return subType == "leather"
+        elseif itemType == "mail" then
+            return subType == "mail"
+        elseif itemType == "cloth" then
+            return subType == "cloth"
+        elseif itemType == "plate" then
+            return subType == "plate"
+        -- Weapons
+        elseif itemType == "bow" then
+            return subType == "bow"
+        elseif itemType == "gun" then
+            return subType == "gun"
+        elseif itemType == "crossbow" then
+            return subType == "crossbow"
+        -- Accessories
+        elseif itemType == "ring" then
+            return equipLoc == "INVTYPE_FINGER"
+        elseif itemType == "trinket" then
+            return equipLoc == "INVTYPE_TRINKET"
+        elseif itemType == "necklace" then
+            return equipLoc == "INVTYPE_NECK"
+        elseif itemType == "cloak" then
+            return equipLoc == "INVTYPE_CLOAK"
+        end
+        
+        return false
+    end
+
+    -- Main function to evaluate rule strings
+    function RuleParser:evaluateRuleStrings(ruleStrings, context)
+        if not ruleStrings then return nil end
+        
+        for i, ruleString in ipairs(ruleStrings) do
+            if AutoRoll_PCDB["debug"] then
+                print("AutoRoll DEBUG: Evaluating rule "..i..": "..ruleString)
+            end
+            
+            local tokens = self:tokenize(ruleString)
+            local ast = self:parse(tokens)
+            local result = self:evaluate(ast, context)
+            
+            if AutoRoll_PCDB["debug"] then
+                print("AutoRoll DEBUG: Rule "..i.." result: "..(result or "false"))
+            end
+            
+            if result then
+                return result:upper()
+            end
+        end
+        
+        return nil
+    end
+
     function EvaluateActiveRolls()
-        -- Only use array-of-objects format for rules
-        local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
-        if type(rules) ~= "table" or type(rules[1]) ~= "table" then return end
         for index,RollID in ipairs(GetActiveLootRollIDs()) do
             local itemId = AutoRollUtils:rollID2itemID(RollID)
             local _, _, _, quality, bindOnPickUp, canNeed, canGreed, _ = GetLootRollItemInfo(RollID)
             local itemName, itemLink, itemRarity, _, _, _, itemSubType, _, itemEquipLoc = GetItemInfo(itemId)
             local handled = false
+            
+            -- Create context for rule evaluation
+            local context = {
+                itemLink = itemLink,
+                itemSubType = itemSubType,
+                itemEquipLoc = itemEquipLoc,
+                canNeed = canNeed,
+                canGreed = canGreed
+            }
+            
+            -- First try rule strings if they exist
+            local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+            local ruleStrings = nil
+            if profileKey then
+                local profile = AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey]
+                if profile and profile.ruleStrings then
+                    ruleStrings = profile.ruleStrings
+                end
+            end
+            
+            if ruleStrings then
+                local action = RuleParser:evaluateRuleStrings(ruleStrings, context)
+                if AutoRoll_PCDB["debug"] then
+                    print("AutoRoll DEBUG: Rule evaluation result for "..(itemLink or "item:"..itemId)..": "..(action or "no match"))
+                end
+                if action then
+                    if action == "MANUAL" then
+                        if AutoRoll_PCDB["printRolls"] then
+                            print("AutoRoll: MANUAL required for "..(itemLink or "item:"..itemId))
+                        end
+                        handled = true
+                    elseif action == "NEED" and canNeed then
+                        if AutoRoll_PCDB["printRolls"] then
+                            print("AutoRoll: NEED on "..(itemLink or "item:"..itemId))
+                        end
+                        RollOnLoot(RollID, AutoRollUtils.ROLL.NEED)
+                        handled = true
+                    elseif action == "GREED" and canGreed then
+                        if AutoRoll_PCDB["printRolls"] then
+                            print("AutoRoll: GREED on "..(itemLink or "item:"..itemId))
+                        end
+                        RollOnLoot(RollID, AutoRollUtils.ROLL.GREED)
+                        handled = true
+                    elseif action == "PASS" then
+                        if AutoRoll_PCDB["printRolls"] then
+                            print("AutoRoll: PASS on "..(itemLink or "item:"..itemId))
+                        end
+                        RollOnLoot(RollID, AutoRollUtils.ROLL.PASS)
+                        handled = true
+                    end
+                end
+            end
+            
+            -- Fallback to legacy array-of-objects format for rules
+            if not handled then
+                local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
+                if type(rules) == "table" and type(rules[1]) == "table" then
             local playerLevel = UnitLevel("player")
             for _, rule in ipairs(rules) do
                 local match = true
@@ -470,6 +868,8 @@ do -- Private Scope
                         RollOnLoot(RollID, AutoRollUtils.ROLL.PASS)
                         handled = true
                         break
+                            end
+                        end
                     end
                 end
             end

@@ -193,7 +193,47 @@ SlashCmdList["AR"] = function(msg)
                 print("AutoRoll Test - Item: "..(itemLink or "Unknown"))
                 print("-- Item Type: "..(itemSubType or "Unknown"))
                 print("-- Equip Location: "..(itemEquipLoc or "Unknown"))
-                -- Use the same logic as EvaluateActiveRolls
+                print("-- Player Level: "..UnitLevel("player"))
+                
+                -- Check for rule strings first
+                local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+                local ruleStrings = nil
+                if profileKey then
+                    local profile = AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey]
+                    if profile and profile.ruleStrings then
+                        ruleStrings = profile.ruleStrings
+                    end
+                end
+                
+                if ruleStrings then
+                    print("-- Testing rule strings:")
+                    local context = {
+                        itemLink = itemLink,
+                        itemSubType = itemSubType,
+                        itemEquipLoc = itemEquipLoc,
+                        canNeed = true,
+                        canGreed = true
+                    }
+                    
+                    -- Enable debug temporarily for this test
+                    local wasDebug = AutoRoll_PCDB["debug"]
+                    AutoRoll_PCDB["debug"] = true
+                    
+                    -- Call the parser from AutoRoll.lua
+                    local action = AutoRoll.RuleParser and AutoRoll.RuleParser:evaluateRuleStrings(ruleStrings, context)
+                    
+                    -- Restore debug setting
+                    AutoRoll_PCDB["debug"] = wasDebug
+                    
+                    if action then
+                        print("-- RESULT: "..action)
+                    else
+                        print("-- RESULT: No matching rule")
+                    end
+                    return
+                end
+                
+                -- Fallback to legacy logic
                 local rules = AutoRoll.GetActiveRules and AutoRoll.GetActiveRules() or {}
                 local isArrayProfile = type(rules) == "table" and #rules > 0 and type(rules[1]) == "table"
                 local handled = false
@@ -302,6 +342,24 @@ SlashCmdList["AR"] = function(msg)
 
     if cmd == "rules" then
         print("AutoRoll - Rules")
+
+        -- Check for rule strings first
+        local profileKey = AutoRoll.GetCurrentProfileKey and AutoRoll.GetCurrentProfileKey()
+        local ruleStrings = nil
+        if profileKey then
+            local profile = AutoRollPlus_PCDB["profiles"] and AutoRollPlus_PCDB["profiles"][profileKey]
+            if profile and profile.ruleStrings then
+                ruleStrings = profile.ruleStrings
+            end
+        end
+        
+        if ruleStrings then
+            print("-- Current Rule Strings:")
+            for i, ruleString in ipairs(ruleStrings) do
+                print("   "..i..". "..ruleString)
+            end
+            return
+        end
 
         -- Use the same logic as AutoRoll.GetActiveRules to get the correct rules table
         local rules = nil
@@ -450,6 +508,8 @@ SlashCmdList["AR"] = function(msg)
     print("--       /ar clear ifnotupgrade <item-type> intellect")
     print("-- Test upgrade logic:")
     print("--       /ar test [item-link]")
+    print("-- Debug mode (shows rule evaluation):")
+    print("--       /ar debug")
     print("-- Open Class/Spec configuration GUI:")
     print("--       /ar config (or /ar gui or /ar setup)")
 
