@@ -145,6 +145,7 @@ do -- Private Scope
     local STAT_KEYS = {
         intellect = "ITEM_MOD_INTELLECT_SHORT",
         agility = "ITEM_MOD_AGILITY_SHORT",
+        armor = "ITEM_MOD_ARMOR_SHORT",
     }
 
     -- Map equip locations to inventory slot IDs

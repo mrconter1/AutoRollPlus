@@ -259,5 +259,31 @@ AutoRollTestData = {
             ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
         }),
         expectedResult = "NEED"
+    },
+    
+    {
+        name = "Warrior needs on cloth chest with better armor",
+        rules = {
+            "IF user.class == 'WARRIOR' AND cloth AND item.armor.isBetter() THEN need"
+        },
+        player = {
+            level = 35,
+            class = "WARRIOR",
+            spec = "Protection"
+        },
+        item = {
+            itemRarity = "Uncommon",
+            itemSubType = "Cloth",
+            itemEquipLoc = "INVTYPE_CHEST",
+            quality = 2,
+            stats = {
+                ["ITEM_MOD_ARMOR_SHORT"] = 85,
+                ["ITEM_MOD_STAMINA_SHORT"] = 10,
+            }
+        },
+        equippedItems = convertEquippedItems({
+            ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_ARMOR_SHORT"] = 60 } }
+        }),
+        expectedResult = "NEED"
     }
 } 
