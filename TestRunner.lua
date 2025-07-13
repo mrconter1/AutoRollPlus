@@ -129,7 +129,7 @@ function TestRunner:runProfileTests(profileName, verbose)
         if success and actualResult == testCase.expectedResult then
             passedTests = passedTests + 1
             if verbose then
-                print("✓ PASS: " .. scenario.name)
+                print("[PASS] " .. scenario.name)
             end
         else
             local failureReason
@@ -148,14 +148,14 @@ function TestRunner:runProfileTests(profileName, verbose)
             })
             
             if verbose then
-                print("✗ FAIL: " .. scenario.name)
+                print("[FAIL] " .. scenario.name)
                 print("  " .. failureReason)
             end
         end
     end
     
     -- .NET style summary line
-    local statusIcon = (totalTests == passedTests) and "✓" or "✗"
+    local statusIcon = (totalTests == passedTests) and "[OK]" or "[FAIL]"
     print(profileName .. ": " .. totalTests .. " tests, " .. passedTests .. " passed, " .. (totalTests - passedTests) .. " failed " .. statusIcon)
     
     -- Show details only if verbose or if there are failures
@@ -172,7 +172,7 @@ function TestRunner:runProfileTests(profileName, verbose)
             print()
             print("=== Failed Test Details for " .. profileName .. " ===")
             for _, failure in ipairs(failedTests) do
-                print("  ✗ " .. failure.name .. ": " .. failure.reason)
+                print("  [FAIL] " .. failure.name .. ": " .. failure.reason)
             end
         end
     end
@@ -221,7 +221,7 @@ function TestRunner:runAllProfiles(verbose)
         print()
     end
     
-    local overallStatus = (totalFailed == 0) and "✓" or "✗"
+    local overallStatus = (totalFailed == 0) and "[OK]" or "[FAIL]"
     print("Test run finished: " .. totalTests .. " tests, " .. totalPassed .. " passed, " .. totalFailed .. " failed " .. overallStatus)
     
     return totalPassed, totalFailed
