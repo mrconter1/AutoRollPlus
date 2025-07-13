@@ -502,12 +502,15 @@ function AutoRollClassSpecGUI:Show()
     frame.ruleLines = {}
     if frame.ruleRowFrames then for _, row in ipairs(frame.ruleRowFrames) do row:Hide() end end
     frame.ruleRowFrames = {}
-    -- Render rules as a table with three columns: Item Type, Greed, Need
+    -- Render rules as a table with four columns: Item Type, Greed, Need, Manual
     local yOffset = 0
     local lastRow = nil
     local rowHeight = 24
     local tableWidth = frame:GetWidth() - 60
-    local col1Width, col2Width, col3Width = math.floor(tableWidth * 0.65), math.floor(tableWidth * 0.175), math.floor(tableWidth * 0.175)
+    local col1Width = math.floor(tableWidth * 0.55)
+    local col2Width = math.floor(tableWidth * 0.15)
+    local col3Width = math.floor(tableWidth * 0.15)
+    local col4Width = math.floor(tableWidth * 0.15)
     -- Header row
     if not frame.rulesHeaderRow then
         local header = CreateFrame("Frame", nil, rulesContent)
@@ -541,6 +544,13 @@ function AutoRollClassSpecGUI:Show()
         col3:SetPoint("LEFT", header, "LEFT", col1Width + col2Width + 16, 0)
         col3:SetWidth(col3Width)
         col3:SetJustifyH("CENTER")
+        local col4 = header:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+        col4:SetText("Manual")
+        col4:SetTextColor(1, 0.85, 0.2)
+        col4:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+        col4:SetPoint("LEFT", header, "LEFT", col1Width + col2Width + col3Width + 24, 0)
+        col4:SetWidth(col4Width)
+        col4:SetJustifyH("CENTER")
         -- Add a thin line below the header
         local sep = header:CreateTexture(nil, "ARTWORK")
         sep:SetColorTexture(0.3, 0.35, 0.45, 0.85)
@@ -606,6 +616,13 @@ function AutoRollClassSpecGUI:Show()
                 needIcon:SetPoint("CENTER", row, "LEFT", col1Width + col2Width + col3Width/2 + 16, 0)
                 needIcon:Hide()
                 row.needIcon = needIcon
+                -- Manual icon
+                local manualIcon = row:CreateTexture(nil, "ARTWORK")
+                manualIcon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+                manualIcon:SetSize(16, 16)
+                manualIcon:SetPoint("CENTER", row, "LEFT", col1Width + col2Width + col3Width + col4Width/2 + 24, 0)
+                manualIcon:Hide()
+                row.manualIcon = manualIcon
                 frame.ruleRowFrames = frame.ruleRowFrames or {}
                 table.insert(frame.ruleRowFrames, row)
             end
@@ -613,12 +630,16 @@ function AutoRollClassSpecGUI:Show()
             row.col1:SetText(itemType)
             row.greedIcon:Hide()
             row.needIcon:Hide()
+            row.manualIcon:Hide()
             if action:upper() == "GREED" then
                 row.greedIcon:SetVertexColor(0.2, 1, 0.2, 1)
                 row.greedIcon:Show()
             elseif action:upper() == "NEED" then
                 row.needIcon:SetVertexColor(0.2, 0.6, 1, 1)
                 row.needIcon:Show()
+            elseif action:upper() == "MANUAL" then
+                row.manualIcon:SetVertexColor(1, 0.85, 0.2, 1)
+                row.manualIcon:Show()
             end
             row:ClearAllPoints()
             if rowIdx == 1 then
