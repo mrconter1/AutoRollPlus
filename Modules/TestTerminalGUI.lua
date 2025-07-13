@@ -133,7 +133,7 @@ function TestTerminalGUI:Initialize()
     local reloadButton = CreateFrame("Button", nil, buttonPanel, "GameMenuButtonTemplate")
     reloadButton:SetSize(120, 25)
     reloadButton:SetPoint("LEFT", runButton, "RIGHT", 10, 0)
-    reloadButton:SetText("Load New Tests")
+    reloadButton:SetText("Reload")
     reloadButton:SetScript("OnClick", function() 
         -- Set flag to reopen test dialog after reload
         if not AutoRollPlus_PCDB then
