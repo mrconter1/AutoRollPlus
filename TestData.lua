@@ -263,7 +263,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "plate upgrade at high level",
@@ -284,7 +284,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "two-handed sword upgrade",
@@ -305,7 +305,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 18 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "ring upgrade",
@@ -326,7 +326,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 10 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "non-upgrade fallback to greed",
@@ -374,7 +374,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "plate upgrade at high level",
@@ -395,7 +395,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "shield upgrade",
@@ -416,7 +416,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 14 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "one-handed mace upgrade",
@@ -437,7 +437,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "non-upgrade fallback to greed",
@@ -485,7 +485,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "dagger agility upgrade",
@@ -506,7 +506,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "thrown weapon agility upgrade",
@@ -527,7 +527,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "mail armor - wrong type results in greed",
@@ -596,7 +596,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "feral weapon upgrade",
@@ -617,7 +617,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "ring upgrade (works for both cat and bear)",
@@ -638,7 +638,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "mail armor - wrong type results in greed",
@@ -707,7 +707,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "balance weapon upgrade",
@@ -728,7 +728,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "trinket intellect upgrade",
@@ -749,7 +749,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "plate armor - wrong type results in greed",
@@ -818,7 +818,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "restoration staff upgrade",
@@ -839,7 +839,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 22 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "healing trinket upgrade",
@@ -860,7 +860,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 16 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "mail armor - wrong type results in greed",
@@ -929,7 +929,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "fist weapon agility upgrade",
@@ -950,7 +950,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "trinket agility upgrade",
@@ -971,7 +971,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "mail armor - wrong type results in greed",
@@ -1040,7 +1040,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_LEGS"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "staff agility upgrade",
@@ -1061,7 +1061,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 22 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "one-handed sword agility upgrade",
@@ -1082,7 +1082,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "plate armor - wrong type results in greed",
@@ -1151,7 +1151,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_CHEST"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 15 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "staff intellect upgrade",
@@ -1172,7 +1172,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_2HWEAPON"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 24 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "healing trinket upgrade",
@@ -1193,7 +1193,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_TRINKET"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 18 } }
                 }),
-                expectedResult = "NEED"
+                expectedResult = "MANUAL"
             },
             {
                 name = "mail armor - wrong type results in greed",
