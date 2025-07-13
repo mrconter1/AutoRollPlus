@@ -46,9 +46,9 @@ end
 AutoRollTestProfiles = {
     hunter = {
         ruleScript = {
-            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isBetter() THEN manual",
-            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isBetter() THEN manual",
+            "IF item.type == 'leather' AND user.level < 50 AND item.agility.isUpgrade() THEN manual",
+            "IF item.type == 'mail' AND user.level >= 50 AND item.agility.isUpgrade() THEN manual",
+            "IF (item.type == 'bow' OR item.type == 'gun' OR item.type == 'crossbow') AND item.agility.isUpgrade() THEN manual",
             "ELSE greed"
         },
         scenarios = {
@@ -120,9 +120,9 @@ AutoRollTestProfiles = {
     
     priest_holy = {
         ruleScript = {
-            "IF item.type == 'cloth' AND item.intellect.isBetter() THEN manual",
-            "IF item.type == 'staff' AND item.intellect.isBetter() THEN manual",
-            "IF item.type == 'trinket' AND item.intellect.isBetter() THEN manual",
+            "IF item.type == 'cloth' AND item.intellect.isUpgrade() THEN manual",
+            "IF item.type == 'staff' AND item.intellect.isUpgrade() THEN manual",
+            "IF item.type == 'trinket' AND item.intellect.isUpgrade() THEN manual",
             "ELSE pass"
         },
         scenarios = {
