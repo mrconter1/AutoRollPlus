@@ -200,7 +200,7 @@ function TestRunner:runAllProfiles(verbose)
     local totalFailed = 0
     
     if verbose then
-        print("=== AutoRoll Test Runner - Profile Mode ===")
+        print("=== AutoRollPlus Test Runner - Profile Mode ===")
         print()
     else
         print("Running tests...")

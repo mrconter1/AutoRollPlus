@@ -218,7 +218,7 @@ do -- Private Scope
                 if profileRules then
                     AutoRollPlus_PCDB["profiles"] = AutoRollPlus_PCDB["profiles"] or {}
                     AutoRollPlus_PCDB["profiles"][profileKey] = { ruleStrings = profileRules }
-                    print("AutoRoll: Profile rules applied for " .. profileKey)
+                    print("AutoRollPlus: Profile rules applied for " .. profileKey)
                 end
             end
             
@@ -255,8 +255,8 @@ do -- Private Scope
 
     function PrintHelp()
         local colorHex = "2979ff"
-        print("|cff"..colorHex.."AutoRoll loaded")
-        print("-- Use /ar for available commands")
+        print("|cff"..colorHex.."AutoRollPlus loaded")
+        print("-- Use /arp for available commands")
     end
 
 

@@ -68,7 +68,7 @@ function ConfigGUI:Initialize()
     -- Title text
     local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     titleText:SetPoint("LEFT", titleBar, "LEFT", 10, 0)
-    titleText:SetText(COLORS.header .. "AutoRoll Configuration" .. COLORS.reset)
+    titleText:SetText(COLORS.header .. "AutoRollPlus Configuration" .. COLORS.reset)
     
     -- Close button
     local closeButton = CreateFrame("Button", nil, titleBar, "UIPanelCloseButton")
@@ -288,7 +288,7 @@ end
 
 -- Show welcome message
 function ConfigGUI:ShowWelcomeMessage()
-    local welcomeText = COLORS.header .. "AutoRoll Configuration Browser" .. COLORS.reset .. "\n\n"
+    local welcomeText = COLORS.header .. "AutoRollPlus Configuration Browser" .. COLORS.reset .. "\n\n"
     welcomeText = welcomeText .. "Select a class and spec from the left panel to view their rule scripts.\n\n"
     welcomeText = welcomeText .. COLORS.current .. "Green entries" .. COLORS.reset .. " indicate your current class/spec.\n\n"
     welcomeText = welcomeText .. "Rule scripts define how the addon automatically rolls on loot:\n"

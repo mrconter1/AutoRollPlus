@@ -66,7 +66,7 @@ function TestTerminalGUI:Initialize()
     -- Title text
     local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     titleText:SetPoint("LEFT", titleBar, "LEFT", 10, 0)
-    titleText:SetText(COLORS.header .. "AutoRoll Test Terminal" .. COLORS.reset)
+    titleText:SetText(COLORS.header .. "AutoRollPlus Test Terminal" .. COLORS.reset)
     
     -- Close button
     local closeButton = CreateFrame("Button", nil, titleBar, "UIPanelCloseButton")
@@ -159,7 +159,7 @@ function TestTerminalGUI:Initialize()
     autoClearLabel:SetTextColor(1, 1, 1)
     
     -- Initial welcome message
-    self:AddOutput(COLORS.header .. "AutoRoll Test Terminal v1.0" .. COLORS.reset)
+    self:AddOutput(COLORS.header .. "AutoRollPlus Test Terminal v1.0" .. COLORS.reset)
     self:AddOutput(COLORS.info .. "Simple test runner with auto-clear option" .. COLORS.reset)
     self:AddOutput(COLORS.info .. "Select text directly in this window and press Ctrl+C to copy" .. COLORS.reset)
     self:AddOutput("")

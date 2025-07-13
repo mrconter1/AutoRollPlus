@@ -1,31 +1,20 @@
-# AutoRollPlus
+# 🎲 AutoRollPlus
 
-A World of Warcraft Classic addon that intelligently automates loot rolling decisions based on whether items are actual upgrades.
+Enhanced auto-rolling addon for World of Warcraft Classic that intelligently handles loot rolls based on your character's class and specialization.
 
-## 🎯 About
+## ⚡ Quick Start
 
-Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addons/autoroll-classic) with smart upgrade detection. The original provided basic rule-based auto-rolling - this version adds intelligence to only roll on items that are stat improvements over your current gear.
-
-## ✨ New Features
-
-- **Smart Upgrade Detection**: Only rolls on items that improve your stats
-- **EXEMPT System**: Force manual rolls for specific item types  
-- **Dynamic Rules**: Auto-pass items that aren't upgrades
-- **Testing Tools**: Preview how items will be handled
-
-## 📥 Installation
-
-1. Download/clone this repository
-2. Copy `AutoRoll` folder to `World of Warcraft\_classic_\Interface\AddOns\`
+1. Extract to `Interface/AddOns/AutoRollPlus`
+2. `/reload` 
 3. Restart WoW or `/reload`
 
 ## 🎮 Usage
 
 ### Available Commands
 ```
-/ar test                    # Open test GUI
-/ar test [item-link]        # Test how item would be handled
-/ar profiles                # Open profiles GUI
+/arp test                    # Open test GUI
+/arp test [item-link]        # Test how item would be handled
+/arp profiles                # Open profiles GUI
 ```
 
 ## 🧠 How It Works
@@ -39,17 +28,17 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 
 **Testing how an item would be handled:**
 ```
-/ar test [Shift-click an item to get its link]
+/arp test [Shift-click an item to get its link]
 ```
 
 **Open test GUI:**
 ```
-/ar test
+/arp test
 ```
 
 **Open profiles GUI:**
 ```
-/ar profiles
+/arp profiles
 ```
 
 ## 🙏 Credits
@@ -60,12 +49,4 @@ Based on [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addons/autoroll-
 
 - Rules are currently defined in Profiles.lua and require addon knowledge to modify
 - Profile selection is automatic based on class/spec and cannot be manually overridden
-- Some complex item types may not map correctly
-
-## 🤝 Contributing
-
-Feel free to submit issues or pull requests to improve the addon!
-
-## 📄 License
-
-Based on the original AutoRoll addon. This enhanced version maintains the same license structure. 
+- Some complex item types may not map correctly 

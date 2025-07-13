@@ -1,5 +1,5 @@
--- AutoRoll Profile Rules  
--- Maps profile names to shared rule scripts
+-- AutoRollPlus Profile Rules
+-- This file defines rule scripts for each class/spec combination
 
 AutoRollProfiles = {
     -- Hunter profiles (all specs use agility + manual rolling)

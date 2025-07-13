@@ -1,10 +1,10 @@
 -- COMMANDS
-SLASH_AR1 = '/ar';
-SLASH_AR2 = '/autoroll';
+SLASH_ARP1 = '/arp';
+SLASH_ARP2 = '/autorollplus';
 
 local STAT_KEYS = AutoRollMappings.STAT_KEYS
 
-SlashCmdList["AR"] = function(msg)
+SlashCmdList["ARP"] = function(msg)
     local cmd = msg:lower()
 
     local rule = string.match(cmd, "^(%S*)")
@@ -23,9 +23,9 @@ SlashCmdList["AR"] = function(msg)
 
 
     if cmd == "clearall" then
-        print("AutoRoll: Rule strings are centrally managed in Profiles.lua")
+        print("AutoRollPlus: Rule strings are centrally managed in Profiles.lua")
         print("-- Individual rules cannot be cleared - profiles are automatically applied based on class/spec")
-        print("-- To disable AutoRoll entirely, use: /ar disable")
+        print("-- To disable AutoRollPlus entirely, use: /arp disable")
         return
     end
 
@@ -37,7 +37,7 @@ SlashCmdList["AR"] = function(msg)
                 local itemId = AutoRollUtils:getItemId(itemLink)
                 if itemId then
                     local itemName, _, itemRarity, _, _, _, itemSubType, _, itemEquipLoc = GetItemInfo(itemId)
-                    print("AutoRoll Test - Item: "..(itemLink or "Unknown"))
+                    print("AutoRollPlus Test - Item: "..(itemLink or "Unknown"))
                     print("-- Item Type: "..(itemSubType or "Unknown"))
                     print("-- Equip Location: "..(itemEquipLoc or "Unknown"))
                     print("-- Player Level: "..UnitLevel("player"))
@@ -75,8 +75,8 @@ SlashCmdList["AR"] = function(msg)
                         print("-- Rule strings are automatically applied based on class/spec")
                     end
                 else
-                    print("AutoRoll Test - ERROR: Invalid item link")
-                    print("AutoRoll Test - Usage: /ar test [item-link]")
+                    print("AutoRollPlus Test - ERROR: Invalid item link")
+                    print("AutoRollPlus Test - Usage: /arp test [item-link]")
                     print("-- Shift-click an item to get its link, then paste after 'test'")
                 end
             end
@@ -85,7 +85,7 @@ SlashCmdList["AR"] = function(msg)
             if AutoRollTestTerminal then
                 AutoRollTestTerminal:Toggle()
             else
-                print("AutoRoll: Test GUI not available")
+                print("AutoRollPlus: Test GUI not available")
             end
         end
         return
@@ -96,7 +96,7 @@ SlashCmdList["AR"] = function(msg)
         if AutoRollConfigGUI then
             AutoRollConfigGUI:Initialize()
         else
-            print("AutoRoll: Configuration GUI not available")
+            print("AutoRollPlus: Configuration GUI not available")
         end
         return
     end
@@ -104,15 +104,15 @@ SlashCmdList["AR"] = function(msg)
 
 
     -- No rules matched, print help
-    print("AutoRoll - Commands")
+    print("AutoRollPlus - Commands")
 
 
     print("-- Testing:")
-    print("--       /ar test         (open test GUI)")
-    print("--       /ar test [item-link] (test specific item)")
+    print("--       /arp test         (open test GUI)")
+    print("--       /arp test [item-link] (test specific item)")
     print("-- Configuration:")
-    print("--       /ar profiles     (open profiles GUI)")
+    print("--       /arp profiles     (open profiles GUI)")
     print("-- Note: Rules are automatically applied based on your class/spec")
-    print("-- Edit rules in Profiles.lua or use /ar test for testing interface")
+    print("-- Edit rules in Profiles.lua or use /arp test for testing interface")
 
 end
