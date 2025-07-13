@@ -23,8 +23,8 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 
 ### Available Commands
 ```
+/ar test                    # Open test GUI
 /ar test [item-link]        # Test how item would be handled
-/ar test                    # Run unit tests
 /ar config                  # Open configuration GUI
 ```
 
@@ -40,6 +40,11 @@ Enhanced version of [AutoRoll by CassiniEU](https://www.curseforge.com/wow/addon
 **Testing how an item would be handled:**
 ```
 /ar test [Shift-click an item to get its link]
+```
+
+**Open test GUI:**
+```
+/ar test
 ```
 
 **Open configuration GUI:**
