@@ -291,9 +291,9 @@ do -- Private Scope
                     if profileKey then
                         -- Hunter rules as parseable strings
                         local hunterRules = {
-                            "IF leather AND user.level < 50 AND item.agility.isBetter() THEN manual",
-                            "IF mail AND user.level >= 50 AND item.agility.isBetter() THEN manual",
-                            "IF (bow OR gun OR crossbow OR ring OR trinket OR necklace OR cloak) AND item.agility.isBetter() THEN manual",
+                                    "IF leather AND user.level < 50 AND item.agility.isUpgrade() THEN manual",
+        "IF mail AND user.level >= 50 AND item.agility.isUpgrade() THEN manual",
+        "IF (bow OR gun OR crossbow OR ring OR trinket OR necklace OR cloak) AND item.agility.isUpgrade() THEN manual",
                             "ELSE greed"
                         }
                         
@@ -569,7 +569,7 @@ do -- Private Scope
                 local identifier = consume("IDENTIFIER")
                 local result = {type = "IDENTIFIER", value = identifier.value}
                 
-                -- Handle dot notation (user.level, item.agility.isBetter())
+                -- Handle dot notation (user.level, item.agility.isUpgrade())
                 while peek() and peek().type == "DOT" do
                     consume("DOT")
                     local member = consume("IDENTIFIER")
@@ -718,11 +718,11 @@ do -- Private Scope
     end
     
     function RuleParser:evaluateMethodCall(methodCall, context)
-        -- Handle item.stat.isBetter() structure
+        -- Handle item.stat.isUpgrade() structure
         if methodCall.object.type == "MEMBER" and 
-           methodCall.object.member == "isBetter" then
+           methodCall.object.member == "isUpgrade" then
             
-            -- Check if this is item.stat.isBetter()
+            -- Check if this is item.stat.isUpgrade()
             if methodCall.object.object.type == "MEMBER" and
                methodCall.object.object.object.type == "IDENTIFIER" and
                methodCall.object.object.object.value == "item" then
