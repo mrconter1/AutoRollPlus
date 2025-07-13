@@ -43,10 +43,11 @@ function TestTerminalGUI:Initialize()
     })
     terminalFrame:SetBackdropColor(0, 0, 0, 0.9)
     terminalFrame:EnableMouse(true)
-    terminalFrame:SetMovable(true)
-    terminalFrame:RegisterForDrag("LeftButton")
-    terminalFrame:SetScript("OnDragStart", terminalFrame.StartMoving)
-    terminalFrame:SetScript("OnDragStop", terminalFrame.StopMovingOrSizing)
+    -- Dragging disabled to improve text selection
+    -- terminalFrame:SetMovable(true)
+    -- terminalFrame:RegisterForDrag("LeftButton")
+    -- terminalFrame:SetScript("OnDragStart", terminalFrame.StartMoving)
+    -- terminalFrame:SetScript("OnDragStop", terminalFrame.StopMovingOrSizing)
     
     -- Title bar
     local titleBar = CreateFrame("Frame", nil, terminalFrame, "BackdropTemplate")

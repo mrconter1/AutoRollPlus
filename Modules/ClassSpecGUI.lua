@@ -54,10 +54,11 @@ function AutoRollClassSpecGUI:CreateFrame()
     topBar:SetVertexColor(0.2, 0.6, 1, 1)
     
     frame:EnableMouse(true)
-    frame:SetMovable(true)
-    frame:RegisterForDrag("LeftButton")
-    frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+    -- Dragging disabled to improve text selection
+    -- frame:SetMovable(true)
+    -- frame:RegisterForDrag("LeftButton")
+    -- frame:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    -- frame:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 
     -- Title
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
