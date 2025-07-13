@@ -17,13 +17,6 @@ AutoRollUtils = {
     }
 }
 
-AutoRollUtils.STAT_KEYS = {
-    intellect = "ITEM_MOD_INTELLECT_SHORT",
-    agility = "ITEM_MOD_AGILITY_SHORT",
-    strength = "ITEM_MOD_STRENGTH_SHORT",
-    -- Add more stat mappings as needed
-}
-
 function AutoRollUtils:deepcopy(orig)
     local orig_type = type(orig)
     local copy

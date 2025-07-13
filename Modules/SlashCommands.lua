@@ -2,7 +2,7 @@
 SLASH_AR1 = '/ar';
 SLASH_AR2 = '/autoroll';
 
-local STAT_KEYS = AutoRollUtils.STAT_KEYS
+local STAT_KEYS = AutoRollMappings.STAT_KEYS
 
 SlashCmdList["AR"] = function(msg)
     local cmd = msg:lower()
@@ -163,19 +163,7 @@ SlashCmdList["AR"] = function(msg)
         -- MoP: Use GetPrimaryTalentTree if available
         if GetPrimaryTalentTree then
             local specIndex = GetPrimaryTalentTree()
-            local classSpecs = {
-                WARRIOR = {"Arms", "Fury", "Protection"},
-                PALADIN = {"Holy", "Protection", "Retribution"},
-                HUNTER = {"Beast Mastery", "Marksmanship", "Survival"},
-                ROGUE = {"Assassination", "Combat", "Subtlety"},
-                PRIEST = {"Discipline", "Holy", "Shadow"},
-                DEATHKNIGHT = {"Blood", "Frost", "Unholy"},
-                SHAMAN = {"Elemental", "Enhancement", "Restoration"},
-                MAGE = {"Arcane", "Fire", "Frost"},
-                WARLOCK = {"Affliction", "Demonology", "Destruction"},
-                DRUID = {"Balance", "Feral", "Restoration"},
-                MONK = {"Brewmaster", "Mistweaver", "Windwalker"},
-            }
+            local classSpecs = AutoRollMappings.classSpecs
             local specs = classSpecs[classKey]
             if specs and specIndex and specs[specIndex] then
                 specName = specs[specIndex]
