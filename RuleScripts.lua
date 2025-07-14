@@ -19,8 +19,11 @@ AutoRollRuleScripts = {
             item.type == 'guns')
         THEN item.manualRoll()
 
-        IF (item.type == 'ring' OR 
-            item.type == 'trinket' OR 
+        IF item.type == 'ring' 
+           AND player.isAnUpgrade('ring', 'agility')
+        THEN item.manualRoll()
+
+        IF (item.type == 'trinket' OR 
             item.type == 'necklace' OR 
             item.type == 'cloak') 
            AND item.agility.isUpgrade() 

@@ -165,6 +165,84 @@ do -- Private Scope
         return false
     end
 
+    -- Get all items of a given EquipLoc from the player's equipped items and bags
+    local function GetPlayerItemsOfType(targetEquipLoc)
+        local items = {}
+        
+        -- Check equipped items first
+        local equippedSlots = equipSlotMap[targetEquipLoc]
+        if equippedSlots then
+            for _, slotID in ipairs(equippedSlots) do
+                local itemLink = GetInventoryItemLink("player", slotID)
+                if itemLink then
+                    table.insert(items, itemLink)
+                end
+            end
+        end
+        
+        -- Check bags
+        for bagID = 0, 4 do
+            for slotID = 1, GetContainerNumSlots(bagID) do
+                local itemLink = GetContainerItemLink(bagID, slotID)
+                if itemLink then
+                    local _, _, _, _, _, _, _, _, equipLoc = GetItemInfo(itemLink)
+                    if equipLoc == targetEquipLoc then
+                        table.insert(items, itemLink)
+                    end
+                end
+            end
+        end
+        
+        return items
+    end
+
+    -- Determines if a new item is an upgrade for a given slot type and stat
+    local function IsAnUpgrade(itemLink, slotType, statKey)
+        -- Map simple slot types to their INVTYPE constants
+        local slotMap = {
+            ring = "INVTYPE_FINGER",
+            trinket = "INVTYPE_TRINKET",
+            cloak = "INVTYPE_CLOAK",
+            necklace = "INVTYPE_NECK",
+            -- Add other slots as needed
+        }
+        local equipLoc = slotMap[slotType:lower()]
+        if not equipLoc then return false end
+
+        local newItemStat = GetItemStatValue(itemLink, statKey)
+        local allItems = GetPlayerItemsOfType(equipLoc)
+        
+        local itemStats = {}
+        for _, ownedItemLink in ipairs(allItems) do
+            table.insert(itemStats, GetItemStatValue(ownedItemLink, statKey))
+        end
+        
+        table.sort(itemStats, function(a, b) return a > b end)
+        
+        local slots = equipSlotMap[equipLoc]
+        local numSlots = #slots
+        
+        -- Logic for two-slot items
+        if numSlots == 2 then
+            local worstEquippedStat = 0
+            if #itemStats >= 2 then
+                worstEquippedStat = itemStats[2] -- Second best is the worst equipped
+            elseif #itemStats == 1 then
+                worstEquippedStat = itemStats[1]
+            end
+            return newItemStat > worstEquippedStat
+        -- Logic for single-slot items
+        elseif numSlots == 1 then
+            local bestEquippedStat = 0
+            if #itemStats >= 1 then
+                bestEquippedStat = itemStats[1]
+            end
+            return newItemStat > bestEquippedStat
+        end
+        
+        return false
+    end
+
     -- REGISTER EVENTS
     AutoRoll:RegisterEvent("ADDON_LOADED")
     AutoRoll:RegisterEvent("START_LOOT_ROLL")
@@ -298,6 +376,9 @@ do -- Private Scope
                 i = i + 1
             elseif char == ")" then
                 table.insert(tokens, {type = "RPAREN", value = ")"})
+                i = i + 1
+            elseif char == "," then
+                table.insert(tokens, {type = "COMMA", value = ","})
                 i = i + 1
             elseif char == "." then
                 table.insert(tokens, {type = "DOT", value = "."})
@@ -461,8 +542,17 @@ do -- Private Scope
                         -- Handle method calls
                         if peek() and peek().type == "LPAREN" then
                             consume("LPAREN")
+                            local args = {}
+                            if peek() and peek().type ~= "RPAREN" then
+                                repeat
+                                    local arg = parsePrimaryExpression()
+                                    if arg then
+                                        table.insert(args, arg)
+                                    end
+                                until not (peek() and peek().type == "COMMA" and consume("COMMA"))
+                            end
                             consume("RPAREN")
-                            result = {type = "METHOD_CALL", object = result}
+                            result = {type = "METHOD_CALL", object = result, arguments = args}
                         end
                     end
                 end
@@ -633,6 +723,23 @@ do -- Private Scope
     end
     
     function RuleParser:evaluateMethodCall(methodCall, context)
+        -- Handle player.isAnUpgrade('slot', 'stat')
+        if methodCall.object.type == "MEMBER" and
+           methodCall.object.object.type == "IDENTIFIER" and
+           methodCall.object.object.value == "player" and
+           methodCall.object.member == "isAnUpgrade" then
+           
+            if methodCall.arguments and #methodCall.arguments == 2 then
+                local slotType = methodCall.arguments[1].value
+                local statName = methodCall.arguments[2].value
+                local statKey = STAT_KEYS[statName:lower()]
+                
+                if slotType and statKey then
+                    return IsAnUpgrade(context.itemLink, slotType, statKey)
+                end
+            end
+        end
+
         -- Handle item.stat.isUpgrade() structure
         if methodCall.object.type == "MEMBER" and 
            methodCall.object.member == "isUpgrade" then

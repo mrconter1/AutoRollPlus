@@ -12,6 +12,9 @@ local function setupTestMocks(testCase)
     local originalUnitClass = _G.UnitClass
     local originalGetItemStats = _G.GetItemStats
     local originalGetInventoryItemLink = _G.GetInventoryItemLink
+    local originalGetContainerNumSlots = _G.GetContainerNumSlots
+    local originalGetContainerItemLink = _G.GetContainerItemLink
+    local originalGetItemInfo = _G.GetItemInfo
     
     -- Mock UnitLevel
     _G.UnitLevel = function(unit)
@@ -33,7 +36,17 @@ local function setupTestMocks(testCase)
     _G.GetItemStats = function(itemLink)
         if itemLink == "test_item_link" then
             return testCase.item.stats
-        elseif itemLink and itemLink:match("equipped_item_") then
+        end
+
+        if itemLink and itemLink:match("bag_item_") then
+            local bagID_s, slotID_s = itemLink:match("bag_item_(%d+)_(%d+)")
+            local bagID, slotID = tonumber(bagID_s), tonumber(slotID_s)
+            if testCase.bagItems and testCase.bagItems[slotID] then
+                return testCase.bagItems[slotID].stats
+            end
+        end
+
+        if itemLink and itemLink:match("equipped_item_") then
             -- Extract slot ID from fake equipped item link
             local slotID = tonumber(itemLink:match("equipped_item_(%d+)"))
             if slotID and testCase.equippedItems[slotID] then
@@ -51,12 +64,48 @@ local function setupTestMocks(testCase)
         return originalGetInventoryItemLink and originalGetInventoryItemLink(unit, slotID)
     end
     
+    -- Mock bag functions
+    local bagItems = testCase.bagItems or {}
+    _G.GetContainerNumSlots = function(bagID)
+        if bagID == 0 then
+            return #bagItems
+        end
+        return 0
+    end
+    
+    _G.GetContainerItemLink = function(bagID, slotID)
+        if bagID == 0 and slotID <= #bagItems then
+            -- Generate a unique, parsable link for the bag item
+            return "bag_item_" .. bagID .. "_" .. slotID
+        end
+        return nil
+    end
+    
+    -- Mock GetItemInfo to extract equipLoc from our fake item links
+    _G.GetItemInfo = function(itemLink)
+        if itemLink and itemLink:match("bag_item_") then
+            local bagID_s, slotID_s = itemLink:match("bag_item_(%d+)_(%d+)")
+            local bagID, slotID = tonumber(bagID_s), tonumber(slotID_s)
+            if testCase.bagItems and testCase.bagItems[slotID] then
+                local itemData = testCase.bagItems[slotID]
+                return nil, nil, nil, nil, nil, nil, itemData.itemSubType, itemData.itemEquipLoc
+            end
+        end
+        if originalGetItemInfo then
+            return originalGetItemInfo(itemLink)
+        end
+        return nil
+    end
+
     -- Return cleanup function
     return function()
         _G.UnitLevel = originalUnitLevel
         _G.UnitClass = originalUnitClass
         _G.GetItemStats = originalGetItemStats
         _G.GetInventoryItemLink = originalGetInventoryItemLink
+        _G.GetContainerNumSlots = originalGetContainerNumSlots
+        _G.GetContainerItemLink = originalGetContainerItemLink
+        _G.GetItemInfo = originalGetItemInfo
     end
 end
 

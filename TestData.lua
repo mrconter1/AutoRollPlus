@@ -223,6 +223,44 @@ AutoRollTestProfiles = {
                     ["INVTYPE_TRINKET2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
                 }),
                 expectedResult = "GREED"
+            },
+            {
+                name = "ring in bag - new ring is not an upgrade",
+                player = {
+                    level = 55,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    stats = { ["ITEM_MOD_AGILITY_SHORT"] = 12 }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER1"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } }
+                }),
+                bagItems = {
+                    { itemEquipLoc = "INVTYPE_FINGER", stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                },
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "ring in bag - new ring is an upgrade",
+                player = {
+                    level = 55,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    stats = { ["ITEM_MOD_AGILITY_SHORT"] = 15 }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER1"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } }
+                }),
+                bagItems = {
+                    { itemEquipLoc = "INVTYPE_FINGER", stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                },
+                expectedResult = "MANUAL"
             }
         }
     },
