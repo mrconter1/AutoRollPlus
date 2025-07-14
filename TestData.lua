@@ -3,7 +3,16 @@
 
 -- Helper function to convert INVTYPE constants to slot IDs
 local function getSlotID(invType)
-    return AutoRollMappings:getSlotID(invType)
+    local equipSlotMap = AutoRollMappings.equipSlotMap
+    
+    if invType == "INVTYPE_FINGER1" then return equipSlotMap["INVTYPE_FINGER"][1]
+    elseif invType == "INVTYPE_FINGER2" then return equipSlotMap["INVTYPE_FINGER"][2]
+    elseif invType == "INVTYPE_TRINKET1" then return equipSlotMap["INVTYPE_TRINKET"][1]
+    elseif invType == "INVTYPE_TRINKET2" then return equipSlotMap["INVTYPE_TRINKET"][2]
+    end
+    
+    local slots = equipSlotMap[invType]
+    return slots and slots[1] or nil
 end
 
 -- Helper function to convert equipped items from INVTYPE format to slot ID format
@@ -170,6 +179,50 @@ AutoRollTestProfiles = {
                     ["INVTYPE_FINGER2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
                 }),
                 expectedResult = "MANUAL"
+            },
+            {
+                name = "trinket upgrade with two trinkets equipped (upgrade over worst)",
+                player = {
+                    level = 55,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET1"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } },
+                    ["INVTYPE_TRINKET2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "trinket upgrade with two trinkets equipped (not an upgrade)",
+                player = {
+                    level = 55,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_TRINKET",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 8,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_TRINKET1"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } },
+                    ["INVTYPE_TRINKET2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                }),
+                expectedResult = "GREED"
             }
         }
     },

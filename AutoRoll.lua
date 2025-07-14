@@ -143,16 +143,26 @@ do -- Private Scope
         local slots = equipSlotMap[equipLoc]
         if not slots then return false end
 
-        local bestEquipped = 0
-        for _,slotID in ipairs(slots) do
-            local equippedLink = GetInventoryItemLink("player", slotID)
+        -- For single-slot items, compare directly
+        if #slots == 1 then
+            local equippedLink = GetInventoryItemLink("player", slots[1])
             local equippedStat = GetItemStatValue(equippedLink, statKey)
-            if equippedStat > bestEquipped then
-                bestEquipped = equippedStat
-            end
+            return itemStat > equippedStat
         end
 
-        return itemStat > bestEquipped
+        -- For dual-slot items (rings/trinkets), check for an upgrade over the WORST item
+        if #slots == 2 then
+            local e1_link = GetInventoryItemLink("player", slots[1])
+            local e1_stat = GetItemStatValue(e1_link, statKey)
+            
+            local e2_link = GetInventoryItemLink("player", slots[2])
+            local e2_stat = GetItemStatValue(e2_link, statKey)
+            
+            -- If new item is better than either equipped item, it's an upgrade
+            return itemStat > e1_stat or itemStat > e2_stat
+        end
+
+        return false
     end
 
     -- REGISTER EVENTS
