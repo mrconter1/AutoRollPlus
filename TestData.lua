@@ -126,6 +126,50 @@ AutoRollTestProfiles = {
                     ["INVTYPE_FINGER"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
                 }),
                 expectedResult = "MANUAL"
+            },
+            {
+                name = "ring upgrade with two rings equipped (upgrade)",
+                player = {
+                    level = 55,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 18,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER1"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } },
+                    ["INVTYPE_FINGER2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                }),
+                expectedResult = "MANUAL"
+            },
+            {
+                name = "ring upgrade with two rings equipped (not an upgrade)",
+                player = {
+                    level = 55,
+                    class = "HUNTER",
+                    spec = "Survival"
+                },
+                item = {
+                    itemRarity = "Rare",
+                    itemSubType = "Miscellaneous",
+                    itemEquipLoc = "INVTYPE_FINGER",
+                    quality = 3,
+                    stats = {
+                        ["ITEM_MOD_AGILITY_SHORT"] = 12,
+                    }
+                },
+                equippedItems = convertEquippedItems({
+                    ["INVTYPE_FINGER1"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 10 } },
+                    ["INVTYPE_FINGER2"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 14 } }
+                }),
+                expectedResult = "MANUAL"
             }
         }
     },
