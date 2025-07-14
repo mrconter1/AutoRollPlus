@@ -73,7 +73,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Bow",
+                    itemSubType = "Bows",
                     itemEquipLoc = "INVTYPE_RANGED",
                     quality = 3,
                     stats = {
@@ -163,7 +163,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -295,7 +295,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Two-Handed Sword",
+                    itemSubType = "Two-Handed Swords",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -406,7 +406,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Shield",
+                    itemSubType = "Shields",
                     itemEquipLoc = "INVTYPE_SHIELD",
                     quality = 3,
                     stats = {
@@ -427,7 +427,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "One-Handed Mace",
+                    itemSubType = "One-Handed Maces",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 3,
                     stats = {
@@ -448,7 +448,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Common",
-                    itemSubType = "Shield",
+                    itemSubType = "Shields",
                     itemEquipLoc = "INVTYPE_SHIELD",
                     quality = 1,
                     stats = {
@@ -496,7 +496,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Dagger",
+                    itemSubType = "Daggers",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 3,
                     stats = {
@@ -559,7 +559,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Bow",
+                    itemSubType = "Bows",
                     itemEquipLoc = "INVTYPE_RANGED",
                     quality = 3,
                     stats = {
@@ -569,7 +569,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
                 }),
-                expectedResult = "MANUAL"
+                expectedResult = "GREED"
             }
         }
     },
@@ -607,7 +607,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -718,7 +718,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -829,7 +829,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -940,7 +940,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Fist Weapon",
+                    itemSubType = "Fist Weapons",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 3,
                     stats = {
@@ -1051,7 +1051,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -1072,7 +1072,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "One-Handed Sword",
+                    itemSubType = "One-Handed Swords",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 3,
                     stats = {
@@ -1114,7 +1114,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Common",
-                    itemSubType = "Fist Weapon",
+                    itemSubType = "Fist Weapons",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 1,
                     stats = {
@@ -1162,7 +1162,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -1273,7 +1273,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -1294,15 +1294,15 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Uncommon",
-                    itemSubType = "Wand",
-                    itemEquipLoc = "INVTYPE_RANGED",
+                    itemSubType = "Wands",
+                    itemEquipLoc = "INVTYPE_RANGEDRIGHT",
                     quality = 2,
                     stats = {
                         ["ITEM_MOD_INTELLECT_SHORT"] = 12,
                     }
                 },
                 equippedItems = convertEquippedItems({
-                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
+                    ["INVTYPE_RANGEDRIGHT"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 8 } }
                 }),
                 expectedResult = "MANUAL"
             },
@@ -1315,7 +1315,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Dagger",
+                    itemSubType = "Daggers",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 3,
                     stats = {
@@ -1447,7 +1447,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Two-Handed Sword",
+                    itemSubType = "Two-Handed Swords",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -1468,7 +1468,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "One-Handed Axe",
+                    itemSubType = "One-Handed Axes",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 3,
                     stats = {
@@ -1489,7 +1489,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Polearm",
+                    itemSubType = "Polearms",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -1664,7 +1664,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Uncommon",
-                    itemSubType = "Shield",
+                    itemSubType = "Shields",
                     itemEquipLoc = "INVTYPE_SHIELD",
                     quality = 2,
                     stats = {
@@ -1755,7 +1755,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Uncommon",
-                    itemSubType = "Shield",
+                    itemSubType = "Shields",
                     itemEquipLoc = "INVTYPE_SHIELD",
                     quality = 2,
                     stats = {
@@ -1783,7 +1783,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Two-Handed Sword",
+                    itemSubType = "Two-Handed Swords",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -1874,7 +1874,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Uncommon",
-                    itemSubType = "Fist Weapon",
+                    itemSubType = "Fist Weapons",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 2,
                     stats = {
@@ -1965,7 +1965,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Uncommon",
-                    itemSubType = "Shield",
+                    itemSubType = "Shields",
                     itemEquipLoc = "INVTYPE_SHIELD",
                     quality = 2,
                     stats = {
@@ -1986,7 +1986,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -2084,7 +2084,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Staff",
+                    itemSubType = "Staves",
                     itemEquipLoc = "INVTYPE_2HWEAPON",
                     quality = 3,
                     stats = {
@@ -2105,15 +2105,15 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Uncommon",
-                    itemSubType = "Wand",
-                    itemEquipLoc = "INVTYPE_RANGED",
+                    itemSubType = "Wands",
+                    itemEquipLoc = "INVTYPE_RANGEDRIGHT",
                     quality = 2,
                     stats = {
                         ["ITEM_MOD_INTELLECT_SHORT"] = 8,
                     }
                 },
                 equippedItems = convertEquippedItems({
-                    ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 5 } }
+                    ["INVTYPE_RANGEDRIGHT"] = { stats = { ["ITEM_MOD_INTELLECT_SHORT"] = 5 } }
                 }),
                 expectedResult = "MANUAL"
             },
@@ -2126,7 +2126,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "Off-Hand",
+                    itemSubType = "Miscellaneous",
                     itemEquipLoc = "INVTYPE_HOLDABLE",
                     quality = 3,
                     stats = {
@@ -2196,7 +2196,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Uncommon",
-                    itemSubType = "Dagger",
+                    itemSubType = "Daggers",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 2,
                     stats = {
@@ -2266,7 +2266,7 @@ AutoRollTestProfiles = {
                 },
                 item = {
                     itemRarity = "Rare",
-                    itemSubType = "One-Handed Sword",
+                    itemSubType = "One-Handed Swords",
                     itemEquipLoc = "INVTYPE_WEAPON",
                     quality = 3,
                     stats = {

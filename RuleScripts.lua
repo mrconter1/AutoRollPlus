@@ -14,7 +14,7 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -33,7 +33,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF item.type == 'trinket' 
@@ -55,7 +55,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -80,7 +80,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -99,7 +99,7 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -118,7 +118,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -137,7 +137,7 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -156,7 +156,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -175,7 +175,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -200,7 +200,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -225,7 +225,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -250,7 +250,7 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -275,7 +275,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -294,7 +294,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isWeapon() 
+        IF item.isUsableWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 

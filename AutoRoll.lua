@@ -644,6 +644,12 @@ do -- Private Scope
                methodCall.object.object.value == "item" and
                methodCall.object.member == "isWeapon" then
             return self:isWeapon(context)
+        -- Handle item.isUsableWeapon() calls
+        elseif methodCall.object.type == "MEMBER" and
+               methodCall.object.object.type == "IDENTIFIER" and
+               methodCall.object.object.value == "item" and
+               methodCall.object.member == "isUsableWeapon" then
+            return self:isUsableWeapon(context)
         end
         
         return false
@@ -667,6 +673,48 @@ do -- Private Scope
                equipLoc == "INVTYPE_RANGEDRIGHT" or      -- Ranged (right side)
                equipLoc == "INVTYPE_THROWN" or           -- Thrown weapons
                equipLoc == "INVTYPE_RELIC"               -- Relics/idols/totems
+    end
+    
+    function RuleParser:isUsableWeapon(context)
+        -- First check: is it even a weapon?
+        if not self:isWeapon(context) then
+            return false
+        end
+        
+        -- Second check: can this class use this weapon type?
+        if not context.itemSubType then 
+            return false 
+        end
+        
+        local _, playerClass = UnitClass("player")
+        local subType = context.itemSubType
+        
+        -- Class-specific usable weapons (based on class weapon restrictions)
+        local usableWeapons = {
+            DRUID = {"Daggers", "One-Handed Maces", "Fist Weapons", "Two-Handed Maces", "Staves", "Idols"},
+            HUNTER = {"Daggers", "One-Handed Swords", "One-Handed Axes", "Fist Weapons", "Two-Handed Swords", "Two-Handed Axes", "Staves", "Polearms", "Crossbows", "Bows", "Guns", "Thrown"},
+            MAGE = {"Daggers", "One-Handed Swords", "Staves", "Wands", "Miscellaneous"},
+            PALADIN = {"One-Handed Swords", "One-Handed Maces", "One-Handed Axes", "Two-Handed Swords", "Two-Handed Axes", "Two-Handed Maces", "Polearms", "Shields", "Librams"},
+            PRIEST = {"Daggers", "One-Handed Maces", "Staves", "Wands", "Miscellaneous"},
+            ROGUE = {"Daggers", "One-Handed Maces", "One-Handed Swords", "Fist Weapons", "Crossbows", "Guns", "Thrown"},
+            SHAMAN = {"Daggers", "One-Handed Maces", "One-Handed Axes", "Fist Weapons", "Two-Handed Maces", "Two-Handed Axes", "Staves", "Shields", "Totems", "Crossbows", "Bows", "Guns", "Thrown"},
+            WARLOCK = {"Daggers", "One-Handed Swords", "Staves", "Wands", "Miscellaneous"},
+            WARRIOR = {"Daggers", "One-Handed Swords", "One-Handed Maces", "One-Handed Axes", "Fist Weapons", "Two-Handed Swords", "Two-Handed Maces", "Two-Handed Axes", "Staves", "Polearms", "Shields", "Crossbows", "Bows", "Guns", "Thrown"},
+            DEATHKNIGHT = {"One-Handed Swords", "Two-Handed Swords", "One-Handed Axes", "Two-Handed Axes", "One-Handed Maces", "Two-Handed Maces", "Polearms", "Sigils"},
+            MONK = {"Daggers", "One-Handed Swords", "One-Handed Axes", "One-Handed Maces", "Fist Weapons", "Staves", "Polearms"}
+        }
+        
+        local classWeapons = usableWeapons[playerClass]
+        if not classWeapons then return false end
+        
+        -- Check if this subtype is usable by this class
+        for _, weaponType in ipairs(classWeapons) do
+            if subType == weaponType then
+                return true
+            end
+        end
+        
+        return false
     end
     
     function RuleParser:evaluateMethodRule(methodCall, context)
