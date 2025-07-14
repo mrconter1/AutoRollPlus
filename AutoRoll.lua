@@ -638,9 +638,35 @@ do -- Private Scope
                     return IsItemStatUpgrade(context.itemLink, context.itemEquipLoc, statKey)
                 end
             end
+        -- Handle item.isWeapon() calls
+        elseif methodCall.object.type == "MEMBER" and
+               methodCall.object.object.type == "IDENTIFIER" and
+               methodCall.object.object.value == "item" and
+               methodCall.object.member == "isWeapon" then
+            return self:isWeapon(context)
         end
         
         return false
+    end
+    
+    function RuleParser:isWeapon(context)
+        if not context.itemEquipLoc then 
+            return false 
+        end
+        
+        local equipLoc = context.itemEquipLoc
+        
+        -- Check if equipment location is any weapon-related slot
+        return equipLoc == "INVTYPE_WEAPON" or           -- One-handed weapons
+               equipLoc == "INVTYPE_2HWEAPON" or         -- Two-handed weapons  
+               equipLoc == "INVTYPE_WEAPONMAINHAND" or   -- Main hand specific
+               equipLoc == "INVTYPE_WEAPONOFFHAND" or    -- Off-hand specific
+               equipLoc == "INVTYPE_HOLDABLE" or         -- Off-hand orbs/books
+               equipLoc == "INVTYPE_SHIELD" or           -- Shields
+               equipLoc == "INVTYPE_RANGED" or           -- Ranged weapons
+               equipLoc == "INVTYPE_RANGEDRIGHT" or      -- Ranged (right side)
+               equipLoc == "INVTYPE_THROWN" or           -- Thrown weapons
+               equipLoc == "INVTYPE_RELIC"               -- Relics/idols/totems
     end
     
     function RuleParser:evaluateMethodRule(methodCall, context)

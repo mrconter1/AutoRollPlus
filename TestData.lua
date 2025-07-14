@@ -458,7 +458,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_SHIELD"] = { stats = { ["ITEM_MOD_STRENGTH_SHORT"] = 16 } }
                 }),
-                expectedResult = "GREED"
+                expectedResult = "MANUAL"
             }
         }
     },
@@ -569,7 +569,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_RANGED"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 18 } }
                 }),
-                expectedResult = "GREED"
+                expectedResult = "MANUAL"
             }
         }
     },
@@ -1124,7 +1124,7 @@ AutoRollTestProfiles = {
                 equippedItems = convertEquippedItems({
                     ["INVTYPE_WEAPON"] = { stats = { ["ITEM_MOD_AGILITY_SHORT"] = 25 } }
                 }),
-                expectedResult = "GREED"
+                expectedResult = "MANUAL"
             }
         }
     },

@@ -14,10 +14,10 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'bow' OR 
-            item.type == 'gun' OR 
-            item.type == 'crossbow' OR 
-            item.type == 'ring' OR 
+        IF item.isWeapon() 
+        THEN item.manualRoll()
+
+        IF (item.type == 'ring' OR 
             item.type == 'trinket' OR 
             item.type == 'necklace' OR 
             item.type == 'cloak') 
@@ -33,8 +33,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.type == 'staff' 
-           AND item.intellect.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF item.type == 'trinket' 
@@ -56,16 +55,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'polearm' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon') 
-           AND item.strength.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -90,20 +80,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'polearm' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon') 
-           AND item.strength.isUpgrade() 
-        THEN item.manualRoll()
-
-        IF item.type == 'shield' 
-           AND item.strength.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -122,15 +99,7 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'staff' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'polearm') 
-           AND item.agility.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -149,15 +118,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'staff' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'polearm') 
-           AND item.intellect.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -176,13 +137,7 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'dagger' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'thrown') 
-           AND item.agility.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -201,12 +156,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'staff' OR 
-            item.type == 'wand' OR 
-            item.type == 'dagger' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'off-hand') 
-           AND item.intellect.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -225,14 +175,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'polearm') 
-           AND item.strength.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -257,18 +200,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'polearm' OR 
-            item.type == 'dagger' OR 
-            item.type == 'staff') 
-           AND item.intellect.isUpgrade() 
-        THEN item.manualRoll()
-
-        IF item.type == 'shield' 
-           AND item.intellect.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -293,19 +225,7 @@ AutoRollRuleScripts = {
            AND item.strength.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'polearm' OR 
-            item.type == 'dagger' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe') 
-           AND item.strength.isUpgrade() 
-        THEN item.manualRoll()
-
-        IF item.type == 'shield' 
-           AND item.strength.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -330,20 +250,7 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'staff') 
-           AND item.agility.isUpgrade() 
-        THEN item.manualRoll()
-
-        IF item.type == 'shield' 
-           AND item.agility.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -368,20 +275,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'one-handed sword' OR 
-            item.type == 'two-handed sword' OR 
-            item.type == 'one-handed mace' OR 
-            item.type == 'two-handed mace' OR 
-            item.type == 'one-handed axe' OR 
-            item.type == 'two-handed axe' OR 
-            item.type == 'dagger' OR 
-            item.type == 'fist weapon' OR 
-            item.type == 'staff') 
-           AND item.intellect.isUpgrade() 
-        THEN item.manualRoll()
-
-        IF item.type == 'shield' 
-           AND item.intellect.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
@@ -400,12 +294,7 @@ AutoRollRuleScripts = {
            AND item.intellect.isUpgrade() 
         THEN item.manualRoll()
 
-        IF (item.type == 'staff' OR 
-            item.type == 'wand' OR 
-            item.type == 'dagger' OR 
-            item.type == 'one-handed sword' OR 
-            item.type == 'off-hand') 
-           AND item.intellect.isUpgrade() 
+        IF item.isWeapon() 
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
