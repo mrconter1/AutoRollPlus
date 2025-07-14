@@ -14,7 +14,9 @@ AutoRollRuleScripts = {
            AND item.agility.isUpgrade() 
         THEN item.manualRoll()
 
-        IF item.isUsableWeapon() 
+        IF (item.type == 'bows' OR
+            item.type == 'crossbows' OR
+            item.type == 'guns')
         THEN item.manualRoll()
 
         IF (item.type == 'ring' OR 
